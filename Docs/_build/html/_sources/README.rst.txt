@@ -13,7 +13,19 @@ Key features
 ============
 
 * Built on python's native ipaddress module
+* 3 Classes : Cidr, CidrMap, CidrFile
+* Cidr provides for many common operations for example:
+  - Support for IPv4 and IPv6
+  - compact lists of CIDRs to smallest set of CIDR blocks
+  - convert an IP range to a list of CIDRs
+  - Identify and validate
+  - many more
+* CidrFile handles common operations with files including atomic writes
+* CidrMap provides mapping of CIDR to value.
+  - Optional file cache uses locking to ensure multiple processes handle cache correctly.
 * Useful tools such as CidrMap(), compact_cidrs() etc
+
+See API reference documentation for more details.
 
 New / Interesting
 ==================
@@ -109,6 +121,8 @@ them as functions (*Cidr.xxx()*)
 * Cidr.get_host_bits
 * Cidr.clean_cidr
 * Cidr.clean_cidrs
+* Cidr.range_to_cidrs
+* Cidr.cidr_to_range
 * Cidr.fix_cidr_host_bits
 * Cidr.fix_cidrs_host_bits
 
