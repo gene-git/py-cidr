@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "py-cidr"
+dynamic = ["version"]
+description = "py-cidr : A Tool to setup tools"
+authors = [{ name = "Gene C", email = "arch@sapience.com" }]
+license = "MIT"
+readme = "README.rst"
+keywords = []
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/py_cidr"]
+
+[[tool.hatch.envs.all.matrix]]
+python = ["3.13", "3.14", "3.15"]
+
+[project.urls]
+Documentation = "https://github.com/gene-git/py-cidr/Docs"
+Issues = "https://github.com/gene-git/py-cidr/issues"
+Source = "https://github.com/gene-git/py-cidr"
+
+[tool.hatch.version]
+path = "src/py_cidr/version.py"
+
+[tool.hatch.envs.default]
+
+[tool.hatch.envs.default.scripts]
+[tool.hatch.envs.lint]
+detached = true
+dependencies = [
+]
+

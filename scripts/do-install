@@ -1,0 +1,30 @@
+#!/bin/bash
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: © 2024-present  Gene C <arch@sapience.com>
+#
+# installer script for py-cidr
+# e.g. Call from PKGBUILD:  
+#   ./do-install ${pkgdir}
+# gene c
+#
+dest="$1"
+self='py-cidr'
+
+info="Docs README.rst scripts packaging"
+infodir="/usr/share/${self}"
+
+license="Docs/License.rst"
+licensedir="/usr/share/licenses/${self}"
+
+if [ ! -d "$dest" ] ; then
+    echo 'Missing destination directory'
+    exit 1
+else
+    # shared
+    /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}
+    /usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/
+
+    /usr/bin/python -m installer --destdir="$dest" dist/*.whl
+    exit 0
+fi
+
