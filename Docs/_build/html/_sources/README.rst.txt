@@ -67,8 +67,8 @@ saves the cache - the module will detect if the cache changed (by another proces
 directory) since it was read in, and merge its own changes with the changes in the cache file 
 before writing out the updated cache.  So nothing should be lost.
 
-This was built this originally for our firewall tool, where par of the data gathering component creates 
-maps of CIDR blocks to geolocated country codes for all CIDRs listed by each registry. 
+This was built this originally for our firewall tool, where part of the data gathering component creates 
+maps of CIDR blocks to geolocated country codes for all CIDRs as listed by each of registries. 
 This process can take several minutes. Run time was cut roughly in half using 
 CidrMap() to provide a mapping of CIDR to location.
 
@@ -133,7 +133,7 @@ them as functions (*Cidr.xxx()*)
 
 **CidrFile Class**
 
-Theis class provides a few reader/writer tools for files with lists of CIDR strings.
+This class provides a few reader/writer tools for files with lists of CIDR strings.
 Readers ignores comments. All methods are *@staticmethod* and thus no instance of the
 class is required.  Simply use them as functions (*Cidr.xxx()*)
 
@@ -142,47 +142,6 @@ class is required.  Simply use them as functions (*Cidr.xxx()*)
 * Cidr.write_cidr_file(cidrs:[str], pathname:str) -> bool
 * Cidr.read_cidrs(fname:str|None, verb:bool=False) -> (ipv4:[str], ipv6:[str]):
 * Cidr.copy_cidr_file(src_file:str, dst_file:str) -> None
-
-Application Usage
-------------------
-
-To run - go to terminal and use :
-
- .. code-block:: bash
-
-   py-cidr --help
-
-Configuration
--------------
-
-The configuration file for py-cidr is ... 
-
- .. code-block:: bash
-
-   /etc/py-cidr/config
-
-.. py-cidr-opts:
-
-Options
--------
-
-Available options for py-cidr are ..
-This section can be referenced by `py-cidr`_ 
-
-
-Log files
-=========
-
-Logs are found:
-
- .. code-block:: bash
-
-    ${HOME}/log/py-cidr
-
-Another Section
-===============
-
-More stuff.
 
 
 ########
@@ -213,21 +172,26 @@ Dependencies
 
 **Run Time** :
 
- * python          (3.11 or later)
+* python          (3.13 or later)
+* lockmgr
 
 **Building Package** :
 
- * git
- * hatch           (aka python-hatch)
- * wheel           (aka python-wheel)
- * build           (aka python-build)
- * installer       (aka python-installer)
- * rsync
+* git
+* hatch           (aka python-hatch)
+* wheel           (aka python-wheel)
+* build           (aka python-build)
+* installer       (aka python-installer)
+* rsync
 
 **Optional for building docs** :
 
- * sphinx
- * texlive-latexextra  (archlinux packaguing of texlive tools)
+* sphinx
+* python-myst-parser
+* python-sphinx-autoapi
+* texlive-latexextra  (archlinux packaguing of texlive tools)
+
+Building docs is not really needed since pre-built docs are provided in the git repo.
 
 Philosophy
 ==========
