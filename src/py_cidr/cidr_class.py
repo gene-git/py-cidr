@@ -357,7 +357,7 @@ class Cidr:
         nets = Cidr.cidrs_to_nets(cidrs)
         if not nets:
             return cidrs
-        nets.sort()
+        nets.sort(key=ipaddress.get_mixed_type_key)
         cidrs_sorted = Cidr.nets_to_cidrs(nets)
         return cidrs_sorted
 
@@ -367,7 +367,7 @@ class Cidr:
         Sort the list of cidr strings
         '''
         addresses = Cidr.ips_to_addresses(ips)
-        addresses.sort()
+        addresses.sort(key=ipaddress.get_mixed_type_key)
         ips_sorted = Cidr.addresses_to_ips(addresses)
         return ips_sorted
 
