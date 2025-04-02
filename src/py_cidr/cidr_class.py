@@ -4,15 +4,28 @@
 Class providing some common CIDR utilities
 '''
 # pylint: disable=too-many-public-methods
-from typing import TypeAlias
-import ipaddress
-import re
-from ipaddress import (AddressValueError, NetmaskValueError)
-from ipaddress import (IPv4Network, IPv6Network, IPv4Address, IPv6Address)
+from typing import (List)
+from ipaddress import (IPv4Network, IPv6Network)
 
-IPvxNetwork: TypeAlias = IPv4Network|IPv6Network
-IPvxAddress: TypeAlias = IPv4Address|IPv6Address
-IPAddress: TypeAlias = IPvxAddress|str
+from .cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
+from .version import version
+
+from .cidr_clean import (clean_cidr, clean_cidrs, fix_cidr_host_bits, fix_cidrs_host_bits)
+
+from .cidr_address import (ip_to_address, ips_to_addresses, addresses_to_ips, ipaddr_cidr_from_string)
+
+from .cidr_subnet import (cidr_set_prefix, get_host_bits)
+from .cidr_subnet import (cidr_is_subnet, net_exclude, nets_exclude, cidrs_exclude)
+from .cidr_subnet import (cidrs2_minus_cidrs1, cidr_exclude)
+
+from .cidr_sort import (sort_cidrs, sort_ips)
+from .cidr_compact import (cidr_list_compact, compact_cidrs, compact_nets)
+from .cidr_nets import (cidr_to_net, cidrs_to_nets, nets_to_cidrs)
+from .cidr_range import (range_to_cidrs, net_to_range, cidr_to_range)
+from .cidr_valid import (is_valid_ip4, is_valid_ip6, is_valid_cidr, cidr_iptype, cidr_type_network)
+from .cidr_valid import (address_iptype)
+
+from .rfc_1918 import (is_rfc_1918, rfc_1918_nets, rfc_1918_cidrs, remove_rfc_1918)
 
 class Cidr:
     '''
@@ -29,6 +42,13 @@ class Cidr:
         * addr means an ip address (IPv4Address or IPv6Address)
         * address means either a IP address or a cidr network as a string
     '''
+    @staticmethod
+    def version() -> str:
+        '''
+        :returns:
+            Version of py-cidr
+        '''
+        return version()
 
     @staticmethod
     def cidr_to_net(cidr:str, strict:bool=False) -> IPvxNetwork | None:
@@ -46,10 +66,7 @@ class Cidr:
         :returns:
             The ipaddress network derived from cidr string as either IPvxNetwork = IPv4Network or IPv6Network.
         '''
-        if not cidr:
-            return None
-
-        return ipaddress.ip_network(cidr, strict=strict)
+        return cidr_to_net(cidr, strict)
 
     @staticmethod
     def cidrs_to_nets(cidrs:[str], strict:bool=False) -> [IPvxNetwork]:
@@ -66,10 +83,7 @@ class Cidr:
         :returns:
             List of IPvxNetworks.
         '''
-        if not cidrs or len(cidrs) < 1:
-            return []
-        nets = [ipaddress.ip_network(cidr, strict=strict) for cidr in cidrs]
-        return nets
+        return cidrs_to_nets(cidrs, strict)
 
     @staticmethod
     def nets_to_cidrs(nets:[IPvxNetwork]) -> [str]:
@@ -83,8 +97,7 @@ class Cidr:
         :returns:
             List of cidr strings
         '''
-        cidrs = [str(net) for net in nets]
-        return cidrs
+        return nets_to_cidrs(nets)
 
     @staticmethod
     def ip_to_address(ip:str) -> IPvxAddress|None:
@@ -99,18 +112,7 @@ class Cidr:
         :returns:
             IPvxAddress derived from IP or None if not an IP address
         '''
-        if not ip:
-            return None
-
-        ipin = ip
-        if '/' in ip:
-            ipin = re.sub(r'/.*$', '',  ip)
-
-        try:
-            addr = ipaddress.ip_address(ipin)
-        except AddressValueError:
-            addr = None
-        return addr
+        return ip_to_address(ip)
 
     @staticmethod
     def ips_to_addresses(ips:[str]) -> [IPvxAddress]:
@@ -124,8 +126,7 @@ class Cidr:
         :returns:
             List of IPvxAddress derived from input IPs.
         '''
-        addresses = [Cidr.ip_to_address(ip) for ip in ips]
-        return addresses
+        return ips_to_addresses(ips)
 
     @staticmethod
     def addresses_to_ips(addresses:[IPvxAddress]) -> [str]:
@@ -139,8 +140,7 @@ class Cidr:
         :returns:
             List of IP strings
         '''
-        ips = [str(address) for address in addresses]
-        return ips
+        return addresses_to_ips(addresses)
 
     @staticmethod
     def cidr_set_prefix(cidr:str, prefix:int) -> str:
@@ -157,9 +157,7 @@ class Cidr:
         :returns:
             Cidr string using the specified prefix
         '''
-        addr = Cidr.ipaddr_cidr_from_string(cidr)
-        addr_new = addr.supernet(new_prefix=prefix)
-        return str(addr_new)
+        return cidr_set_prefix(cidr, prefix)
 
     @staticmethod
     def ipaddr_cidr_from_string(addr:str, strict:bool=False) -> IPv4Network | IPv6Network | None:
@@ -176,13 +174,7 @@ class Cidr:
         :returns:
             An IPvXNetwork or None if not valid.
         '''
-        if not addr:
-            return None
-        if Cidr.is_valid_ip4(addr):
-            return ipaddress.IPv4Network(addr, strict=strict)
-        if Cidr.is_valid_ip6(addr):
-            return ipaddress.IPv6Network(addr, strict=strict)
-        return None
+        return ipaddr_cidr_from_string(addr, strict)
 
     @staticmethod
     def cidr_is_subnet(cidr:str, ipa_nets:[IPv4Network | IPv6Network]) -> bool:
@@ -199,23 +191,7 @@ class Cidr:
         :returns:
             True if cidr is subnet of any of the ipa_nets, else False.
         '''
-        if not cidr or not ipa_nets:
-            return False
-
-        this_net = Cidr.cidr_to_net(cidr)
-        if not this_net:
-            return False
-
-        this_ipt = Cidr.cidr_iptype(this_net)
-
-        for net in ipa_nets:
-            net_ipt = Cidr.cidr_iptype(net)
-            if net_ipt != this_ipt:
-                return False
-            if this_net.subnet_of(net):
-                return True
-
-        return False
+        return cidr_is_subnet(cidr, ipa_nets)
 
     @staticmethod
     def address_iptype(addr:IPvxAddress|IPvxNetwork) -> str|None:
@@ -229,14 +205,7 @@ class Cidr:
         :returns:
             'ip4', 'ip6' or None
         '''
-        if not addr:
-            return None
-        ipt = type(addr)
-        if ipt in (IPv4Address,IPv4Network):
-            return 'ip4'
-        if ipt in (IPv6Address,IPv6Network):
-            return 'ip6'
-        return None
+        return address_iptype(addr)
 
     @staticmethod
     def cidr_list_compact(cidrs_in:[str], string=True) -> [str|IPvxNetwork]:
@@ -254,32 +223,36 @@ class Cidr:
             Compressed list of cidrs as ipaddress networks (string=False)
             or list of strings when string=True
         """
-        if not cidrs_in:
-            return cidrs_in
-
-        ip_nets = [ipaddress.ip_network(cidr, strict=False) for cidr in cidrs_in]
-        cidrs_out = []
-        for cidr in ipaddress.collapse_addresses(ip_nets):
-            if string:
-                cidrs_out.append(str(cidr))
-            else:
-                cidrs_out.append(cidr)
-        return cidrs_out
+        return cidr_list_compact(cidrs_in, string)
 
     @staticmethod
     def compact_cidrs(cidrs:[str], nets=False) -> [str|IPvxNetwork]:
-        ''' combine em '''
-        ip_nets = [ipaddress.ip_network(cidr, strict=False) for cidr in cidrs]
-        if nets:
-            return ip_nets
-        compact = [str(net) for net in ipaddress.collapse_addresses(ip_nets)]
-        return compact
+        '''
+        Compact cidr list
+
+        :param cidrs:
+            List of cidrs 
+
+        :param nets:
+            If true result type IPvxNetwork else string, 
+
+        :returns:
+            If nets is True, result is list of IPvxNetwork otherwise strings
+        '''
+        return compact_cidrs(cidrs, nets)
 
     @staticmethod
     def compact_nets(nets:[IPvxNetwork]) -> [IPvxNetwork]:
-        ''' combine em '''
-        compact = list(ipaddress.collapse_addresses(nets))
-        return compact
+        '''
+        Compact list of IPvxNetwork
+
+        :param nets:
+            Input list 
+
+        :returns:
+            Compacted list of IPvxNetwork
+        '''
+        return compact_nets(nets)
 
     @staticmethod
     def net_exclude(net1:IPvxNetwork, nets2:[IPvxNetwork]) -> [IPvxNetwork]:
@@ -287,39 +260,19 @@ class Cidr:
         Exclude net1 from any of networks in net2
         return resulting list of nets (without net1)
         '''
-        if not net1 or not nets2:
-            return nets2
-
-        nets = []
-        for net in nets2:
-            if net1.subnet_of(net):
-                # remove the net1 subnet from net
-                nets += list(net.address_exclude(net1))
-            elif net.subnet_of(net1):
-                # remove net entirely as part of net1
-                continue
-            else:
-                # keep net
-                nets.append(net)
-        nets = Cidr.compact_nets(nets)
-        return nets
+        return net_exclude(net1, nets2)
 
     @staticmethod
     def nets_exclude(nets1:[IPvxNetwork], nets2:[IPvxNetwork]) -> [IPvxNetwork]:
         '''
         Exclude every nets1 network from from any networks in nets2
         '''
-        final = []
-        nets1 = Cidr.compact_nets(nets1)
-        final = Cidr.compact_nets(nets2)
-        for net1 in nets1:
-            final = Cidr.net_exclude(net1, final)
-        return final
+        return nets_exclude(nets1, nets2)
 
     @staticmethod
     def cidrs_exclude(cidrs1:[str], cidrs2:[str]) -> [str]:
         ''' old name '''
-        return Cidr.cidrs2_minus_cidrs1(cidrs1, cidrs2)
+        return cidrs_exclude(cidrs1, cidrs2)
 
     @staticmethod
     def cidrs2_minus_cidrs1(cidrs1:[str], cidrs2:[str]) -> [str]:
@@ -327,11 +280,7 @@ class Cidr:
         Exclude all of cidrs1 from cidrs2
         i.e. return cidrs2 - cidrs1
         '''
-        nets1 = [ipaddress.ip_network(cidr, strict=False) for cidr in cidrs1]
-        nets2 = [ipaddress.ip_network(cidr, strict=False) for cidr in cidrs2]
-        nets = Cidr.nets_exclude(nets1, nets2)
-        cidrs = [str(net) for net in nets]
-        return cidrs
+        return cidrs2_minus_cidrs1(cidrs1, cidrs2)
 
     @staticmethod
     def cidr_exclude(cidr1:str, cidrs2:[str]) -> [str]:
@@ -339,51 +288,28 @@ class Cidr:
         Exclude cidr1 from any of networks in cidrs2
         return resulting list of cidrs (without cidr1)
         '''
-        if not cidr1 or not cidrs2:
-            if not cidrs2:
-                return []
-            return cidrs2
-
-        net1 = Cidr.cidr_to_net(cidr1)
-        nets2 = Cidr.compact_cidrs(cidrs2)
-        nets = Cidr.net_exclude(net1, nets2)
-        return Cidr.nets_to_cidrs(nets)
+        return cidr_exclude(cidr1, cidrs2)
 
     @staticmethod
     def sort_cidrs(cidrs:[str]) -> [str]:
         '''
         Sort the list of cidr strings
         '''
-        nets = Cidr.cidrs_to_nets(cidrs)
-        if not nets:
-            return cidrs
-        nets.sort(key=ipaddress.get_mixed_type_key)
-        cidrs_sorted = Cidr.nets_to_cidrs(nets)
-        return cidrs_sorted
+        return sort_cidrs(cidrs)
 
     @staticmethod
     def sort_ips(ips:[str]) -> [str]:
         '''
         Sort the list of cidr strings
         '''
-        addresses = Cidr.ips_to_addresses(ips)
-        addresses.sort(key=ipaddress.get_mixed_type_key)
-        ips_sorted = Cidr.addresses_to_ips(addresses)
-        return ips_sorted
+        return sort_ips(ips)
 
     @staticmethod
     def get_host_bits(ip:str, pfx:int=24):
         '''
         Gets the host bits from an IP address given the netmask
         '''
-        ipa = ipaddress.ip_address(ip)
-        net = ipaddress.ip_network(ip)
-        netpfx = net.supernet(new_prefix=pfx)
-
-        hostmask = netpfx.hostmask
-        host_bits = int(ipa) & int(hostmask)
-
-        return host_bits
+        return get_host_bits(ip, pfx)
 
     @staticmethod
     def clean_cidr(cidr:str) -> str:
@@ -391,73 +317,32 @@ class Cidr:
         returns None if not valid
          - we to fix class C : a.b.c -> a.b.c.0/24
         '''
-        if Cidr.is_valid_cidr(cidr):
-            cidr = Cidr.fix_cidr_host_bits(cidr)
-            return cidr
-
-        if cidr.count('.') == 2:
-            cidr = cidr + '.0/24'
-
-        if Cidr.is_valid_cidr(cidr):
-            cidr = Cidr.fix_cidr_host_bits(cidr)
-            return cidr
-
-        return None
+        return clean_cidr(cidr)
 
     @staticmethod
     def clean_cidrs(cidrs:[str]) -> [str]:
         ''' clean cidr array '''
-        if not cidrs:
-            return []
-
-        cleans = []
-        for cidr in cidrs:
-            clean = Cidr.clean_cidr(cidr)
-            if clean:
-                cleans.append(clean)
-        return cleans
+        return clean_cidrs(cidrs)
 
     @staticmethod
     def fix_cidr_host_bits(cidr:str, verb:bool=False):
         ''' zero any host bits '''
-        net = Cidr.cidr_to_net(cidr)
-        fix = str(net)
-        if verb and cidr != fix:
-            print(f'\t Fixed: {cidr} -> {fix}')
-        return fix
+        return fix_cidr_host_bits(cidr, verb)
 
     @staticmethod
     def fix_cidrs_host_bits(cidrs:[str], verb:bool=False):
         ''' zero any host bits '''
-        if not cidrs:
-            return cidrs
-
-        fixed = []
-        for cidr in cidrs:
-            fix = str(Cidr.cidr_to_net(cidr))
-            if verb and cidr != fix:
-                print(f'\t Fixed: {cidr} -> {fix}')
-            fixed.append(fix)
-
-        return fixed
+        return fix_cidrs_host_bits(cidrs, verb)
 
     @staticmethod
     def is_valid_ip4(address) -> bool:
         ''' check if valid address or cidr '''
-        try:
-            _check = IPv4Network(address, strict=False)
-            return True
-        except (AddressValueError, NetmaskValueError, ValueError, TypeError):
-            return False
+        return is_valid_ip4(address)
 
     @staticmethod
     def is_valid_ip6(address) -> bool:
         ''' check if valid address or cidr '''
-        try:
-            _check = IPv6Network(address, strict=False)
-            return True
-        except (AddressValueError, NetmaskValueError, ValueError, TypeError):
-            return False
+        return is_valid_ip6(address)
 
     @staticmethod
     def is_valid_cidr(address) -> bool:
@@ -471,16 +356,7 @@ class Cidr:
         :returns:
             True/False if address is valid
         '''
-        if not address:
-            return False
-        try:
-            _check = ipaddress.ip_network(address, strict=False)
-            return True
-        except (AddressValueError, NetmaskValueError, ValueError, TypeError):
-            return False
-        #if Cidr.is_valid_ip4(address) or Cidr.is_valid_ip6(address):
-        #    return True
-        #return False
+        return is_valid_cidr(address)
 
     @staticmethod
     def cidr_iptype(address:str) -> str|None :
@@ -493,16 +369,7 @@ class Cidr:
          :returns:
             'ip4' or 'ip6' or None
         '''
-        if not address:
-            return None
-
-        if Cidr.is_valid_ip4(address) :
-            return 'ip4'
-
-        if Cidr.is_valid_ip6(address):
-            return 'ip6'
-
-        return None
+        return cidr_iptype(address)
 
     @staticmethod
     def cidr_type_network(cidr:str) -> (str, IPvxNetwork):
@@ -516,18 +383,7 @@ class Cidr:
             Tuple(ip-type, net-type). ip-type is a string  ('ip4', 'ip6') while
             network type is IPv4Network or IPv6Network
         '''
-        ipt = None
-        IPNetwork = IPv4Network
-
-        if Cidr.is_valid_ip4(cidr):
-            ipt = 'ip4'
-            IPNetwork = IPv4Network
-
-        elif Cidr.is_valid_ip6(cidr):
-            ipt = 'ip6'
-            IPNetwork = IPv6Network
-
-        return (ipt, IPNetwork)
+        return cidr_type_network(cidr)
 
     @staticmethod
     def range_to_cidrs(addr_start:IPAddress, addr_end:IPAddress, string=False) -> [IPvxNetwork|str]:
@@ -547,19 +403,7 @@ class Cidr:
             List of cidr network blocks representing the IP range. 
             List elements are IPvxAddress or str if parameter string=True
         '''
-        ip0 = addr_start
-        if not isinstance(addr_start, IPvxAddress) :
-            ip0 = ipaddress.ip_address(addr_start)
-
-        ip1 = addr_end
-        if not isinstance(addr_end, IPvxAddress):
-            ip1 = ipaddress.ip_address(addr_end)
-
-        if string:
-            cidrs = [str(cidr) for cidr in ipaddress.summarize_address_range(ip0, ip1)]
-        else:
-            cidrs = list(ipaddress.summarize_address_range(ip0, ip1))
-        return cidrs
+        return range_to_cidrs(addr_start, addr_end, string)
 
     @staticmethod
     def net_to_range(net:IPvxNetwork, string:bool=False) -> (IPAddress, IPAddress):
@@ -576,16 +420,7 @@ class Cidr:
             Tuple (ip0, ip1) of first and last IP address in net
             (ip0, ip1) are IPvxAddress or str when string is True
         '''
-        if not net:
-            return (None, None)
-
-        ip0 = net.network_address
-        ip1 = net.broadcast_address
-
-        if string:
-            ip0 = str(ip0)
-            ip1 = str(ip1)
-        return (ip0, ip1)
+        net_to_range(net, string)
 
     @staticmethod
     def cidr_to_range(cidr:str, string:bool=False) -> (IPAddress, IPAddress):
@@ -602,5 +437,55 @@ class Cidr:
             Tuple (ip0, ip1) of first and last IP address in net
             (ip0, ip1) are IPvxAddress or str when string is True
         '''
-        net = Cidr.cidr_to_net(cidr, strict=False)
-        return Cidr.net_to_range(net, string)
+        return cidr_to_range(cidr, string)
+
+    @staticmethod
+    def is_rfc_1918(cidr: str) -> bool:
+        '''
+        Check if cidr is any RFC 1918
+
+        :param cidr:
+            IP or Cidr to check if RFC 1918
+        
+        :returns:
+            True if cidr is an RGC 1918 address
+            False if not.
+        '''
+        return is_rfc_1918(cidr)
+
+    @staticmethod
+    def rfc_1918_nets() -> [IPv4Network]:
+        '''
+        Return list of rfc 1918 networks
+
+        :returns:
+            List of all RFC 1918 networks. Each element is ipaddress.IPv4Network
+        '''
+        return rfc_1918_nets()
+
+    @staticmethod
+    def rfc_1918_cidrs() -> [str]:
+        '''
+        Return list of rfc 1918 networks cidr strings
+
+        :returns:
+            List of RFC 1918 networks as cidr strings
+        '''
+        return rfc_1918_cidrs()
+
+    @staticmethod
+    def remove_rfc_1918(cidrs_in: str|List[str]) -> (str|List[str], str|List[str]):
+        '''
+        Given list of cidrs, return list without any rfc 1918
+
+        :param cidrs_in:
+            Cidr string or list of cidr strings.
+
+        :returns:
+            Returns (cidrs_cleaned, rfc_1918_cidrs_found)
+            cidrs_cleaned = list of cidrs with all rfc_1918 removed
+            rfc_1918_cidrs_found = list of any rfc 1918 found in the input cidr(s)
+            If input cidr(s) is a list, then output will be a list (possibly empty).
+            If input cidr not a list then returned items will be string or None.
+        '''
+        return remove_rfc_1918(cidrs_in)

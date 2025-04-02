@@ -35,7 +35,14 @@ See API reference documentation for more details.
 New / Interesting
 ==================
 
-* Initial release
+* Add RFC 1918 convenience tools:
+
+  Cidr.is_rfc_1918()
+  Cidr.rfc_1918_nets()
+  Cidr.rfc_1918_cidrs()
+  Cidr.remove_rfc_1918()
+
+* Code reorg; break into smaller chunks in separate files.
 
 ###############
 Getting Started

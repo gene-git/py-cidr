@@ -40,7 +40,16 @@ Package Contents
        * address means either a IP address or a cidr network as a string
 
 
-   .. py:method:: cidr_to_net(cidr: str, strict: bool = False) -> IPvxNetwork | None
+   .. py:method:: version() -> str
+      :staticmethod:
+
+
+      :returns:
+          Version of py-cidr
+
+
+
+   .. py:method:: cidr_to_net(cidr: str, strict: bool = False) -> py_cidr.cidr_types.IPvxNetwork | None
       :staticmethod:
 
 
@@ -59,7 +68,7 @@ Package Contents
 
 
 
-   .. py:method:: cidrs_to_nets(cidrs: [str], strict: bool = False) -> [IPvxNetwork]
+   .. py:method:: cidrs_to_nets(cidrs: [str], strict: bool = False) -> [py_cidr.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -77,7 +86,7 @@ Package Contents
 
 
 
-   .. py:method:: nets_to_cidrs(nets: [IPvxNetwork]) -> [str]
+   .. py:method:: nets_to_cidrs(nets: [py_cidr.cidr_types.IPvxNetwork]) -> [str]
       :staticmethod:
 
 
@@ -92,7 +101,7 @@ Package Contents
 
 
 
-   .. py:method:: ip_to_address(ip: str) -> IPvxAddress | None
+   .. py:method:: ip_to_address(ip: str) -> py_cidr.cidr_types.IPvxAddress | None
       :staticmethod:
 
 
@@ -108,7 +117,7 @@ Package Contents
 
 
 
-   .. py:method:: ips_to_addresses(ips: [str]) -> [IPvxAddress]
+   .. py:method:: ips_to_addresses(ips: [str]) -> [py_cidr.cidr_types.IPvxAddress]
       :staticmethod:
 
 
@@ -123,7 +132,7 @@ Package Contents
 
 
 
-   .. py:method:: addresses_to_ips(addresses: [IPvxAddress]) -> [str]
+   .. py:method:: addresses_to_ips(addresses: [py_cidr.cidr_types.IPvxAddress]) -> [str]
       :staticmethod:
 
 
@@ -192,7 +201,7 @@ Package Contents
 
 
 
-   .. py:method:: address_iptype(addr: IPvxAddress | IPvxNetwork) -> str | None
+   .. py:method:: address_iptype(addr: py_cidr.cidr_types.IPvxAddress | py_cidr.cidr_types.IPvxNetwork) -> str | None
       :staticmethod:
 
 
@@ -207,7 +216,7 @@ Package Contents
 
 
 
-   .. py:method:: cidr_list_compact(cidrs_in: [str], string=True) -> [str | IPvxNetwork]
+   .. py:method:: cidr_list_compact(cidrs_in: [str], string=True) -> [str | py_cidr.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -226,23 +235,38 @@ Package Contents
 
 
 
-   .. py:method:: compact_cidrs(cidrs: [str], nets=False) -> [str | IPvxNetwork]
+   .. py:method:: compact_cidrs(cidrs: [str], nets=False) -> [str | py_cidr.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
-      combine em 
+      Compact cidr list
+
+      :param cidrs:
+          List of cidrs 
+
+      :param nets:
+          If true result type IPvxNetwork else string, 
+
+      :returns:
+          If nets is True, result is list of IPvxNetwork otherwise strings
 
 
 
-   .. py:method:: compact_nets(nets: [IPvxNetwork]) -> [IPvxNetwork]
+   .. py:method:: compact_nets(nets: [py_cidr.cidr_types.IPvxNetwork]) -> [py_cidr.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
-      combine em 
+      Compact list of IPvxNetwork
+
+      :param nets:
+          Input list 
+
+      :returns:
+          Compacted list of IPvxNetwork
 
 
 
-   .. py:method:: net_exclude(net1: IPvxNetwork, nets2: [IPvxNetwork]) -> [IPvxNetwork]
+   .. py:method:: net_exclude(net1: py_cidr.cidr_types.IPvxNetwork, nets2: [py_cidr.cidr_types.IPvxNetwork]) -> [py_cidr.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -251,7 +275,7 @@ Package Contents
 
 
 
-   .. py:method:: nets_exclude(nets1: [IPvxNetwork], nets2: [IPvxNetwork]) -> [IPvxNetwork]
+   .. py:method:: nets_exclude(nets1: [py_cidr.cidr_types.IPvxNetwork], nets2: [py_cidr.cidr_types.IPvxNetwork]) -> [py_cidr.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -387,7 +411,7 @@ Package Contents
 
 
 
-   .. py:method:: cidr_type_network(cidr: str) -> (str, IPvxNetwork)
+   .. py:method:: cidr_type_network(cidr: str) -> (str, py_cidr.cidr_types.IPvxNetwork)
       :staticmethod:
 
 
@@ -402,7 +426,7 @@ Package Contents
 
 
 
-   .. py:method:: range_to_cidrs(addr_start: IPAddress, addr_end: IPAddress, string=False) -> [IPvxNetwork | str]
+   .. py:method:: range_to_cidrs(addr_start: py_cidr.cidr_types.IPAddress, addr_end: py_cidr.cidr_types.IPAddress, string=False) -> [py_cidr.cidr_types.IPvxNetwork | str]
       :staticmethod:
 
 
@@ -423,7 +447,7 @@ Package Contents
 
 
 
-   .. py:method:: net_to_range(net: IPvxNetwork, string: bool = False) -> (IPAddress, IPAddress)
+   .. py:method:: net_to_range(net: py_cidr.cidr_types.IPvxNetwork, string: bool = False) -> (py_cidr.cidr_types.IPAddress, py_cidr.cidr_types.IPAddress)
       :staticmethod:
 
 
@@ -441,7 +465,7 @@ Package Contents
 
 
 
-   .. py:method:: cidr_to_range(cidr: str, string: bool = False) -> (IPAddress, IPAddress)
+   .. py:method:: cidr_to_range(cidr: str, string: bool = False) -> (py_cidr.cidr_types.IPAddress, py_cidr.cidr_types.IPAddress)
       :staticmethod:
 
 
@@ -456,6 +480,61 @@ Package Contents
       :returns:
           Tuple (ip0, ip1) of first and last IP address in net
           (ip0, ip1) are IPvxAddress or str when string is True
+
+
+
+   .. py:method:: is_rfc_1918(cidr: str) -> bool
+      :staticmethod:
+
+
+      Check if cidr is any RFC 1918
+
+      :param cidr:
+          IP or Cidr to check if RFC 1918
+
+      :returns:
+          True if cidr is an RGC 1918 address
+          False if not.
+
+
+
+   .. py:method:: rfc_1918_nets() -> [ipaddress.IPv4Network]
+      :staticmethod:
+
+
+      Return list of rfc 1918 networks
+
+      :returns:
+          List of all RFC 1918 networks. Each element is ipaddress.IPv4Network
+
+
+
+   .. py:method:: rfc_1918_cidrs() -> [str]
+      :staticmethod:
+
+
+      Return list of rfc 1918 networks cidr strings
+
+      :returns:
+          List of RFC 1918 networks as cidr strings
+
+
+
+   .. py:method:: remove_rfc_1918(cidrs_in: str | List[str]) -> (str | List[str], str | List[str])
+      :staticmethod:
+
+
+      Given list of cidrs, return list without any rfc 1918
+
+      :param cidrs_in:
+          Cidr string or list of cidr strings.
+
+      :returns:
+          Returns (cidrs_cleaned, rfc_1918_cidrs_found)
+          cidrs_cleaned = list of cidrs with all rfc_1918 removed
+          rfc_1918_cidrs_found = list of any rfc 1918 found in the input cidr(s)
+          If input cidr(s) is a list, then output will be a list (possibly empty).
+          If input cidr not a list then returned items will be string or None.
 
 
 
