@@ -1,32 +1,42 @@
+=========
 Changelog
 =========
 
-**[2.7.0] ----- 2025-03-10** ::
+**Tags**     : 2.6.0 (2025-01-18) -> HEAD (2025-04-02)
+             : 11 commits.
 
-	    Bugfix: sorting mixed list of IPv4 and IPv6
-	    update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
+* 2025-04-02  : **HEAD**
 
+                Add RFC 1918 tools:
+                      Cidr.is_rfc_1918()
+                      Cidr.rfc_1918_nets()
+                      Cidr.rfc_1918_cidrs()
+                      Cidr.remove_rfc_1918()
+                Reorganize code and separate into more files for better maintainability
+ 2025-03-10     update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
 
-**[2.6.3] ----- 2025-01-18** ::
+* 2025-03-10  : **2.7.0**
 
-	    Readme - removed unused (template) sections
-	    update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
+                Bugfix: sorting mixed list of IPv4 and IPv6
+ 2025-01-18     update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
 
+* 2025-01-18  : **2.6.3**
 
-**[2.6.2] ----- 2025-01-18** ::
+                Readme - removed unused (template) sections
+                update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
 
-	    fix readme rst syntax
-	    update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
+* 2025-01-18  : **2.6.2**
 
+                fix readme rst syntax
+                update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
 
-**[2.6.1] ----- 2025-01-18** ::
+* 2025-01-18  : **2.6.1**
 
-	    Small change to readme
-	    update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
+                Small change to readme
+                update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
 
+* 2025-01-18  : **2.6.0**
 
-**[2.6.0] ----- 2025-01-18** ::
-
-	    Initial release
+                Initial release
 
 

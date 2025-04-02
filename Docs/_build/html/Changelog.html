@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Changelog &#8212; py-cidr 2.7.0 documentation</title>
+    <title>Changelog &#8212; py-cidr 2.8.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
-    <script src="_static/documentation_options.js?v=dfec817d"></script>
+    <script src="_static/documentation_options.js?v=69ff2ef9"></script>
     <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -36,30 +36,62 @@
             
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading">¶</a></h1>
-<p><strong>[2.7.0] —– 2025-03-10</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Bugfix</span><span class="p">:</span> <span class="n">sorting</span> <span class="n">mixed</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">IPv4</span> <span class="ow">and</span> <span class="n">IPv6</span>
-<span class="n">update</span> <span class="n">Docs</span><span class="o">/</span><span class="n">Changelog</span><span class="o">.</span><span class="n">rst</span> <span class="n">Docs</span><span class="o">/</span><span class="n">_build</span><span class="o">/</span><span class="n">html</span> <span class="n">Docs</span><span class="o">/</span><span class="n">py</span><span class="o">-</span><span class="n">cidr</span><span class="o">.</span><span class="n">pdf</span>
-</pre></div>
-</div>
-<p><strong>[2.6.3] —– 2025-01-18</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Readme</span> <span class="o">-</span> <span class="n">removed</span> <span class="n">unused</span> <span class="p">(</span><span class="n">template</span><span class="p">)</span> <span class="n">sections</span>
-<span class="n">update</span> <span class="n">Docs</span><span class="o">/</span><span class="n">Changelog</span><span class="o">.</span><span class="n">rst</span> <span class="n">Docs</span><span class="o">/</span><span class="n">_build</span><span class="o">/</span><span class="n">html</span> <span class="n">Docs</span><span class="o">/</span><span class="n">py</span><span class="o">-</span><span class="n">cidr</span><span class="o">.</span><span class="n">pdf</span>
-</pre></div>
-</div>
-<p><strong>[2.6.2] —– 2025-01-18</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fix</span> <span class="n">readme</span> <span class="n">rst</span> <span class="n">syntax</span>
-<span class="n">update</span> <span class="n">Docs</span><span class="o">/</span><span class="n">Changelog</span><span class="o">.</span><span class="n">rst</span> <span class="n">Docs</span><span class="o">/</span><span class="n">_build</span><span class="o">/</span><span class="n">html</span> <span class="n">Docs</span><span class="o">/</span><span class="n">py</span><span class="o">-</span><span class="n">cidr</span><span class="o">.</span><span class="n">pdf</span>
-</pre></div>
-</div>
-<p><strong>[2.6.1] —– 2025-01-18</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Small</span> <span class="n">change</span> <span class="n">to</span> <span class="n">readme</span>
-<span class="n">update</span> <span class="n">Docs</span><span class="o">/</span><span class="n">Changelog</span><span class="o">.</span><span class="n">rst</span> <span class="n">Docs</span><span class="o">/</span><span class="n">_build</span><span class="o">/</span><span class="n">html</span> <span class="n">Docs</span><span class="o">/</span><span class="n">py</span><span class="o">-</span><span class="n">cidr</span><span class="o">.</span><span class="n">pdf</span>
-</pre></div>
-</div>
-<p><strong>[2.6.0] —– 2025-01-18</strong></p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Initial</span> <span class="n">release</span>
-</pre></div>
-</div>
+<dl class="simple">
+<dt><strong>Tags</strong><span class="classifier">2.6.0 (2025-01-18) -&gt; HEAD (2025-04-02)</span></dt><dd><p>: 11 commits.</p>
+</dd>
+</dl>
+<ul>
+<li><p>2025-04-02  : <strong>HEAD</strong></p>
+<blockquote>
+<div><dl class="simple">
+<dt>Add RFC 1918 tools:</dt><dd><p>Cidr.is_rfc_1918()
+Cidr.rfc_1918_nets()
+Cidr.rfc_1918_cidrs()
+Cidr.remove_rfc_1918()</p>
+</dd>
+</dl>
+<p>Reorganize code and separate into more files for better maintainability</p>
+</div></blockquote>
+</li>
+</ul>
+<blockquote>
+<div><p>2025-03-10     update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf</p>
+</div></blockquote>
+<ul>
+<li><p>2025-03-10  : <strong>2.7.0</strong></p>
+<blockquote>
+<div><p>Bugfix: sorting mixed list of IPv4 and IPv6</p>
+</div></blockquote>
+</li>
+</ul>
+<blockquote>
+<div><p>2025-01-18     update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf</p>
+</div></blockquote>
+<ul>
+<li><p>2025-01-18  : <strong>2.6.3</strong></p>
+<blockquote>
+<div><p>Readme - removed unused (template) sections
+update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf</p>
+</div></blockquote>
+</li>
+<li><p>2025-01-18  : <strong>2.6.2</strong></p>
+<blockquote>
+<div><p>fix readme rst syntax
+update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf</p>
+</div></blockquote>
+</li>
+<li><p>2025-01-18  : <strong>2.6.1</strong></p>
+<blockquote>
+<div><p>Small change to readme
+update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf</p>
+</div></blockquote>
+</li>
+<li><p>2025-01-18  : <strong>2.6.0</strong></p>
+<blockquote>
+<div><p>Initial release</p>
+</div></blockquote>
+</li>
+</ul>
 </section>
 
 
