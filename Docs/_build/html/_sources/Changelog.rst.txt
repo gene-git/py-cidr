@@ -2,11 +2,39 @@
 Changelog
 =========
 
-**Tags**     : 2.6.0 (2025-01-18) -> HEAD (2025-04-02)
-             : 11 commits.
+Tags
+====
 
-* 2025-04-02  : **HEAD**
+::
 
+	2.6.0 (2025-01-18) -> 3.0.0 (2025-05-03)
+	13 commits.
+
+Commits
+=======
+
+
+* 2025-05-03  : **3.0.0**
+
+::
+
+                PEP-8, PEP-257 and PEP-484 style changes
+                PEP 561 type hints (improves module use for type checkers e.g. *mypy*)
+                CidrMap now uses separate CidrCache for "private cache data" instead of just
+                the "data" part.
+                  CidrCache class no longer needs its own "private data" functionality.
+                Add some tests (via pytest)
+                Reorganize CidrMap and simplify/improve way we do private_cache supporing
+                  multiprocess/multithreading usecase. This is now all done in CidrMap.
+                Change cache file storage to pickle format as its more flexible than json
+                  Provide simple app to show contents of cache:
+                  py-cidr-cache-print <cache_directory>
+
+* 2025-04-02  : **2.8.0, origin/master**
+
+::
+
+                update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
                 Add RFC 1918 tools:
                       Cidr.is_rfc_1918()
                       Cidr.rfc_1918_nets()
@@ -17,25 +45,35 @@ Changelog
 
 * 2025-03-10  : **2.7.0**
 
+::
+
                 Bugfix: sorting mixed list of IPv4 and IPv6
  2025-01-18     update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-01-18  : **2.6.3**
+
+::
 
                 Readme - removed unused (template) sections
                 update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-01-18  : **2.6.2**
 
+::
+
                 fix readme rst syntax
                 update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-01-18  : **2.6.1**
 
+::
+
                 Small change to readme
                 update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-01-18  : **2.6.0**
+
+::
 
                 Initial release
 
