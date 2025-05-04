@@ -7,12 +7,19 @@ Tags
 
 ::
 
-	2.6.0 (2025-01-18) -> 3.0.0 (2025-05-03)
-	13 commits.
+	2.6.0 (2025-01-18) -> 3.0.1 (2025-05-03)
+	15 commits.
 
 Commits
 =======
 
+
+* 2025-05-03  : **3.0.1**
+
+::
+
+                Add tests to repo
+                update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-05-03  : **3.0.0**
 
@@ -30,7 +37,7 @@ Commits
                   Provide simple app to show contents of cache:
                   py-cidr-cache-print <cache_directory>
 
-* 2025-04-02  : **2.8.0, origin/master**
+* 2025-04-02  : **2.8.0**
 
 ::
 
