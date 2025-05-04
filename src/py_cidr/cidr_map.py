@@ -167,7 +167,7 @@ class CidrMap:
         private_cache = _NetCache(cache_dir='')
         return private_cache
 
-    def add_cidr(self, cidr: str, result: str, priv_cache: _NetCache | None):
+    def add_cidr(self, cidr: str, result: str, priv_cache: _NetCache | None = None):
         """
         Add cidr to cache.
 
