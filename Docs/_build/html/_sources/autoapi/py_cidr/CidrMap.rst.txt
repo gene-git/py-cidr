@@ -28,7 +28,7 @@ py_cidr.CidrMap
 
 
 
-   .. py:method:: add_cidr(cidr: str, result: str, priv_cache: _NetCache | None)
+   .. py:method:: add_cidr(cidr: str, result: str, priv_cache: _NetCache | None = None)
 
       Add cidr to cache.
 

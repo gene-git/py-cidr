@@ -7,12 +7,19 @@ Tags
 
 ::
 
-	2.6.0 (2025-01-18) -> 3.0.1 (2025-05-03)
-	15 commits.
+	2.6.0 (2025-01-18) -> 3.1.1 (2025-05-04)
+	17 commits.
 
 Commits
 =======
 
+
+* 2025-05-04  : **3.1.1**
+
+::
+
+                Buglet: CidrMap::add_cidr() make private_cache optional argument again
+ 2025-05-03     update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-05-03  : **3.0.1**
 

@@ -692,7 +692,7 @@ class Cidr:
         """
         Return list of rfc 1918 networks cidr strings
 
-        :returns:
+        Returns (List[str]):
             List of RFC 1918 networks as cidr strings
         """
         return rfc_1918_cidrs()
@@ -710,10 +710,11 @@ class Cidr:
         Returns:
             Tuple[str | List[str], str | List[str]]:
             Returns (Tuple[cidrs_cleaned, rfc_1918_cidrs_found]):
-             - cidrs_cleaned:
-               List of cidrs with all rfc_1918 removed.
-             - rfc_1918_cidrs_found:
-               List of any rfc 1918 found in the input.
+
+            - cidrs_cleaned:
+              List of cidrs with all rfc_1918 removed.
+            - rfc_1918_cidrs_found:
+              List of any rfc 1918 found in the input.
 
             If input cidr(s) is a list, then items in output
             are a (possibly empty) list
