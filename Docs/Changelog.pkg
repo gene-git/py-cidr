@@ -1,41 +1,147 @@
 -------------------------------------------------------
  Changelog    : py-cidr
- Tags         : 2.6.2 ➙ 3.0.0
-              : 2025-01-18 ➙ 2025-05-03
-              : 6 tags. See Docs for full changelog
+ Tags         : 0.0.1 ➙ HEAD
+              : 2024-12-05 ➙ 2025-04-02
+              : All tags.
 -------------------------------------------------------
 
- 2025-05-03   : 3.0.0
-                PEP-8, PEP-257 and PEP-484 style changes
-                PEP 561 type hints (improves module use for type checkers e.g. *mypy*)
-                CidrMap now uses separate CidrCache for "private cache data" instead of just
-                the "data" part.
-                  CidrCache class no longer needs its own "private data" functionality.
-                Add some tests (via pytest)
-                Reorganize CidrMap and simplify/improve way we do private_cache supporing
-                  multiprocess/multithreading usecase. This is now all done in CidrMap.
-                Change cache file storage to pickle format as its more flexible than json
-                  Provide simple app to show contents of cache:
-                  py-cidr-cache-print <cache_directory>
+ 2025-04-02   : HEAD
+                update Docs/Changelog.rst
 
- 2025-04-02   : 2.8.0, origin/master
-                update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
+ 2025-04-02   : 2.8.0
+                Update version file
+                Fix autoapi doc with new code. Update README
                 Add RFC 1918 tools:
-                      Cidr.is_rfc_1918()
-                      Cidr.rfc_1918_nets()
-                      Cidr.rfc_1918_cidrs()
-                      Cidr.remove_rfc_1918()
+                  Cidr.is_rfc_1918()
+                  Cidr.rfc_1918_nets()
+                  Cidr.rfc_1918_cidrs()
+                  Cidr.remove_rfc_1918()
                 Reorganize code and separate into more files for better maintainability
- 2025-03-10     update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
+ 2025-03-10     update Docs/Changelog.rst
 
  2025-03-10   : 2.7.0
+                Update version file
                 Bugfix: sorting mixed list of IPv4 and IPv6
- 2025-01-18     update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
+ 2025-01-18     update Docs/Changelog.rst
 
  2025-01-18   : 2.6.3
+                Update version file
                 Readme - removed unused (template) sections
-                update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
+                update Docs/Changelog.rst
 
  2025-01-18   : 2.6.2
-                fix readme rst syntax
-                update Docs/Changelog.rst Docs/_build/html Docs/py-cidr.pdf
+                Update version file
+                Readme fix rst syntax
+                update Docs/Changelog.rst
+
+ 2025-01-18   : 2.6.1
+                Update version file
+                Small change to readme
+                update Docs/Changelog.rst
+
+ 2025-01-18   : 2.6.0
+                Update version file
+                tidy ups
+                Add signed source line to PKGBUILD
+                pre release tidy ups
+                update Docs/Changelog.rst
+
+ 2025-01-18   : 2.5.0
+                Update version file
+                sphinx html theme in packaging/optional-requirements.txt
+                Fix bug with multiple threades/processes using private cache updates
+ 2024-12-25     update Docs/Changelog.rst
+
+ 2024-12-25   : 2.4.0
+                Update version file
+                finish removing old function api from module
+                Remove old function api
+                update Docs/Changelog.rst
+
+ 2024-12-25   : 2.3.0
+                Update version file
+                fix bug and improve nets_exclude and net_exclude
+ 2024-12-22     missed import List
+                Docs make sure copy pdf to Docs directory
+                Add API reference to documentation
+ 2024-12-19     update Docs/Changelog.rst
+
+ 2024-12-19   : 2.2.0
+                Update version file
+                Add CidrFile class for read/write
+                Add Cidr.range_to_cidrs(), Cidr.net_to_range() and Cidr.cidr_to_range()
+ 2024-12-13     typo fix
+                Add Cidr class with staticmethods - users now simply
+                  from py_cidr import Cidr
+                  ... = Cidr.cidr_to_net()
+                  instead of .. = cidr_to_net()
+                .
+                Update some code comments
+                update Docs/Changelog.rst
+
+ 2024-12-13   : 2.1.0
+                Update version file
+                Add atomic file write and use in cache writer. Small cache tweaks.
+                Since this is lib with no apps remove the lib submodule
+ 2024-12-12     more import fixups
+                remove circular import
+                add missing to module in top level
+                add copy_cidr_file to module
+                Add missing read_cidr_files function
+                update Docs/Changelog.rst
+
+ 2024-12-12   : 2.0.0
+                Update version file
+                cidr cache change redo. Now uses list of [ipaddr-network, value] pairs
+                  Keep then ordered by netowrk. Use binary search to find net in cache where
+                  "match" means
+                  net is subdir of cache net node
+ 2024-12-11     update Docs/Changelog.rst
+
+ 2024-12-11   : 1.5.0
+                Update version file
+                Improve choice of lockfile by making it function of cache_dir - avoid
+                unncessary locking
+ 2024-12-09     update Docs/Changelog.rst
+
+ 2024-12-09   : 1.4.0
+                Update version file
+                remove debug if which used to condition breakpoint now removed
+                update Docs/Changelog.rst
+
+ 2024-12-09   : 1.3.0
+                Update version file
+                remove 2 breakpoint()
+                update Docs/Changelog.rst
+
+ 2024-12-09   : 1.2.0
+                Update version file
+                remove debug breakpoint
+                update Docs/Changelog.rst
+
+ 2024-12-09   : 1.1.0
+                Update version file
+                bugfix when cache has supernet not on standard oct/hext ets
+ 2024-12-05     update Docs/Changelog.rst
+
+ 2024-12-05   : 1.0.0
+                Update version file
+                When finding cache supernets, use cidr to build the chain not previous
+                supernet
+                CidrMap.cidr_lookup -> CidrMap.lookup
+                CidrMap: ensure works when no cache files are used
+                fix typo CidrMap
+                Add CidrMap for caching and lookups
+                fix __init__ so functions under lib are available at top level
+                add __init__.py to top level
+                update Docs/Changelog.rst
+
+ 2024-12-05   : 0.1.0
+                Update version file
+                initial readme
+                fix pyproject
+                update Docs/Changelog.rst
+                Update version file
+
+ 2024-12-05   : 0.0.1
+                initial commit
