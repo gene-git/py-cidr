@@ -35,6 +35,7 @@ See API reference documentation for more details.
 New / Interesting
 ==================
 
+* Rename *py-cidr-cache-print* (without the .py extension)
 * PEP-8, PEP-257 and PEP-484 style changes
 * PEP 561 type hints (improves module use for type checkers e.g. *mypy*)
 * CidrMap now uses separate CidrCache for "private cache data" instead of just the "data" part.
@@ -48,6 +49,20 @@ New / Interesting
 .. code::
 
    py-cidr-cache-print <cache_directory>
+
+Documentation:
+==============
+
+We include pre-built versions of both html and PDF documentation, including the
+API reference.
+
+The PDF file is *Docs/py-cidr.pdf* and after the package is installed it will be available:
+
+    `PDF Documentation </usr/share/py-cidr/Docs/py-cidr.pdf>`_.
+
+and a browser can be used to view:
+
+    `HTML Documentation <file:///usr/share/py-cidr/Docs/_build/html/index.html>`_.
 
 ###############
 Getting Started

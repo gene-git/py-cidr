@@ -11,7 +11,7 @@ Requires CidrCache for the actual cache management
 """
 from typing import (Any)
 
-from .cidr_cache import (CidrCache)
+from ._cidr_cache import (CidrCache)
 from ._cidr_nets import (cidr_to_net)
 from ._cidr_valid import (is_valid_ip4, is_valid_ip6)
 

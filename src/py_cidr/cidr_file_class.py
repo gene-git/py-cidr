@@ -4,9 +4,11 @@
  CidrFile class:
  Read/write a file with list of cidr blocks as strings
  For reading
-   - comments ignored
-   - pname = is path to the file.
-   - cidr are all in column 1
+
+ - comments ignored
+ - pname = is path to the file.
+ - cidr are all in column 1
+
 """
 from typing import (List, Tuple)
 import os
@@ -31,6 +33,7 @@ def _has_cidr_data(row):
 class CidrFile:
     """
     Provides common CIDR string file reader/writer tools.
+
     All methods are static so no class instance variable needed.
     """
     @staticmethod
@@ -39,9 +42,9 @@ class CidrFile:
         """
         Read file of cidrs and return tuple of separate lists (ip4, ip6).
 
-         -  if fname is None or sys.stdin then data is read from stdin.
-         -  only column 1 of file is used.
-         -  comments are ignored
+        - if fname is None or sys.stdin then data is read from stdin.
+        - only column 1 of file is used.
+        - comments are ignored
 
         Args:
             fname (str | None):

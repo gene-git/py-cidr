@@ -9,7 +9,7 @@
 project = "py-cidr"
 copyright = '2024-present, Gene C'
 author = 'Gene C'
-release = '3.1.0'
+release = '3.2.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -17,29 +17,19 @@ release = '3.1.0'
 extensions = ['sphinx.ext.autodoc', 'autoapi.extension']
 
 autoapi_dirs = ['../src/py_cidr']
-#autoapi_options = ['members', 'show-module-summary']
-autoapi_options = ['members', 'inherited-members']
-autoapi_keep_files = True
-autoapi_member_order = 'groupwise'
-autoapi_own_page_level = 'class'
+autoapi_ignore = ['_*']
+autoapi_options = ['members']
+autoapi_member_order = 'alphabetical'
+autoapi_python_use_implicit_namespaces = True
 add_module_names = False
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '_*']
 
 def skip_submodules(app, what, name, obj, skip, options):
-    skip = True
-    if name == 'py_cidr' or \
-        name.startswith('py_cidr.Cidr') or name.startswith('py_cidr.CidrMap') or \
-        name.startswith('py_cidr.CidrFile') or name.startswith('py_cidr.CidrCache') :
+    #skip = True
+    if 'cidr_types' in name:
         skip = False
-
-    if what == 'method' and name.endswith('__init__'):
-        skip = True
-
-    if what == 'attribute':
-        skip = True
-
     return skip
 
 def setup(sphinx):

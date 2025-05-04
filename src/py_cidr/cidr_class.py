@@ -619,7 +619,7 @@ class Cidr:
                      ) -> Tuple[IPvxAddress | str | None,
                                 IPvxAddress | str | None]:
         """
-        Conert network to IP Range.
+        Convert network to IP Range.
 
         Args:
             net (IPvxNetwork):

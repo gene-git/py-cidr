@@ -22,7 +22,7 @@ if [ ! -d "$dest" ] ; then
 fi
 
 # make app link in /usr/bin
-apps=('py-cidr-cache-print.py')
+apps=('py-cidr-cache-print')
 
 sitedir=$(/usr/bin/python3 -c "import site; print(site.getsitepackages()[0])")
 self_sitedir=${sitedir}/${self//-/_}
@@ -38,7 +38,7 @@ if [ -v apps ] ; then
     /usr/bin/mkdir -p "${dest}/usr/bin"
     for app in ${apps[@]}
     do
-        /usr/bin/rsync -av src/${app} ${dest}/usr/bin/ 
+        /usr/bin/rsync -av src/${app}.py ${dest}/usr/bin/${app} 
     done
 fi
 exit 0

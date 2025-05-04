@@ -4,7 +4,7 @@ Pretty print a py-cidr cache file
 """
 # pylint: disable=invalid-name
 import sys
-from py_cidr import CidrCache
+from py_cidr._cidr_cache import CidrCache
 
 
 def main():
