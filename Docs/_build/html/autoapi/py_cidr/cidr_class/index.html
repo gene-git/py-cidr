@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>py_cidr.cidr_class &#8212; py-cidr 3.2.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <script src="../../../_static/documentation_options.js?v=4f6ddb47"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="py_cidr.cidr_clean" href="../cidr_clean/index.html" />
+    <link rel="prev" title="py_cidr.cidr_cache" href="../cidr_cache/index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-py_cidr.cidr_class">
+<span id="py-cidr-cidr-class"></span><h1>py_cidr.cidr_class<a class="headerlink" href="#module-py_cidr.cidr_class" title="Link to this heading">¶</a></h1>
+<p>Class providing some common CIDR utilities</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Cidr</span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr" title="Link to this definition">¶</a></dt>
+<dd><p>Provides suite of CIDR tools.</p>
+<p>All mathods are (static) and are thus called without need
+to instantiate the class. For example:</p>
+<blockquote>
+<div><p>net = Cidr.cidr_to_net(cidr_string)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Notation:</dt><dd><ul class="simple">
+<li><p>cidr means a string</p></li>
+<li><p>net means ipaddress network (IPv4Network or IPv6Network)</p></li>
+<li><p>ip means an IP address string</p></li>
+<li><p>addr means an ip address (IPv4Address or IPv6Address)</p></li>
+<li><p>address means either a IP address or a cidr network as a string</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.address_iptype">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">address_iptype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">py_cidr.cidr_types.IPvxAddress</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.address_iptype" title="Link to this definition">¶</a></dt>
+<dd><p>Identify address or net (IPvxNetwork) as ipv4, ipv6 or neither.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>addr (str):
+ipaddress IP or network .</p>
+</dd>
+<dt>Returns:</dt><dd><p>str | None:
+‘ip4’, ‘ip6’ or None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.addresses_to_ips">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">addresses_to_ips</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addresses</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxAddress</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.addresses_to_ips" title="Link to this definition">¶</a></dt>
+<dd><p>From list of IPs in ipaddress format, get list of ip strings.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>addresses (List[IPvxAddress]):
+List of IP addresses in ipaddress format</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[str]:
+List of IP strings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidr_exclude">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidr_exclude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cidrs2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidr_exclude" title="Link to this definition">¶</a></dt>
+<dd><p>Exclude cidr1 from any of networks in cidrs2.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidr1 (str):
+cidr to be excluded.</p>
+<p>cidrs2 (List[str]):
+List fo cidrs from which cidr1 will be excluded.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[str]:
+Resulting list of cidrs (“cidrs2” - “cidr1”)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidr_iptype">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidr_iptype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidr_iptype" title="Link to this definition">¶</a></dt>
+<dd><p>Determines if address string is valid ipv4 or ipv6 or not.</p>
+<dl>
+<dt>Args:</dt><dd><blockquote>
+<div><p>address (Any):
+address or cidr string</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>str | None:
+‘ip4’ or ‘ip6’ or None if not a valid address</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidr_is_subnet">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidr_is_subnet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipa_nets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidr_is_subnet" title="Link to this definition">¶</a></dt>
+<dd><p>Check if cidr is a subnet of any of the list of IPvxNetworks .</p>
+<dl>
+<dt>Args:</dt><dd><p>cidr (str):
+Cidr string to check.</p>
+<p>ipa_nets (List[IPvxNetwork]):
+List of IPvxNetworks to check.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool:
+True if cidr is subnet of any of the ipa_nets, else False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidr_list_compact">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidr_list_compact</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidr_list_compact" title="Link to this definition">¶</a></dt>
+<dd><p>Compact list of cidr networks to smallest list possible.
+Deprecated - use compact_cidrs(cidrs, return_nets)) instead,
+it is the same with the boolean flag reversed.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidrs (List[str]):
+List of cidr strings to compact.</p>
+<dl class="simple">
+<dt>string (bool):</dt><dd><ul class="simple">
+<li><p>If True (default), then return is a list of strings.</p></li>
+<li><p>If False, a list of IPvxNetworks.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>List[str] | List[IPvxNetwork]:
+Compressed list of cidrs as ipaddress networks (string=False)
+or list of strings when string=True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidr_set_prefix">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidr_set_prefix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidr_set_prefix" title="Link to this definition">¶</a></dt>
+<dd><p>Set new prefix for cidr and return new cidr string.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidr (str):
+Cidr string to use</p>
+<p>prefix (int):
+The new prefix to use</p>
+</dd>
+<dt>Returns:</dt><dd><p>str:
+Cidr string using the specified prefix</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidr_to_net">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidr_to_net</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidr_to_net" title="Link to this definition">¶</a></dt>
+<dd><p>Convert cidr string to ipaddress network.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidr (str):
+Input cidr string</p>
+<p>strict (bool):
+If true then cidr is considered invalid if host bits are set.
+Defaults to False. (see ipaddress docs).</p>
+</dd>
+<dt>Returns:</dt><dd><p>IPvxNetwork | None:
+The ipaddress network derived from cidr string as
+IPvxNetwork = IPv4Network or IPv6Network or None if invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidr_to_range">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidr_to_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxAddress</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">py_cidr.cidr_types.IPvxAddress</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidr_to_range" title="Link to this definition">¶</a></dt>
+<dd><p>Cidr string to an IP Range.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidr (str):
+The cidr string to examine.</p>
+<p>string (bool):
+If True then returns cidr strings instead of IPvxAddress</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tuple[IPAddress, IPAddress]:
+Tuple (ip0, ip1) of first and last IP address in net
+(ip0, ip1) are IPvxAddress or str when string is True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidr_type_network">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidr_type_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidr_type_network" title="Link to this definition">¶</a></dt>
+<dd><p>Cidr Network Type.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cidr (str):
+Cidr string to examine</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tuple[str, IPvxNetwork]:
+Tuple(ip-type, net-type). ip-type is a string  (‘ip4’, ‘ip6’) while
+network type is IPv4Network or IPv6Network</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidrs2_minus_cidrs1">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidrs2_minus_cidrs1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cidrs2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidrs2_minus_cidrs1" title="Link to this definition">¶</a></dt>
+<dd><p>Exclude all of cidrs1 from cidrs2.</p>
+<p>i.e. return “cidrs2” - “cidrs1”.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidrs1 (List[str]):
+List of cidr strings to be excluded.</p>
+<p>cidrs2 (List[str]):
+List of cidr strings from which cidrs1 are excluded.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[str]:
+Resulting list of cidr strings = “cidrs2” - “cidrs1”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidrs_exclude">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidrs_exclude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cidrs2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidrs_exclude" title="Link to this definition">¶</a></dt>
+<dd><p>Deprecated: replaced by cidrs2_minus_cidrs1()</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.cidrs_to_nets">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cidrs_to_nets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.cidrs_to_nets" title="Link to this definition">¶</a></dt>
+<dd><p>Convert list of cidr strings to list of IPvxNetwork.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidrs (List[str]):
+List of cidr strings</p>
+<p>strict (bool):
+If true, cidr with host bits set is invalid. Defaults to false.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[IPvxNetwork]:
+List of IPvxNetworks generated from cidrs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.clean_cidr">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_cidr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.clean_cidr" title="Link to this definition">¶</a></dt>
+<dd><p>Clean up a cidr address.</p>
+<dl class="simple">
+<dt>Does:</dt><dd><ul class="simple">
+<li><p>fix up host bits to match the prefix</p></li>
+<li><p>convert old class A,B,C style IPv4 addresses to cidr.</p></li>
+</ul>
+</dd>
+<dt>e.g.</dt><dd><p>a.b.c -&gt; a.b.c.0/24
+a.b.c.23/24 -&gt; a.b.c.0/24</p>
+</dd>
+<dt>Args:</dt><dd><p>cidr (str):
+Cidr string to clean up.</p>
+</dd>
+<dt>Returns:</dt><dd><dl class="simple">
+<dt>str | None:</dt><dd><ul class="simple">
+<li><p>cidr string if valid</p></li>
+<li><p>None if cidr is invalid.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.clean_cidrs">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clean_cidrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.clean_cidrs" title="Link to this definition">¶</a></dt>
+<dd><p>Clean list of cidrs.</p>
+<p>Similar to clean_cidr() but for a list.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cidrs (List[str]):
+List of cidr strings to clean up.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[str]:
+List of cleaned cidrs.
+If input cidr is invalid then its returnded as None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.compact_cidrs">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compact_cidrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.compact_cidrs" title="Link to this definition">¶</a></dt>
+<dd><p>Compact a list of cidr networks as strings.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidrs (List[str]):
+List of cidrs to compact.</p>
+<p>nets (bool):
+If False, the default, the result will be list of strings
+else a list of IPvxNetwork’s.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[str | IPvxNetwork]:
+A list of compacted networks whose elements are strings
+if return_nets is False or IPvxNetworks if True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.compact_nets">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compact_nets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.compact_nets" title="Link to this definition">¶</a></dt>
+<dd><p>Compact list of IPvxNetwork.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>nets (List[IPvxNetwork]):
+Input list if networks to compact.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[IPvxNetwork]:
+Compacted list of IPvxNetworks.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.fix_cidr_host_bits">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fix_cidr_host_bits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.fix_cidr_host_bits" title="Link to this definition">¶</a></dt>
+<dd><p>zero out any host bits.</p>
+<p>A strictly valid cidr address must have host bits set to zero.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidr (str):
+The cidr to “fix” if needed.</p>
+<p>verb (bool):
+Some info on stdout when set True. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>str:
+The cidr with any non-zero host bits now zeroed out.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.fix_cidrs_host_bits">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fix_cidrs_host_bits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.fix_cidrs_host_bits" title="Link to this definition">¶</a></dt>
+<dd><p>zero any host bits for a list of cidrs.</p>
+<p>Similar to fix_cidr_host_bits() but for a list of cidrs.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidrs (List[str]):
+List of cidrs to fix up.</p>
+<p>verb (bool):
+Some info on stdout when set True. Defaults to False.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[str]:
+The list of cidrs each with any non-zero host bits now zeroed out.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.get_host_bits">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_host_bits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pfx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.get_host_bits" title="Link to this definition">¶</a></dt>
+<dd><p>Gets the host bits from an IP address given the netmask.</p>
+<dl>
+<dt>Args:</dt><dd><p>ip (str):
+The IP to examine.</p>
+<p>pfx (int):
+The cidr prefix.</p>
+</dd>
+<dt>Returns:</dt><dd><p>int:
+The host bits from the IP.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.ip_to_address">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ip_to_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">py_cidr.cidr_types.IPvxAddress</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.ip_to_address" title="Link to this definition">¶</a></dt>
+<dd><p>Return ipaddress of given ip.</p>
+<p>If IP has prefix or host bits set, strip the prefix and keep host bits.</p>
+<dl>
+<dt>Args:</dt><dd><p>ip (str):
+The IP string to convert</p>
+<p>Rreturns (IPvxAddress | None):
+IPvxAddress derived from IP or None if not an IP address.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.ipaddr_cidr_from_string">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ipaddr_cidr_from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.ipaddr_cidr_from_string" title="Link to this definition">¶</a></dt>
+<dd><p>Convert string of IP address or cidr net to IPvxNetwork</p>
+<dl>
+<dt>Args:</dt><dd><p>address:
+IP or CIDR network as a string.</p>
+<p>strict (bool):
+If true, host bits are disallowed for cidr block.</p>
+</dd>
+<dt>Returns:</dt><dd><p>IPvxNetwork | None:
+An IPvxNetwork or None if invalid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.ips_to_addresses">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ips_to_addresses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxAddress</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.ips_to_addresses" title="Link to this definition">¶</a></dt>
+<dd><p>Convert list of IP strings to a list of ip addresses</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>ips (List[str]):
+List of IP strings to convert</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[IPvxAddress]:
+List of IPvxAddress derived from input IPs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.is_rfc_1918">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_rfc_1918</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.is_rfc_1918" title="Link to this definition">¶</a></dt>
+<dd><p>Check if cidr is any RFC 1918.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cidr (str):
+IP or Cidr to check if RFC 1918.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool:
+True if cidr is an RFC 1918 address.
+False if not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.is_valid_cidr">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid_cidr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.is_valid_cidr" title="Link to this definition">¶</a></dt>
+<dd><p>Check if address is a valid ip or cidr network.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>address (Any):
+Address to check. Host bits set is permitted for a cidr network.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool:
+True/False if address is valid IPv4 or IPv6 address or network.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.is_valid_ip4">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid_ip4</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.is_valid_ip4" title="Link to this definition">¶</a></dt>
+<dd><p>check if valid IPv4 address or cidr.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>address (Any):
+Check if this is a valid IPv4 address or cidr.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool:
+True if valid IPv4 else False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.is_valid_ip6">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_valid_ip6</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.is_valid_ip6" title="Link to this definition">¶</a></dt>
+<dd><p>check if valid IPv6 address or cidr.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>address (Any):
+Check if this is a valid IPv6 address or cidr.</p>
+</dd>
+<dt>Returns:</dt><dd><p>bool:
+True if valid IPv6 else False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.net_exclude">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">net_exclude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">net1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">py_cidr.cidr_types.IPvxNetwork</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nets2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.net_exclude" title="Link to this definition">¶</a></dt>
+<dd><p>Exclude net1 from any of networks in net2 and
+return resulting list of nets (without net1).</p>
+<dl>
+<dt>Args:</dt><dd><p>net1 (IPvxNetwork):
+Network to be ecluded.</p>
+<p>nets2 (List[IPvxNetwork]):
+List of networks from which net1 will be excluded
+from.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[IPvxNetwork]:
+Resultant list of networks “nets2 - net1”.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.net_to_range">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">net_to_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">net</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">py_cidr.cidr_types.IPvxNetwork</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxAddress</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">py_cidr.cidr_types.IPvxAddress</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.net_to_range" title="Link to this definition">¶</a></dt>
+<dd><p>Convert network to IP Range.</p>
+<dl>
+<dt>Args:</dt><dd><p>net (IPvxNetwork):
+The network (IPvxNetwork) to examine.</p>
+<p>string (bool):
+If True then returns cidr strings instead of IPvxAddress</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tuple[IPAddress, IPAddress]:
+Tuple (ip0, ip1) of first and last IP address in net
+Each (ip0, ip1) is IPvxAddress or a string if “string” == True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.nets_exclude">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nets_exclude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nets1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nets2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.nets_exclude" title="Link to this definition">¶</a></dt>
+<dd><p>Exclude every nets1 network from from any networks in nets2.</p>
+<p>Similar to net_exclude() except this version has a list
+to be excluded instead of a single network.</p>
+<dl>
+<dt>Args:</dt><dd><p>nets1 (List[IPvxNetwork]):
+List of nets to be excluded.</p>
+<p>nets2: (List[IPvxNetwork]):
+List of nets from which will exclude any of nets1.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[IPvxNetwork]:
+List of resultant networks (“nets2” - “nets1”)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.nets_to_cidrs">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nets_to_cidrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.nets_to_cidrs" title="Link to this definition">¶</a></dt>
+<dd><p>Convert list of ipaddress networks to list of cidr strings.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>nets (List[IPvxNetwork]):
+List of nets to convert.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[str]:
+List of cidr strings.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.range_to_cidrs">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">range_to_cidrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addr_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">py_cidr.cidr_types.IPAddress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addr_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">py_cidr.cidr_types.IPAddress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.range_to_cidrs" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a list of cidr/nets from an IP range.</p>
+<dl>
+<dt>Args:</dt><dd><p>addr_start (IPAddress):
+Start of IP range</p>
+<p>addr_end (IPAddress):
+End of IP range</p>
+<p>string (bool):
+If True then returns list of cidr strings otherwise IPvxNetwork</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[IPvxNetwork] | List[str]
+List of cidr network blocks representing the IP range.
+List elements are IPvxAddress or str if parameter string=True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.remove_rfc_1918">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_rfc_1918</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs_in</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.remove_rfc_1918" title="Link to this definition">¶</a></dt>
+<dd><p>Given list of cidrs, return list without any rfc 1918</p>
+<dl>
+<dt>Args:</dt><dd><p>cidrs_in (str | List[str]:
+Cidr string or list of cidr strings.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tuple[str | List[str], str | List[str]]:
+Returns (Tuple[cidrs_cleaned, rfc_1918_cidrs_found]):</p>
+<ul class="simple">
+<li><p>cidrs_cleaned:
+List of cidrs with all rfc_1918 removed.</p></li>
+<li><p>rfc_1918_cidrs_found:
+List of any rfc 1918 found in the input.</p></li>
+</ul>
+<p>If input cidr(s) is a list, then items in output
+are a (possibly empty) list
+If not a list then returned items will be string or None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.rfc_1918_cidrs">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rfc_1918_cidrs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.rfc_1918_cidrs" title="Link to this definition">¶</a></dt>
+<dd><p>Return list of rfc 1918 networks cidr strings</p>
+<dl class="simple">
+<dt>Returns (List[str]):</dt><dd><p>List of RFC 1918 networks as cidr strings</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.rfc_1918_nets">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rfc_1918_nets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">py_cidr.cidr_types.IPvxNetwork</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.rfc_1918_nets" title="Link to this definition">¶</a></dt>
+<dd><p>Return list of rfc 1918 networks</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>List[IPv4Network]:
+List of RFC 1918 networks.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.sort_cidrs">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sort_cidrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.sort_cidrs" title="Link to this definition">¶</a></dt>
+<dd><p>Sort the list of cidr strings.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cidrs (List[str]):
+List of cidrs.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[str]:
+Sorted copy of cidr list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.sort_ips">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sort_ips</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ips</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.sort_ips" title="Link to this definition">¶</a></dt>
+<dd><p>Sort a list of IP addresses.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>ips (List[str]):
+List of ips to be sorted.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List[str]:
+Sorted copy of ips.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.version">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.version" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Version of py-cidr</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">py-cidr</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">py-cidr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html#getting-started">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html#appendix">Appendix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../License.html">MIT License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Contributing.html">How to help with this project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Code-of-conduct.html">Contributor Covenant Code of Conduct</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">py_cidr</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">API Reference</a><ul>
+  <li><a href="../index.html">py_cidr</a><ul>
+      <li>Previous: <a href="../cidr_cache/index.html" title="previous chapter">py_cidr.cidr_cache</a></li>
+      <li>Next: <a href="../cidr_clean/index.html" title="next chapter">py_cidr.cidr_clean</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024-present, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/autoapi/py_cidr/cidr_class/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,79 @@
+py_cidr.cidr_subnet
+===================
+
+.. py:module:: py_cidr.cidr_subnet
+
+.. autoapi-nested-parse::
+
+   Class support functions for subnets
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: cidr_exclude(cidr1: str, cidrs2: [str]) -> [str]
+
+   Exclude cidr1 from any of networks in cidrs2
+   return resulting list of cidrs (without cidr1)
+
+
+.. py:function:: cidr_is_subnet(cidr: str, ipa_nets: [ipaddress.IPv4Network | ipaddress.IPv6Network]) -> bool
+
+   Is Subnet:
+       Check if cidr is a subnet of any of the list of IPvxNetworks .
+
+   :param cidr:
+       Cidr string to check.
+
+   :param ipa_nets:
+       List of IPvxNetworks to check in.
+
+   :returns:
+       True if cidr is subnet of any of the ipa_nets, else False.
+
+
+.. py:function:: cidr_set_prefix(cidr: str, prefix: int) -> str
+
+   Set Prefix
+       Set new prefix for cidr and return new cidr string
+
+   :param cidr:
+       Cidr string to use
+
+   :param prefix:
+       The new prefix to use
+
+   :returns:
+       Cidr string using the specified prefix
+
+
+.. py:function:: cidrs2_minus_cidrs1(cidrs1: [str], cidrs2: [str]) -> [str]
+
+   Exclude all of cidrs1 from cidrs2
+   i.e. return cidrs2 - cidrs1
+
+
+.. py:function:: cidrs_exclude(cidrs1: [str], cidrs2: [str]) -> [str]
+
+   old name 
+
+
+.. py:function:: get_host_bits(ip: str, pfx: int = 24)
+
+   Gets the host bits from an IP address given the netmask
+
+
+.. py:function:: net_exclude(net1: py_cidr.cidr_types.IPvxNetwork, nets2: [py_cidr.cidr_types.IPvxNetwork]) -> [py_cidr.cidr_types.IPvxNetwork]
+
+   Exclude net1 from any of networks in net2
+   return resulting list of nets (without net1)
+
+
+.. py:function:: nets_exclude(nets1: [py_cidr.cidr_types.IPvxNetwork], nets2: [py_cidr.cidr_types.IPvxNetwork]) -> [py_cidr.cidr_types.IPvxNetwork]
+
+   Exclude every nets1 network from from any networks in nets2
+
+

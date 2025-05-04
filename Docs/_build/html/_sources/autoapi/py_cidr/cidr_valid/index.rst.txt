@@ -1,0 +1,73 @@
+py_cidr.cidr_valid
+==================
+
+.. py:module:: py_cidr.cidr_valid
+
+.. autoapi-nested-parse::
+
+   Support for type checks
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: address_iptype(addr: py_cidr.cidr_types.IPvxAddress | py_cidr.cidr_types.IPvxNetwork) -> str | None
+
+   Address Type
+       Identify if IP address (IPvxAddres) or net (IPvxNetwork) is ipv4 or ipv6
+
+   :param addr:
+       IP address or cidr network .
+
+   :returns:
+       'ip4', 'ip6' or None
+
+
+.. py:function:: cidr_iptype(address: str) -> str | None
+
+   Determines if an IP address or CIDR string is ipv4 or ipv6
+
+   :param address:
+       ip address or cidr string
+
+    :returns:
+       'ip4' or 'ip6' or None
+
+
+.. py:function:: cidr_type_network(cidr: str) -> (str, py_cidr.cidr_types.IPvxNetwork)
+
+   Cidr Network Type:
+
+   :param cidr:
+       Cidr string to examine
+
+   :returns:
+       Tuple(ip-type, net-type). ip-type is a string  ('ip4', 'ip6') while
+       network type is IPv4Network or IPv6Network
+
+
+.. py:function:: is_valid_cidr(address) -> bool
+
+   Valid Address or Network
+       check if valid ip address or cidr network
+
+   :param address:
+       IP or Cidr string to check. Host bits being set is permitted for a cidr network.
+
+   :returns:
+       True/False if address is valid
+
+
+.. py:function:: is_valid_ip4(address) -> bool
+
+   check if valid address or cidr 
+
+
+.. py:function:: is_valid_ip6(address) -> bool
+
+   check if valid address or cidr 
+
+

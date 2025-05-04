@@ -1,0 +1,64 @@
+py_cidr.cidr_range
+==================
+
+.. py:module:: py_cidr.cidr_range
+
+.. autoapi-nested-parse::
+
+   Class support functions for range of cidrs
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: cidr_to_range(cidr: str, string: bool = False) -> (py_cidr.cidr_types.IPAddress, py_cidr.cidr_types.IPAddress)
+
+   Cidr string to an IP Range
+
+   :param cidr:
+       The cidr string to examine
+
+   :param string:
+       If True then returns cidr strings instead of IPvxAddress
+
+   :returns:
+       Tuple (ip0, ip1) of first and last IP address in net
+       (ip0, ip1) are IPvxAddress or str when string is True
+
+
+.. py:function:: net_to_range(net: py_cidr.cidr_types.IPvxNetwork, string: bool = False) -> (py_cidr.cidr_types.IPAddress, py_cidr.cidr_types.IPAddress)
+
+   Network to IP Range
+
+   :param net:
+       The ipaddress network (IPvxNetwork) to examine
+
+   :param string:
+       If True then returns cidr strings instead of IPvxAddress
+
+   :returns:
+       Tuple (ip0, ip1) of first and last IP address in net
+       (ip0, ip1) are IPvxAddress or str when string is True
+
+
+.. py:function:: range_to_cidrs(addr_start: py_cidr.cidr_types.IPAddress, addr_end: py_cidr.cidr_types.IPAddress, string=False) -> [py_cidr.cidr_types.IPvxNetwork | str]
+
+   Generate a list of cidr/nets from an IP range.
+
+   :param addr_start:
+       Start of IP range as IPAddress (IPv4Address,  IPv6Address or string)
+
+   :param addr_end:
+       End of IP range as IPAddress (IPv4Address,  IPv6Address or string)
+
+   :param string:
+       If True then returns list of cidr strings otherwise IPvxNetwork
+
+   :returns:
+       List of cidr network blocks representing the IP range. 
+       List elements are IPvxAddress or str if parameter string=True
+
+

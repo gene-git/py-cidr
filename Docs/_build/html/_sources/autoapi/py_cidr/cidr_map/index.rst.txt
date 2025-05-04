@@ -1,7 +1,26 @@
-py_cidr.CidrMap
-===============
+py_cidr.cidr_map
+================
 
-.. py:class:: py_cidr.CidrMap(cache_dir: str | None = None)
+.. py:module:: py_cidr.cidr_map
+
+.. autoapi-nested-parse::
+
+   Map cidr/ips to a (str) value.
+   Requires CidrCache
+
+   Keep separate caches for ipv4 and ipv6
+   cidr matches cache.cidr cidr when cidr is subnet of cache.cidr.
+
+   Requires CidrCache for the actual cache management
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: CidrMap(cache_dir: str | None = None)
 
    Class provides map(cidr) -> some value.
 
@@ -11,21 +30,6 @@ py_cidr.CidrMap
    Args:
        cache_dir (str):
        Optional directory to save cache file
-
-
-   .. py:method:: _iptype(cidr: str) -> str
-
-      Identify whether cidr is a valid "ipv4" or "ipv6".
-
-      Args:
-          cidr (str):
-          Input cidr string
-
-      Returns:
-          str:
-          'ipv4' of 'ipv6' based on cidr or None if invalid cidr string.
-          Return empty string '' if unknown.
-
 
 
    .. py:method:: add_cidr(cidr: str, result: str, priv_cache: _NetCache | None = None)
@@ -104,5 +108,6 @@ py_cidr.CidrMap
    .. py:method:: save_cache()
 
       Write cache to files
+
 
 

@@ -1,0 +1,22 @@
+py_cidr.version
+===============
+
+.. py:module:: py_cidr.version
+
+.. autoapi-nested-parse::
+
+   Project py-cidr
+   This file is auto updated by git-release
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: version() -> str
+
+   report version and release date 
+
+

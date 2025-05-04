@@ -1,0 +1,32 @@
+py_cidr.files
+=============
+
+.. py:module:: py_cidr.files
+
+.. autoapi-nested-parse::
+
+   Atomic write file
+    - caller responsible for any required locking
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: open_file(path, mode, encoding=None)
+
+   Open a file and return file object
+   Useful where file is opened and used over wider part of code
+   than a simple with open() as loop in one spot.
+
+
+.. py:function:: write_file_atomic(data: str | bytes, fpath: str) -> (bool, str | None)
+
+   Write data to fpath - atomic version
+   Input:
+       data : whatever is to be written
+       fpath: path to file to write to
+
+

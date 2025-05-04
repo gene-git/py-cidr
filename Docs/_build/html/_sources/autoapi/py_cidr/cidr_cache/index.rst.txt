@@ -1,7 +1,30 @@
-py_cidr.CidrCache
-=================
+py_cidr.cidr_cache
+==================
 
-.. py:class:: py_cidr.CidrCache(ipt: str, cache_dir: str | None = None)
+.. py:module:: py_cidr.cidr_cache
+
+.. autoapi-nested-parse::
+
+   Cached (network, value) pairs: value is string.
+   network is any ipaddress network (ipv4 or ipv6 )
+   lookup of a cidr returns its associated value.
+   cidr matches cache.cidr if cidr is subnet of cidr.
+   Cache is an ordered list by net.
+    See Also:
+       CidrMap which uses CidrCache and with a
+       separate cache for ipv4 and ipv6
+    Requires:
+       ipaddress: for cidr/network manipulations
+       lockmgr: for ensuring cache can be safely read/written
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: CidrCache(ipt: str, cache_dir: str | None = None)
 
    Provides a cache that maps cidrs to values.
 
@@ -150,5 +173,6 @@ py_cidr.CidrCache
       Write cache to file if cache_dir was set up.
 
       Use locking to ensure no file contention.
+
 
 

@@ -1,0 +1,22 @@
+py_cidr.utils
+=============
+
+.. py:module:: py_cidr.utils
+
+.. autoapi-nested-parse::
+
+   Dev tools
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: print_dictionary(dic, indent=0)
+
+   simple dictionary printer
+   Used to dump cidr cache 
+
+

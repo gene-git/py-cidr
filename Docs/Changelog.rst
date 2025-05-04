@@ -7,12 +7,20 @@ Tags
 
 ::
 
-	2.6.0 (2025-01-18) -> 3.1.1 (2025-05-04)
-	17 commits.
+	2.6.0 (2025-01-18) -> 3.2.0 (2025-05-04)
+	19 commits.
 
 Commits
 =======
 
+
+* 2025-05-04  : **3.2.0**
+
+::
+
+                Improve API reference documentation.
+                install: rename cache print to /usr/bin/py-cidr-cache-print
+                update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-05-04  : **3.1.1**
 

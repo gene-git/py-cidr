@@ -1,0 +1,42 @@
+py_cidr.cidr_compact
+====================
+
+.. py:module:: py_cidr.cidr_compact
+
+.. autoapi-nested-parse::
+
+   Class support functions to compact lists of cidrs/nets
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: cidr_list_compact(cidrs_in: [str], string=True) -> [str | py_cidr.cidr_types.IPvxNetwork]
+
+   Cidr Compact:
+       Compact list of cidr networks to smallest list possible.
+
+   :param cidrs_in:
+       List of cidr strings to compact.
+
+   :param string:
+       If true (default) returns list of strings, else a list of IPvxNetworks
+
+   :returns:
+       Compressed list of cidrs as ipaddress networks (string=False)
+       or list of strings when string=True
+
+
+.. py:function:: compact_cidrs(cidrs: [str], nets=False) -> [str | py_cidr.cidr_types.IPvxNetwork]
+
+   combine em 
+
+
+.. py:function:: compact_nets(nets: [py_cidr.cidr_types.IPvxNetwork]) -> [py_cidr.cidr_types.IPvxNetwork]
+
+   combine em 
+
+

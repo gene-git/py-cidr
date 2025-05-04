@@ -10,22 +10,30 @@ py_cidr
 
 
 
-Classes
--------
+Submodules
+----------
 
 .. toctree::
-   :hidden:
+   :maxdepth: 1
 
-   /autoapi/py_cidr/Cidr
-   /autoapi/py_cidr/CidrCache
-   /autoapi/py_cidr/CidrFile
-   /autoapi/py_cidr/CidrMap
-
-.. autoapisummary::
-
-   py_cidr.Cidr
-   py_cidr.CidrCache
-   py_cidr.CidrFile
-   py_cidr.CidrMap
+   /autoapi/py_cidr/cache_files/index
+   /autoapi/py_cidr/cidr_address/index
+   /autoapi/py_cidr/cidr_cache/index
+   /autoapi/py_cidr/cidr_class/index
+   /autoapi/py_cidr/cidr_clean/index
+   /autoapi/py_cidr/cidr_compact/index
+   /autoapi/py_cidr/cidr_file_class/index
+   /autoapi/py_cidr/cidr_map/index
+   /autoapi/py_cidr/cidr_nets/index
+   /autoapi/py_cidr/cidr_range/index
+   /autoapi/py_cidr/cidr_sort/index
+   /autoapi/py_cidr/cidr_subnet/index
+   /autoapi/py_cidr/cidr_types/index
+   /autoapi/py_cidr/cidr_valid/index
+   /autoapi/py_cidr/core/index
+   /autoapi/py_cidr/files/index
+   /autoapi/py_cidr/rfc_1918/index
+   /autoapi/py_cidr/utils/index
+   /autoapi/py_cidr/version/index
 
 

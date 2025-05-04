@@ -1,0 +1,54 @@
+py_cidr.cache_files
+===================
+
+.. py:module:: py_cidr.cache_files
+
+.. autoapi-nested-parse::
+
+   Read write cache file
+     NB caller should implement locking as appropriate
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: cache_file_extension(ftype: str = 'json')
+
+   File extension to use based on fype
+
+
+.. py:function:: read_cache_file(file, ftype: str = 'json')
+
+   Read cache
+
+
+.. py:function:: read_cache_file_json(cache_file: str)
+
+   Read cache file : ipt is 'ipv4' or 'ipv6'
+   Returns cache or None if no cache
+
+
+.. py:function:: read_cache_file_pickle(cache_file: str)
+
+   Read cache file : ipt is 'ipv4' or 'ipv6'
+   Returns cache or None if no cache
+
+
+.. py:function:: write_cache_file(cache, file, ftype: str = 'json')
+
+   Read cache
+
+
+.. py:function:: write_cache_file_json(cache, cache_file)
+
+   Write json cache file
+
+
+.. py:function:: write_cache_file_pickle(cache, cache_file)
+
+   Write pickled cache file
+
+

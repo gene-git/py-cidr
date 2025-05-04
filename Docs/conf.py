@@ -9,7 +9,7 @@
 project = "py-cidr"
 copyright = '2024-present, Gene C'
 author = 'Gene C'
-release = '3.2.0'
+release = '3.2.1'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -22,6 +22,7 @@ autoapi_options = ['members']
 autoapi_member_order = 'alphabetical'
 autoapi_python_use_implicit_namespaces = True
 add_module_names = False
+autoapi_keep_files = True
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '_*']
@@ -40,4 +41,4 @@ def setup(sphinx):
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'alabaster'
-html_static_path = ['_static']
+#html_static_path = ['_static']

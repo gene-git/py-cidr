@@ -1,7 +1,20 @@
-py_cidr.Cidr
-============
+py_cidr.cidr_class
+==================
 
-.. py:class:: py_cidr.Cidr
+.. py:module:: py_cidr.cidr_class
+
+.. autoapi-nested-parse::
+
+   Class providing some common CIDR utilities
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: Cidr
 
    Provides suite of CIDR tools.
 
@@ -541,7 +554,7 @@ py_cidr.Cidr
       :staticmethod:
 
 
-      Conert network to IP Range.
+      Convert network to IP Range.
 
       Args:
           net (IPvxNetwork):
@@ -705,5 +718,6 @@ py_cidr.Cidr
 
       :returns:
           Version of py-cidr
+
 
 

@@ -1,0 +1,59 @@
+py_cidr.cidr_nets
+=================
+
+.. py:module:: py_cidr.cidr_nets
+
+.. autoapi-nested-parse::
+
+   Class support functions for networks
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: cidr_to_net(cidr: str, strict: bool = False) -> py_cidr.cidr_types.IPvxNetwork | None
+
+   Cidr to Net
+       Convert cidr string to ipaddress network.
+
+   :param cidr:
+       Input cidr string
+
+   :param strict:
+       If true then cidr is considered invalid if host bits are set.
+       Defaults to False. (see ipaddress docs).
+
+   :returns:
+       The ipaddress network derived from cidr string as either IPvxNetwork = IPv4Network or IPv6Network.
+
+
+.. py:function:: cidrs_to_nets(cidrs: [str], strict: bool = False) -> [py_cidr.cidr_types.IPvxNetwork]
+
+   Cidrs to Nets
+       Convert list of cidr strings to list of IPvxNetwork
+
+   :param cidrs:
+       List of cidr strings
+
+   :param strict:
+       If true, then any cidr with host bits is invalid. Defaults to false.
+
+   :returns:
+       List of IPvxNetworks.
+
+
+.. py:function:: nets_to_cidrs(nets: [py_cidr.cidr_types.IPvxNetwork]) -> [str]
+
+   Nets to Strings
+       Convert list of ipaddress networks to list of cidr strings.
+
+   :param nets:
+       List of nets to convert
+
+   :returns:
+       List of cidr strings
+
+

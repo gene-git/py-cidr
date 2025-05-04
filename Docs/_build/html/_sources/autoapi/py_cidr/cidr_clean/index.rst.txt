@@ -1,0 +1,37 @@
+py_cidr.cidr_clean
+==================
+
+.. py:module:: py_cidr.cidr_clean
+
+.. autoapi-nested-parse::
+
+   Class support functions to clean/tidy cidrs
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:function:: clean_cidr(cidr: str) -> str
+
+   returns None if not valid
+    - we to fix class C : a.b.c -> a.b.c.0/24
+
+
+.. py:function:: clean_cidrs(cidrs: [str]) -> [str]
+
+   clean cidr array 
+
+
+.. py:function:: fix_cidr_host_bits(cidr: str, verb: bool = False)
+
+   zero any host bits 
+
+
+.. py:function:: fix_cidrs_host_bits(cidrs: [str], verb: bool = False)
+
+   zero any host bits 
+
+
