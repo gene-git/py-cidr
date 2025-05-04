@@ -8,10 +8,13 @@
    - pname = is path to the file.
    - cidr are all in column 1
 """
+from typing import (List, Tuple)
 import os
 import sys
 from .cidr_class import (Cidr)
-from .files import open_file
+from ._cidr_compact import (compact_cidrs)
+from ._files import open_file
+
 
 def _has_cidr_data(row):
     """
@@ -24,51 +27,55 @@ def _has_cidr_data(row):
         return False
     return True
 
+
 class CidrFile:
-    '''
-    Class provides common CIDR string file reader/writer tools.
+    """
+    Provides common CIDR string file reader/writer tools.
     All methods are static so no class instance variable needed.
-    '''
+    """
     @staticmethod
-    def read_cidrs(fname:str|None, verb:bool=False) -> ([str], [str]):
-        '''
-        Read file of cidrs and return tuple of separate lists (ip4, ip6)
-            *  if fname is None or sys.stdin then data is read from stdin.
-            *  only column 1 of file is used.
-            *  comments are ignored
+    def read_cidrs(fname: str | None, verb: bool = False
+                   ) -> Tuple[List[str], List[str]]:
+        """
+        Read file of cidrs and return tuple of separate lists (ip4, ip6).
 
-        :param fname:
-            File name to read
+         -  if fname is None or sys.stdin then data is read from stdin.
+         -  only column 1 of file is used.
+         -  comments are ignored
 
-        :param verb:
-            More verbose output
+        Args:
+            fname (str | None):
+            File name to read.
 
-        :returns:
-            tuple of lists of cidrs (ip4, ip6)
-        '''
+            verb (bool):
+            More verbose output when True.
+
+        Returns:
+            Tuple[List[str], List[str]]:
+            Tuple of lists of cidrs (ip4, ip6)
+        """
         if verb:
-            print (' \tread_cidr_file: {fname}')
+            print(' \tread_cidr_file: {fname}')
 
         ip4 = []
         ip6 = []
 
-        if fname in (None, sys.stdin):
-            rows = sys.stdin.readlines()
-        else:
+        if fname is not None and isinstance(fname, str):
             if os.path.exists(fname):
                 fob = open_file(fname, 'r')
                 rows = fob.readlines()
                 fob.close()
             else:
                 rows = []
+        else:
+            rows = sys.stdin.readlines()
 
         for row in rows:
             row.lstrip()
             if not _has_cidr_data(row):
                 continue
 
-            # Keep first column (which also drops trailing comment or anything else)
-            #cols = row.split('#')
+            # Keep first column (also drops trailing comment or anything else)
             cols = row.split()
             if cols and cols[0]:
                 row = cols[0].rstrip()
@@ -89,30 +96,44 @@ class CidrFile:
         return (ip4, ip6)
 
     @staticmethod
-    def read_cidr_file(fname:str, verb:bool = False ) -> [str]:
+    def read_cidr_file(fname: str, verb: bool = False) -> List[str]:
         """
-         Read file of cidrs. Comments are ignored.
-            Uses read_cidrs()
+         Read file of cidrs and return list of all IPv4 and IPv6.
 
-        :param fname:
-            File name to read
+         See read_cidrs() which this uses.
 
-        :param verb:
+        Args:
+            fname (str):
+            Path to file of cidrs to read.
+
+            verb (bool):
             More verbose output
 
-        :returns:
+        Returns:
+            List[str]:
             List of all cidrs (ip4 and ip6 combined)
         """
         (ip4, ip6) = CidrFile.read_cidrs(fname, verb)
         return ip4 + ip6
 
     @staticmethod
-    def read_cidr_files(targ_dir:str, file_list:[str]) -> [str]:
+    def read_cidr_files(targ_dir: str, file_list: List[str]) -> List[str]:
         """
-        Read set of files from a directory and return merged list of
-        cidr strings
+        Read files in a directory and return merged list of cidr strings.
+
+        Args:
+            targ_dir (str):
+            Directory to find each file.
+
+            file_list (List[str]):
+            List of files in *targ_dir* to read.
+
+        Returns:
+            List[str]:
+            List of all cidrs found in the files.
+
         """
-        cidrs = []
+        cidrs: List[str] = []
         if not targ_dir or not file_list:
             return cidrs
 
@@ -123,51 +144,58 @@ class CidrFile:
 
         # compress if possible
         if cidrs:
-            cidrs = Cidr.compact_cidrs(cidrs)
+            cidrs = compact_cidrs(cidrs)
         return cidrs
 
     @staticmethod
-    def write_cidr_file(cidrs:[str], pname:str) -> bool:
+    def write_cidr_file(cidrs: List[str], pname: str) -> bool:
         """
-        Write list of cidrs to a file
+        Write list of cidrs to a file.
 
-        :param cidrs:
-            List of cidr strings to save
+        Args:
+            cidrs (List[str]):
+            List of cidr strings to write.
 
-        :param pname:
-            Path to file where cidrs are to be written
+            pname (str):
+            Path to file where cidrs are to be written.
+
+        Returns:
+            bool:
+            True if successful otherwise False.
         """
         data = '\n'.join(cidrs) + '\n'
-        if not pname :
+        if not pname:
             fob = sys.stdout
         else:
             fob = open_file(pname, 'w')
 
         if fob:
             fob.write(data + '\n')
-            if pname :
+            if pname:
                 fob.close()
             return True
         return False
 
     @staticmethod
-    def copy_cidr_file(src_file:str, dst_file:str) -> bool:
+    def copy_cidr_file(src_file: str, dst_file: str) -> bool:
         """
-        Copy one file to another:
+        Copy one file to another.
 
-        :param src_file:
-            Source file to copy
+        Args:
+            src_file (str):
+            Source file to copy.
 
-        :param dst_file:
+            dst_file (str):
             Where to save copy
 
-        :returns:
+        Returns:
+            bool:
             True if all okay else False
         """
         is_okay = True
         if src_file.endswith('.ip4') or src_file.endswith('.ip6'):
             cidrs = CidrFile.read_cidr_file(src_file)
             if cidrs:
-                cidrs = Cidr.compact_cidrs(cidrs)
+                cidrs = compact_cidrs(cidrs)
                 is_okay = CidrFile.write_cidr_file(cidrs, dst_file)
         return is_okay

@@ -9,7 +9,7 @@
 project = "py-cidr"
 copyright = '2024-present, Gene C'
 author = 'Gene C'
-release = '2.8.0'
+release = '3.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -17,8 +17,12 @@ release = '2.8.0'
 extensions = ['sphinx.ext.autodoc', 'autoapi.extension']
 
 autoapi_dirs = ['../src/py_cidr']
-autoapi_options = ['members', 'show-module-summary']
+#autoapi_options = ['members', 'show-module-summary']
+autoapi_options = ['members', 'inherited-members']
 autoapi_keep_files = True
+autoapi_member_order = 'groupwise'
+autoapi_own_page_level = 'class'
+add_module_names = False
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
@@ -36,7 +40,6 @@ def skip_submodules(app, what, name, obj, skip, options):
     if what == 'attribute':
         skip = True
 
-    #print(f'skip={skip} what={what} name={name}')
     return skip
 
 def setup(sphinx):

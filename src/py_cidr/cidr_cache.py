@@ -1,364 +1,291 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: © 2024-present  Gene C <arch@sapience.com>
-'''
-Cached map of (network, value) pairs: value is string.
-network is any ipaddress network (ipv4 or ipv6 or both)
-lookup of a cidr returns its val.
+"""
+Cached (network, value) pairs: value is string.
+network is any ipaddress network (ipv4 or ipv6 )
+lookup of a cidr returns its associated value.
 cidr matches cache.cidr if cidr is subnet of cidr.
 Cache is an ordered list by net.
  See Also:
-    CidrMap which uses CidrCache and uses a separate cache for ipv4 and ipv6
- Requires: 
+    CidrMap which uses CidrCache and with a
+    separate cache for ipv4 and ipv6
+ Requires:
     ipaddress: for cidr/network manipulations
     lockmgr: for ensuring cache can be safely read/written
-'''
+"""
 # pylint: disable=too-many-instance-attributes
+from typing import (Any, Self, Tuple)
 import os
-from typing import (List)
-from ipaddress import (IPv4Network, IPv6Network)
 
 from lockmgr import LockMgr
-from .cidr_class import (Cidr)
 
-from .cache_files import (read_cache_file, write_cache_file, cache_file_extension)
+from .cidr_types import (IPvxNetwork)
+from ._cidr_nets import (cidr_to_net)
+from ._cache_files import (cache_file_extension)
+from ._cache_data import (CidrCacheData, CidrCacheElem)
+
 
 class CidrCache:
-    '''
-    Class provides a cache which maps cidrs to values.
-    Implemented as an ordered list of networks where each net has some assocated value
-    Each elem in list is a pair of (cidr_net, value)
+    """
+    Provides a cache that maps cidrs to values.
 
-    data List *must* be kept sorted and compressed (no elem can be subnet of any other element)
-    for search to work and work efficiently.
+    Implemented as an ordered list of networks.
+    All networks must be either ipv4 or ipv6
+    as these are kept separate for performance.
+    Each network has an assocated value.
+    Each elem in ordered list is a typle of (cidr_net, value)
 
-    We use ipaddress network as key instead of a string to for performance reasons.
-    This minimizes any mapping between network and string representations.
-    '''
-    def __init__(self, ipt, cache_dir=None):
-        self.ipt : str = ipt
-        self.dirty : bool = False
-        self.cache_dir : str = cache_dir
-        self.data : [[IPv4Network|IPv6Network, str]] = []
+    Note that data list *must* be kept sorted and compressed.
+    Compressing ensures that no elem can be subnet of any other element.
+    Sorting allows search to work (efficiently).
 
-        self.cache_file : str = None
-        self.cache_time : int = -1
-        self.lock_timeout = 120
+    We use ipaddress network as the key rather than a string as
+    this provides superior performance. This also minimizes
+    conversion between network and string representations.
 
-        if self.cache_dir:
-            ext = cache_file_extension()
-            self.cache_file = os.path.join(cache_dir, ipt + ext)
-            lockfile = choose_lock_file(cache_dir, ipt)
+    Args:
+        ipt (str):
+        One of 'ipv4' or 'ipv6'
+
+        cache_dir (str | None):
+        Optional directory where cache files are saved.
+
+    """
+    def __init__(self, ipt: str, cache_dir: str | None = None):
+        self.ipt: str = ipt
+        self.dirty: bool = False
+        self.cache_dir: str = ''
+        self.using_cache_file: bool = False
+        self.cache_file: str = ''
+        self.cache_time: float = -1.0
+        self.cache_data = CidrCacheData()
+
+        if cache_dir:
+            self.cache_dir = cache_dir
+            self.using_cache_file = True
+            ext = ipt + cache_file_extension()
+            self.cache_file = os.path.join(self.cache_dir, ext)
+            lockfile = _choose_lock_file(self.cache_dir, ipt)
+            self.lock_timeout = 120
             self.lockmgr = LockMgr(lockfile)
+        else:
+            self.cache_data = CidrCacheData()
 
     def load_cache(self):
-        '''
+        """
         Read cache from file
-        '''
-        if not self.cache_file:
-            self.data = []
+        """
+        if not self.using_cache_file:
             return
 
-        got_lock = self.lockmgr.acquire_lock(wait=True, timeout=self.lock_timeout)
-        if got_lock:
-            self.data = read_cache_file(self.cache_file)
-            if self.data:
+        lockmgr = self.lockmgr
+        if lockmgr.acquire_lock(wait=True, timeout=self.lock_timeout):
+            self.cache_data.read_cache_file(self.cache_file)
+            #
+            # Cache Element has (net, val).
+            # net is a network represented as IPvxNetwork
+            # and val can be Any
+            #
+            if self.cache_data.elems:
                 self.cache_time = os.path.getmtime(self.cache_file)
             self.lockmgr.release_lock()
         else:
-            print(f'CIDR Cache failed to load cache : {self.cache_file}')
-
-        if not self.data:
-            self.data = []
+            print(f'CIDR Cache failed to load cache: {self.cache_file}')
 
     def write(self):
-        '''
-        Save to cache file
-        '''
+        """
+        Write cache to file if cache_dir was set up.
+
+        Use locking to ensure no file contention.
+        """
+        if not self.cache_file:
+            return
+
         if self.dirty:
-            got_lock = self.lockmgr.acquire_lock(wait=True, timeout=self.lock_timeout)
-            if got_lock:
+            timeout = self.lock_timeout
+            lockmgr = self.lockmgr
+            if lockmgr.acquire_lock(wait=True, timeout=timeout):
                 # Check if cache changed since we read it in
                 if self.cache_time > 0:
                     cache_time_now = os.path.getmtime(self.cache_file)
                     if cache_time_now > self.cache_time:
-                        print(' write cidr cache - updated since we read it - merging')
-                        temp_cache = CidrCache(self.cache_dir, self.ipt)
-                        if temp_cache.data:
-                            self.combine_data(temp_cache.data)
-                            temp_cache = None
+                        print(' cidr cache updated since prev read - merging')
+                        temp_data = CidrCacheData()
+                        temp_data.read_cache_file(self.cache_file)
+                        if temp_data.elems:
+                            self.cache_data.merge_data(temp_data)
+                            # temp_cache = None
 
-                write_cache_file(self.data, self.cache_file)
-                self.lockmgr.release_lock()
+                self.cache_data.write_cache_file(self.cache_file)
+                lockmgr.release_lock()
             else:
-                print(f' cidr cache write failed to get lock after {self.lock_timeout}')
+                print(f' cache write failed to get lock after {timeout}')
                 print('  ** skipping writing cache')
 
+            self.dirty = False
+
     def sort(self):
-        '''
-        sort the data by network
-        '''
-        if not self.data or len(self.data) < 2:
-            return
-        self.data.sort(key=lambda elem: elem[0])
+        """
+        Sort the cached data in network order.
+        """
+        self.cache_data.sort()
 
-    def lookup_cidr(self, cidr:str) -> str|None:
-        '''
-        Look up the value associated with cidr string 
+    def lookup_elem(self, net: IPvxNetwork) -> CidrCacheElem | None:
+        """
+        Lookup value associated with network.
 
-        :param cidr:
-            Cidr string to lookup
+        If network in cache then return the pair [cache_net, value].
+        with net either equal to cache_net or a subnet of it.
+        If not found then [None, None] is returned.
 
-        :returns:
-            Value associated with the cidr string or None if not found
-        '''
-        net = Cidr.cidr_to_net(cidr)
-        [_network, value] = self.lookup(net)
-        return value
+        Args:
+            net (IPvxNetwork):
+            The network to lookup.
 
-    def lookup(self, net) -> [IPv4Network|IPv6Network, str]:
-        '''
-        Lookup value for net
-            If net isin cache then returns pair [cache_net, value].
-            net is a cache_net or a subnet it.
-            If not found [None, None] is returned.
-
-        :param net:
-            The network to lookup 
-
-        :returns:
-            List of (cahe_network, value) where net is cache_network or subnet of it.
+        Returns:
+            [IPvxNetwork, Any]:
+            A list of with 2 items: [cache_network, value].
+            where net is either equal to cache_network or a subnet of it.
             If net is not found then [None, None]
-        '''
-        (index, ismatch) = self.find_nearest(net)
-        if ismatch:
-            return self.data[index]
-        return [None, None]
 
-    def find_nearest(self, net, priv_data=None) -> (int, bool):
-        '''
-        Find Nearest (internal)
-            find the index of the element (foundnet, value) 
-            where net is a subnet of foundnet
-            or the index of the element after which net would be inserted
-            elem[i] <= net < elem[i+1]
-            when net = elem[i] (i.e. net is subnet of elem[i]) then ismatch is True
+        """
+        return self.cache_data.lookup_elem(net)
 
-        :returns:
-            Tuple of (Index, ismatch). Index refers to cache list. Is match is True when
-            net is a subnet of the cache element at index.
-        '''
-        data = self.data
-        if priv_data is not None:
-            data = priv_data
-        (index, ismatch) = _find_nearest(data, net)
-        return (index, ismatch)
+    def lookup_cidr(self, cidr: str) -> Any:
+        """
+        Look up the value associated with cidr string:
+         - cache(cidr) -> value
 
-    def add_cidr(self, cidr:str, value:str, priv_data=None):
-        '''
-        same as add() with input a cidr string instead of net
-        '''
-        net = Cidr.cidr_to_net(cidr)
-        self.add(net, value, priv_data)
+        Args (str):
+            Cidr to lookup
 
-    def add(self, net, value, priv_data:List[[IPv4Network|IPv6Network, str]] = None):
-        '''
-        Add (net, value) to cache where.
-            if priv_data provided then new data saved there instead of self.data
-            Used when have multiple threads/processing using same CidrCache instance
+        Returns:
+            str | None:
+            Value associated with the cidr string or None if not found
+        """
+        net = cidr_to_net(cidr)
+        if net:
+            elem = self.cache_data.lookup_elem(net)
+            if elem:
+                return elem.val
+        return None
 
-            Note that if add a (cidr, value) pair exists in cache but is different - 
-            then this new added version will replace the existing one. 
+    def lookup(self, net: IPvxNetwork
+               ) -> Tuple[IPvxNetwork, Any] | Tuple[None, None]:
+        """
+        Lookup value associated with network.
 
-            Better name might be add_or_replace()
+        If network in cache then return the pair [cache_net, value].
+        with net either equal to cache_net or a subnet of it.
+        If not found then [None, None] is returned.
 
-        :param net:
+        Args:
+            net (IPvxNetwork):
+            The network to lookup.
+
+        Returns:
+            [IPvxNetwork, Any]:
+            A list of with 2 items: [cache_network, value].
+            where net is either equal to cache_network or a subnet of it.
+            If net is not found then [None, None]
+
+        """
+        elem = self.cache_data.lookup_elem(net)
+        if elem:
+            return (elem.net, elem.val)
+        return (None, None)
+
+    def add_cidr(self, cidr: str, value: Any):
+        """
+        Same as add() but with input a cidr string instead of network.
+        """
+        net = cidr_to_net(cidr)
+        if net is not None:
+            self.add(net, value)
+
+    def add(self, net: IPvxNetwork, value: Any):
+        """
+        Add (net, value) to cache.
+
+        Note that if add a (cidr, value) pair exists in cache but is different,
+        then this new added version will replace the existing one.
+
+        Better name might be add_or_replace()
+
+        Args:
+            net (IPvxNetwork):
             ipaddress network to add to cache
 
-        :param value:
-            the value to cache with net that is associated with it
+            value (Any):
+            The value associated with net to be cached as (net, value) pair.
 
-        :priv_data:
-            Optional list to hold added [net, value] pairs until they can be merged 
-            into the class instance data via combine_data() method. Needed if sharing
-            CidrCache instance across mutliple processes/threads.
+            When present, all additions are made to private data
+            instead of instance data and our own data is read only until
+            all threads/processes finish.
 
-            When present, all additions are made to private data instead of instance data
-            and our own data is read only until all threads/processes finish
+        """
+        if net:
+            elem = CidrCacheElem()
+            elem.net = net
+            elem.val = value
 
-            Once all multiple threads/processes complete, then each private data cache(s) 
-            can be combined into this instance data using combine_data(priv_data)
+            changed = self.cache_data.add_elem(elem)
+            if changed:
+                self.dirty = True
 
-            When private data provided the dirty flag is left alone.
-            combine() will set dirty if needed. This trackes where to save 
-            cache file if data has changed.
+    def combine_cache(self, new_cache: Self):
+        """
+        Merge another CidrCache into self.
 
-        '''
-        data = self.data
-        if priv_data is not None:
-            data = priv_data
-        else:
+        Args:
+            new_cache (CidrCache)
+            Data must be installed .add() to ensure the cache data is
+            network sorted.
+            Data from new_cache is combined / merged into the instance data.
+
+            NB the network types must match or will be ignored.
+        """
+        if not new_cache:
+            return
+
+        if new_cache.ipt != self.ipt:
+            print('Network Type mismatch - cannot combine:')
+            print(' {new_cache.ipt} added to {self.ipt}:')
+            return
+
+        if not self.cache_data:
+            # this is ok as new_data was built by add() and is sorted/merged
+            self.cache_data = new_cache.cache_data
+            return
+
+        changed = self.cache_data.merge_data(new_cache.cache_data)
+        if changed:
             self.dirty = True
 
-        (index, ismatch) = self.find_nearest(net, data)
-        if ismatch:
-            #
-            # net is a subnet of (or equal to) elem[i][0]
-            # so keep net part and update the value
-            #
-            if value != data[index][1]:
-                # updated value replaces existing
-                if data is not None:
-                    data.append([net, value])
-                else:
-                    data[index][1] = value
-                    self.dirty = True
-            return
-
-        #
-        # if index+1 is subnet of net then can be replaced by combining the 2 nets
-        # If new value is different we assume its correct - so thus okay to delete
-        #
-        # if index+1 and net have same value check if can be merged
-        #
-
-        num_elems = len(data)
-        if index < num_elems - 1 and data[index+1][0].subnet_of(net):
-            del data[index+1]
-
-        #
-        # insert at index+1
-        #
-        data.insert(index+1, [net, value])
-
-        #
-        # Check if addition admits any network merges
-        #
-        _try_merge(data, index, direction=0)
-
-    def compact(self):
-        '''
-        merge wherever possible - not used.
-        '''
-        _try_merge(self.data, 0, direction=0)
-
-    def combine_data(self, new_data):
-        '''
-        Combine private data into this instance data
-
-        :param new_data:
-            List of data created by add() when provided private data list.
-            All data from new_data is combined / merged into the instance data.
-        '''
-        if not new_data:
-            return
-
-        if not self.data:
-            # this is ok as new_data was built by add() and is sorted/merged
-            self.data = new_data
-            return
-
-        for item in new_data:
-            self.add(item[0], item[1])
-
     def print(self):
-        '''
-        Print all the data
-        '''
-        if self.data:
+        """
+        Print all the data.
+        """
+        if self.cache_data:
             print(f'# {self.ipt}')
-            for [net, val] in self.data:
-                print(f'{net} = {val}')
+            self.cache_data.print()
 
-def _try_merge(data, ind:int, direction:int=0):
-    '''
-    When new net is added it might be possible to merge some of the nets
-    So, if possible merge any nets in cache which can be merged.
-    The work begins at index 'ind'. Since we keep the cache ordered
-    and merged we only need to do this whenever element is inserted.
-    and this if i+1 cannot be merged then i+2, i+3 etc likewise.
-    Ditto for i-1. So by keeping list merged and sorted we only need
-    to check i+1,i-1 (and recurse if we merge anything).
-    In this case an element was inserted at index 'ind'
 
-    So we first check (ind, ind+1) - if merged then work to next higher and so on
-    Then work down (ind, ind-1) similarly
-    Input:
-        ind : index to start merge (ie what just got inserted into list)
-        direction:
-            1 only merge i > index
-           -1 only merge i < index
-            0 merge both ways
-    '''
-    # pylint: disable=chained-comparison
-    if ind < 0:
-        return
-
-    num_elems = len(data)
-    ind_next = ind + 1
-    if direction >= 0 and ind_next < num_elems:
-        if data[ind][1] == data[ind_next][1]:
-            try_merged = Cidr.compact_nets([data[ind][0], data[ind_next][0]])
-            if len(try_merged) == 1:
-                data[ind][0] = try_merged[0]
-                del data[ind_next]
-                _try_merge(data, ind, direction=1)
-
-    num_elems = len(data)
-    ind_prev = ind - 1
-    if direction <= 0 and ind_prev >= 0:
-        if data[ind][1] == data[ind_prev][1]:
-            try_merged = Cidr.compact_nets([data[ind][0], data[ind_prev][0]])
-            if len(try_merged) == 1:
-                data[ind_prev][0] = try_merged[0]
-                del data[ind]
-                _try_merge(data, ind_prev, direction = -1)
-
-def _find_nearest(data, target_net) -> (int, bool):
-    '''
-    Return (index, ismatch)
-    ismatch True means target_net is subnet of element[index] network
-    Find index of the element that matches (ismatch = True)
-    or index after which net would be added to list to keep it sorted
-    if net is small than first element then returns -1 so net should
-    be inserted at element 0
-    Algorithm is binary search.
-    '''
-    if not data:
-        return (-1, False)
-
-    ismatch = False
-    low = 0
-    high = len(data) - 1
-    index = -1
-
-    while low <= high:
-        mid = (low + high) // 2
-
-        if data[mid][0] <= target_net:
-            index = mid
-            low = mid + 1
-        else:
-            high = mid - 1
-
-    if index >= 0:
-        if target_net.subnet_of(data[index][0]):
-            ismatch = True
-    return (index, ismatch)
-
-def choose_lock_file(cache_dir:str, ipt:str) -> str:
-    '''
+def _choose_lock_file(cache_dir: str, ipt: str) -> str:
+    """
     Generate lock file to protect cache writes and reads
     lockfile in /tmp but use cache file name to ensure lock applies
     to what its needed for
-    '''
+    """
     if not cache_dir:
-        return None
+        return '-x-'
 
     user = os.getlogin()
     lockdir = f'/tmp/py-cidr-{user}'
-    os.makedirs(lockdir, exist_ok = True)
+    os.makedirs(lockdir, exist_ok=True)
 
-    lockfile = cache_dir.replace('/home/', '').replace(user, '').replace('.cache', '')
+    lockfile = cache_dir.replace('/home/', '').replace(user, '')
+    lockfile = lockfile.replace('.cache', '')
     lockfile = lockfile.lstrip('/').rstrip('/')
     lockfile = lockfile.replace('/', '-')
     lockfile = f'{lockfile}.{ipt}'

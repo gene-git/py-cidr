@@ -19,12 +19,26 @@ licensedir="/usr/share/licenses/${self}"
 if [ ! -d "$dest" ] ; then
     echo 'Missing destination directory'
     exit 1
-else
-    # shared
-    /usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}
-    /usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/
-
-    /usr/bin/python -m installer --destdir="$dest" dist/*.whl
-    exit 0
 fi
 
+# make app link in /usr/bin
+apps=('py-cidr-cache-print.py')
+
+sitedir=$(/usr/bin/python3 -c "import site; print(site.getsitepackages()[0])")
+self_sitedir=${sitedir}/${self//-/_}
+
+
+# shared
+/usr/bin/rsync --mkpath -a ${info} ${dest}${infodir}
+/usr/bin/rsync --mkpath -a ${license} ${dest}/${licensedir}/
+
+/usr/bin/python -m installer --destdir="$dest" dist/*.whl
+
+if [ -v apps ] ; then
+    /usr/bin/mkdir -p "${dest}/usr/bin"
+    for app in ${apps[@]}
+    do
+        /usr/bin/rsync -av src/${app} ${dest}/usr/bin/ 
+    done
+fi
+exit 0

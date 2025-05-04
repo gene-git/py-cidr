@@ -35,18 +35,28 @@ See API reference documentation for more details.
 New / Interesting
 ==================
 
-* Add RFC 1918 convenience tools:
+* PEP-8, PEP-257 and PEP-484 style changes
+* PEP 561 type hints (improves module use for type checkers e.g. *mypy*)
+* CidrMap now uses separate CidrCache for "private cache data" instead of just the "data" part.
+  CidrCache class no longer needs it's own "private data" functionality.
+* Add some tests (via pytest)
+* Reorganize CidrMap and simplify/improve way we do private_cache supporing
+  multiprocess/multithreading usecase. This is now all done in CidrMap.
+* Change cache file storage to pickle format as its more flexible than json
+  Provide simple app to show contents of cache:
 
-  Cidr.is_rfc_1918()
-  Cidr.rfc_1918_nets()
-  Cidr.rfc_1918_cidrs()
-  Cidr.remove_rfc_1918()
+.. code::
 
-* Code reorg; break into smaller chunks in separate files.
+   py-cidr-cache-print <cache_directory>
 
 ###############
 Getting Started
 ###############
+
+All git tags are signed with arch@sapience.com key which is available via WKD
+or download from https://www.sapience.com/tech. Add the key to your package builder gpg keyring.
+The key is included in the Arch package and the source= line with *?signed* at the end can be used
+to verify the git tag.  You can also manually verify the signature
 
 
 py-cidr module 
