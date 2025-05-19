@@ -7,12 +7,20 @@ Tags
 
 ::
 
-	2.6.0 (2025-01-18) -> 3.2.1 (2025-05-04)
-	20 commits.
+	2.6.0 (2025-01-18) -> 3.2.2 (2025-05-19)
+	22 commits.
 
 Commits
 =======
 
+
+* 2025-05-19  : **3.2.2**
+
+::
+
+                Add pytest to checkdepnds in arch PKBUILD
+                  Thanks to @Reylak pm AUR.
+ 2025-05-04     update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-05-04  : **3.2.1**
 
