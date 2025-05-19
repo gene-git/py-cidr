@@ -4,8 +4,8 @@
 Project py-cidr
 This file is auto updated by git-release
 """
-__version__ = "3.2.1"
-__date__ = "2025-05-04"
+__version__ = "3.2.2"
+__date__ = "2025-05-19"
 __reldev__ = "release"
 
 
