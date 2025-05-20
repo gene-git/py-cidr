@@ -1,0 +1,131 @@
+py_cidr.cidr_file_class
+=======================
+
+.. py:module:: py_cidr.cidr_file_class
+
+.. autoapi-nested-parse::
+
+   CidrFile class:
+   Read/write a file with list of cidr blocks as strings
+   For reading
+
+   - comments ignored
+   - pname = is path to the file.
+   - cidr are all in column 1
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: CidrFile
+
+   Provides common CIDR string file reader/writer tools.
+
+   All methods are static so no class instance variable needed.
+
+
+   .. py:method:: copy_cidr_file(src_file: str, dst_file: str) -> bool
+      :staticmethod:
+
+
+      Copy one file to another.
+
+      Args:
+          src_file (str):
+          Source file to copy.
+
+          dst_file (str):
+          Where to save copy
+
+      Returns:
+          bool:
+          True if all okay else False
+
+
+
+   .. py:method:: read_cidr_file(fname: str, verb: bool = False) -> List[str]
+      :staticmethod:
+
+
+       Read file of cidrs and return list of all IPv4 and IPv6.
+
+       See read_cidrs() which this uses.
+
+      Args:
+          fname (str):
+          Path to file of cidrs to read.
+
+          verb (bool):
+          More verbose output
+
+      Returns:
+          List[str]:
+          List of all cidrs (ip4 and ip6 combined)
+
+
+
+   .. py:method:: read_cidr_files(targ_dir: str, file_list: List[str]) -> List[str]
+      :staticmethod:
+
+
+      Read files in a directory and return merged list of cidr strings.
+
+      Args:
+          targ_dir (str):
+          Directory to find each file.
+
+          file_list (List[str]):
+          List of files in *targ_dir* to read.
+
+      Returns:
+          List[str]:
+          List of all cidrs found in the files.
+
+
+
+
+   .. py:method:: read_cidrs(fname: str | None, verb: bool = False) -> Tuple[List[str], List[str]]
+      :staticmethod:
+
+
+      Read file of cidrs and return tuple of separate lists (ip4, ip6).
+
+      - if fname is None or sys.stdin then data is read from stdin.
+      - only column 1 of file is used.
+      - comments are ignored
+
+      Args:
+          fname (str | None):
+          File name to read.
+
+          verb (bool):
+          More verbose output when True.
+
+      Returns:
+          Tuple[List[str], List[str]]:
+          Tuple of lists of cidrs (ip4, ip6)
+
+
+
+   .. py:method:: write_cidr_file(cidrs: List[str], pname: str) -> bool
+      :staticmethod:
+
+
+      Write list of cidrs to a file.
+
+      Args:
+          cidrs (List[str]):
+          List of cidr strings to write.
+
+          pname (str):
+          Path to file where cidrs are to be written.
+
+      Returns:
+          bool:
+          True if successful otherwise False.
+
+
+

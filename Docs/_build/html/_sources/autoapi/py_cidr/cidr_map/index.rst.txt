@@ -1,0 +1,113 @@
+py_cidr.cidr_map
+================
+
+.. py:module:: py_cidr.cidr_map
+
+.. autoapi-nested-parse::
+
+   Map cidr/ips to a (str) value.
+   Requires CidrCache
+
+   Keep separate caches for ipv4 and ipv6
+   cidr matches cache.cidr cidr when cidr is subnet of cache.cidr.
+
+   Requires CidrCache for the actual cache management
+
+
+
+
+
+Module Contents
+---------------
+
+.. py:class:: CidrMap(cache_dir: str | None = None)
+
+   Class provides map(cidr) -> some value.
+
+    - ipv4 and ipv6 are cached separately
+    - built on CidrCache and Cidr classes
+
+   Args:
+       cache_dir (str):
+       Optional directory to save cache file
+
+
+   .. py:method:: add_cidr(cidr: str, result: str, priv_cache: _NetCache | None = None)
+
+      Add cidr to cache.
+
+      Args:
+          cidr (str):
+          Add this cidr string and its associated result value to the map.
+
+          result (str):
+          The result value to be associated with this cidr.
+          i.e. map(cidr) = result
+
+          priv_data (private):
+
+          If using multiple processes/threads then provide this object
+          where changes are kept instead of in the instance cache.
+          This way the same instance (and its cache) can be used
+          across multiple processes/threads.
+
+          Use CidrMap.create_private_cache() to create private_data
+
+
+
+
+   .. py:method:: create_private_cache() -> _NetCache
+      :staticmethod:
+
+
+      Create and Return private cache object to use with add_cidr().
+
+      This cache has no cache_dir set - memory only.
+      Required if one CidrMap instance is used in multiple processes/threads
+      Give each process/thread a private data cache and they can be merged
+      into the CidrMap instance after they have all completed.
+
+      Returns:
+          (private):
+          private_cache_data object.
+
+
+
+   .. py:method:: lookup(cidr: str) -> Any | None
+
+      Check if cidr is in map.
+
+      Args:
+          cidr (str):
+          Cidr value to lookup.
+
+      Returns:
+          Any | None:
+          Result = map(cidr) if found else None.
+
+
+
+   .. py:method:: merge(priv_cache: _NetCache | None)
+
+      Merge private cache into our internal cache.
+
+      Args:
+          priv_data (_PrivCache):
+          The "private data" to add (cidr, result) to the map, then
+          this merges content of priv_data into the current data.
+          priv_data must be created by CidrMap.create_private_cache()
+
+
+
+   .. py:method:: print()
+
+      Print the cache data.
+
+
+
+   .. py:method:: save_cache()
+
+      Write cache to files
+
+
+
