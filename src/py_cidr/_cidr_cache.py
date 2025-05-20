@@ -50,6 +50,8 @@ class CidrCache:
         cache_dir (str | None):
         Optional directory where cache files are saved.
 
+    Enhancement: Add cleanup() method to remove lockfile
+
     """
     def __init__(self, ipt: str, cache_dir: str | None = None):
         self.ipt: str = ipt
@@ -276,19 +278,32 @@ def _choose_lock_file(cache_dir: str, ipt: str) -> str:
     Generate lock file to protect cache writes and reads
     lockfile in /tmp but use cache file name to ensure lock applies
     to what its needed for
+
+    NB lockfile must be same across processes so that the lock
+    is respected across processes. We prefer to use /tmp
+    as this is tmpfs and avoids NFS.
+
+    This means we dont want to use any 'tempdir/tempfile'.
+
+    Preferable to use username.  But when run in chroot there may
+    be no user / controlling terminal.
+
+    E.g. When building package in chroot and running tests.
+    In this case we use cache_dir.
     """
     if not cache_dir:
         return '-x-'
 
-    user = os.getlogin()
-    lockdir = f'/tmp/py-cidr-{user}'
+    try:
+        user = os.getlogin()
+        lockdir = f'/tmp/py-cidr-{user}'
+        lockfile = f'{ipt}.' + os.path.basename(cache_dir) + '.lock'
+
+    except OSError:
+        user = 'xxx'
+        lockdir = cache_dir
+        lockfile = f'{ipt}.lock'
+
     os.makedirs(lockdir, exist_ok=True)
-
-    lockfile = cache_dir.replace('/home/', '').replace(user, '')
-    lockfile = lockfile.replace('.cache', '')
-    lockfile = lockfile.lstrip('/').rstrip('/')
-    lockfile = lockfile.replace('/', '-')
-    lockfile = f'{lockfile}.{ipt}'
-
     path = os.path.join(lockdir, lockfile)
     return path

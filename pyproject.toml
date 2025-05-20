@@ -43,3 +43,6 @@ detached = true
 dependencies = [
 ]
 
+[tool.mypy]
+check_untyped_defs = true
+
