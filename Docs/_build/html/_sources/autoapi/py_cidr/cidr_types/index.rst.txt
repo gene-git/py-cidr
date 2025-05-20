@@ -7,8 +7,9 @@ py_cidr.cidr_types
 
    Convenience types:
 
-   Provides types IPvxNetwork, IPvxAddress and IPAddress which 
-   are based on ipaddress types IPv4Network, IPv6Network, IPv4Address and IPv6Address.
+   Provides types IPvxNetwork, IPvxAddress and IPAddress which
+   are based on ipaddress types:
+     IPv4Network, IPv6Network, IPv4Address and IPv6Address.
 
 
 

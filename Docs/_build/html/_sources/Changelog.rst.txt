@@ -7,12 +7,20 @@ Tags
 
 ::
 
-	2.6.0 (2025-01-18) -> 3.2.2 (2025-05-19)
-	22 commits.
+	2.6.0 (2025-01-18) -> 3.3.0 (2025-05-20)
+	24 commits.
 
 Commits
 =======
 
+
+* 2025-05-20  : **3.3.0**
+
+::
+
+                Fix for lockfile path when run in chroot.
+                  As reported by AUR user @piater
+ 2025-05-19     update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-05-19  : **3.2.2**
 
