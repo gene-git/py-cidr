@@ -6,10 +6,13 @@ network is any ipaddress network (ipv4 or ipv6 )
 lookup of a cidr returns its associated value.
 cidr matches cache.cidr if cidr is subnet of cidr.
 Cache is an ordered list by net.
- See Also:
+See Also:
+
     CidrMap which uses CidrCache and with a
     separate cache for ipv4 and ipv6
- Requires:
+
+Requires:
+
     ipaddress: for cidr/network manipulations
     lockmgr: for ensuring cache can be safely read/written
 """
