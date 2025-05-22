@@ -3,7 +3,6 @@ Test:
     Read / Write cache file
 """
 # pylint: disable=too-few-public-methods
-from typing import List
 import os
 import shutil
 from py_cidr import CidrMap
@@ -14,8 +13,8 @@ class _TestData:
     Initialize for test
     """
     def __init__(self):
-        self.cidrs: List[str] = ['10.0.0.0/24', '10.0.1.0/24', '10.0.2.0/24']
-        self.values: List[str] = ['aaa', 'bbb', 'ccc']
+        self.cidrs: list[str] = ['10.0.0.0/24', '10.0.1.0/24', '10.0.2.0/24']
+        self.values: list[str] = ['aaa', 'bbb', 'ccc']
 
         pid: int = os.getpid()
         self.cache_dir: str = f'/tmp/_py-cidr-test/{pid}'

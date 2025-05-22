@@ -3,14 +3,13 @@
 """
 Class support functions for range of cidrs
 """
-from typing import (List, Tuple)
 import ipaddress
 from ipaddress import (IPv4Address, IPv6Address)
 from .cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
 from ._cidr_nets import (cidr_to_net)
 
 
-def range_to_nets(start: IPAddress, end: IPAddress) -> List[IPvxNetwork]:
+def range_to_nets(start: IPAddress, end: IPAddress) -> list[IPvxNetwork]:
     """
     Generate a list of cidr/nets from an IP range.
 
@@ -24,8 +23,8 @@ def range_to_nets(start: IPAddress, end: IPAddress) -> List[IPvxNetwork]:
         If True then returns list of cidr strings otherwise IPvxNetwork
 
     :returns:
-        List of cidr network blocks representing the IP range.
-        List elements are IPvxAddress or str if parameter string=True
+        list of cidr network blocks representing the IP range.
+        list elements are IPvxAddress or str if parameter string=True
     """
     # pylint: disable=unnecessary-comprehension
     if isinstance(start, str):
@@ -45,7 +44,7 @@ def range_to_nets(start: IPAddress, end: IPAddress) -> List[IPvxNetwork]:
     return nets
 
 
-def range_to_cidrs(start: IPAddress, end: IPAddress) -> List[str]:
+def range_to_cidrs(start: IPAddress, end: IPAddress) -> list[str]:
     """
     Generate a list of cidr/nets from an IP range.
 
@@ -59,8 +58,8 @@ def range_to_cidrs(start: IPAddress, end: IPAddress) -> List[str]:
         If True then returns list of cidr strings otherwise IPvxNetwork
 
     :returns:
-        List of cidr network blocks representing the IP range.
-        List elements are IPvxAddress or str if parameter string=True
+        list of cidr network blocks representing the IP range.
+        list elements are IPvxAddress or str if parameter string=True
     """
     nets = range_to_nets(start, end)
     cidrs = [str(cidr) for cidr in nets]
@@ -68,7 +67,7 @@ def range_to_cidrs(start: IPAddress, end: IPAddress) -> List[str]:
 
 
 def net_to_range_nets(net: IPvxNetwork
-                      ) -> Tuple[IPvxAddress | None, IPvxAddress | None]:
+                      ) -> tuple[IPvxAddress | None, IPvxAddress | None]:
     """
     Network to IP Range
 
@@ -79,7 +78,7 @@ def net_to_range_nets(net: IPvxNetwork
         If True then returns cidr strings instead of IPvxAddress
 
     :returns:
-        Tuple (ip0, ip1) of first and last IP address in net
+        tuple (ip0, ip1) of first and last IP address in net
         (ip0, ip1) are IPvxAddress or str when string is True
     """
     if not net:
@@ -91,7 +90,7 @@ def net_to_range_nets(net: IPvxNetwork
 
 
 def net_to_range_cidrs(net: IPvxNetwork
-                       ) -> Tuple[str | None, str | None]:
+                       ) -> tuple[str | None, str | None]:
     """
     Network to IP Range
 
@@ -102,7 +101,7 @@ def net_to_range_cidrs(net: IPvxNetwork
         If True then returns cidr strings instead of IPvxAddress
 
     :returns:
-        Tuple (ip0, ip1) of first and last IP address in net
+        tuple (ip0, ip1) of first and last IP address in net
         (ip0, ip1) are IPvxAddress or str when string is True
     """
     if not net:
@@ -112,7 +111,7 @@ def net_to_range_cidrs(net: IPvxNetwork
 
 
 def cidr_to_range_nets(cidr: str
-                       ) -> Tuple[IPvxAddress | None, IPvxAddress | None]:
+                       ) -> tuple[IPvxAddress | None, IPvxAddress | None]:
     """
     Cidr string to an IP Range
 
@@ -120,7 +119,7 @@ def cidr_to_range_nets(cidr: str
         The cidr string to examine
 
     :returns:
-        Tuple (ip0, ip1) of first and last IP address in net
+        tuple (ip0, ip1) of first and last IP address in net
         (ip0, ip1) are each IPvxAddress.
     """
     net = cidr_to_net(cidr, strict=False)
@@ -130,7 +129,7 @@ def cidr_to_range_nets(cidr: str
 
 
 def cidr_to_range_cidrs(cidr: str
-                        ) -> Tuple[str | None, str | None]:
+                        ) -> tuple[str | None, str | None]:
     """
     Cidr string to an IP Range
 
@@ -138,7 +137,7 @@ def cidr_to_range_cidrs(cidr: str
         The cidr string to examine
 
     :returns:
-        Tuple (ip0, ip1) of first and last IP address in net
+        tuple (ip0, ip1) of first and last IP address in net
         (ip0, ip1) are each a cidr str
     """
     net = cidr_to_net(cidr, strict=False)

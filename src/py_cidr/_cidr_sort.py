@@ -3,14 +3,13 @@
 """
 Class support functions to sort lists of cidrs/nets
 """
-from typing import (List)
 import ipaddress
 
 from ._cidr_nets import (cidrs_to_nets, nets_to_cidrs)
 from ._cidr_address import (ips_to_addresses, addresses_to_ips)
 
 
-def sort_cidrs(cidrs: List[str]) -> List[str]:
+def sort_cidrs(cidrs: list[str]) -> list[str]:
     """
     Sort the list of cidr strings.
     """
@@ -22,7 +21,7 @@ def sort_cidrs(cidrs: List[str]) -> List[str]:
     return cidrs_sorted
 
 
-def sort_ips(ips: List[str]) -> List[str]:
+def sort_ips(ips: list[str]) -> list[str]:
     """
     Sort the list of cidr strings.
     """

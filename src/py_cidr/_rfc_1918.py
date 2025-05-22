@@ -4,7 +4,6 @@
 Tools interacting with RFC 1918
 """
 # pylint: disable=invalid-name
-from typing import (List, Tuple)
 from .cidr_types import IPvxNetwork
 from ._cidr_subnet import (cidr_is_subnet)
 from ._cidr_nets import (cidrs_to_nets)
@@ -32,42 +31,42 @@ def is_rfc_1918(cidr: str) -> bool:
     return False
 
 
-def rfc_1918_nets() -> List[IPvxNetwork]:
+def rfc_1918_nets() -> list[IPvxNetwork]:
     """
     Return list of rfc 1918 networks.
 
     Returns:
-        List[IPvxNetwork]:
-        List of all RFC 1918 networks. Each element is ipaddress.IPv4Network
+        list[IPvxNetwork]:
+        list of all RFC 1918 networks. Each element is ipaddress.IPv4Network
     """
     rfc_1918_str = rfc_1918_cidrs()
     rfc_1918 = cidrs_to_nets(rfc_1918_str)
     return rfc_1918
 
 
-def rfc_1918_cidrs() -> List[str]:
+def rfc_1918_cidrs() -> list[str]:
     """
     Return list of rfc 1918 networks cidr strings.
 
     Returns:
-        List[str]:
-        List of RFC 1918 networks as cidr strings
+        list[str]:
+        list of RFC 1918 networks as cidr strings
     """
     rfc_1918s = ['10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16']
     return rfc_1918s
 
 
-def remove_rfc_1918(cidrs_in: str | List[str]
-                    ) -> Tuple[str | List[str], str | List[str]]:
+def remove_rfc_1918(cidrs_in: str | list[str]
+                    ) -> tuple[str | list[str], str | list[str]]:
     """
     Given list of cidrs, return list without any rfc 1918.
 
     Args:
-        cidrs_in (str | List[str])::
+        cidrs_in (str | list[str])::
         Cidr string or list of cidr strings.
 
     Returns:
-        Tuple[str | List[str], str | List[str]]:
+        tuple[str | list[str], str | list[str]]:
         Returns (cidrs_cleaned, rfc_1918_cidrs_found):
 
         - cidrs_cleaned = list of cidrs with all rfc_1918 removed

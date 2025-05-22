@@ -17,7 +17,7 @@ Requires:
     lockmgr: for ensuring cache can be safely read/written
 """
 # pylint: disable=too-many-instance-attributes
-from typing import (Any, Self, Tuple)
+from typing import (Any, Self)
 import os
 
 from lockmgr import LockMgr
@@ -176,7 +176,7 @@ class CidrCache:
         return None
 
     def lookup(self, net: IPvxNetwork
-               ) -> Tuple[IPvxNetwork, Any] | Tuple[None, None]:
+               ) -> tuple[IPvxNetwork, Any] | tuple[None, None]:
         """
         Lookup value associated with network.
 

@@ -3,7 +3,7 @@
 """
 Support for type checks
 """
-from typing import (Any, Tuple, Type)
+from typing import (Any)
 import ipaddress
 from ipaddress import (IPv4Address, IPv6Address, IPv4Network, IPv6Network)
 from ipaddress import (AddressValueError, NetmaskValueError)
@@ -93,7 +93,7 @@ def address_iptype(addr: IPvxAddress | IPvxNetwork) -> str | None:
     return None
 
 
-def cidr_type_network(cidr: str) -> Tuple[str, Type[IPvxNetwork]]:
+def cidr_type_network(cidr: str) -> tuple[str, type[IPvxNetwork]]:
     """
     Cidr Network Type.
 
@@ -102,8 +102,8 @@ def cidr_type_network(cidr: str) -> Tuple[str, Type[IPvxNetwork]]:
         Cidr string to examine.
 
     Returns:
-        Tuple[str, Type[IPvxNetwork]]
-        Tuple(ip-type, net-type). ip-type is a string  ('ip4', 'ip6') while
+        tuple[str, type[IPvxNetwork]]
+        tuple(ip-type, net-type). ip-type is a string  ('ip4', 'ip6') while
         network type is IPv4Network or IPv6Network.
         If cidr is invalid then ip-type will be None.
     """

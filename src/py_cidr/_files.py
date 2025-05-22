@@ -4,7 +4,6 @@
 Atomic write file
  - caller responsible for any required locking
 """
-from typing import (Tuple)
 import os
 import random
 import string
@@ -26,7 +25,7 @@ def open_file(path, mode, encoding=None):
 
 
 def write_file_atomic(data: str | bytes, fpath: str
-                      ) -> Tuple[bool, str | None]:
+                      ) -> tuple[bool, str | None]:
     """
     Write data to fpath - atomic version
     Input:

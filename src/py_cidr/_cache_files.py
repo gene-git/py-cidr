@@ -6,7 +6,6 @@ Read write cache file
   To Show content of pickle file use:
     python -m pickletools xxx.pkl
 """
-from typing import (List)
 import os
 import pickle
 from pickle import (PickleError)
@@ -14,7 +13,7 @@ from ._files import write_file_atomic
 from ._cache_elem import (CidrCacheElem)
 
 
-def read_cache_file(cache_file: str) -> List[CidrCacheElem]:
+def read_cache_file(cache_file: str) -> list[CidrCacheElem]:
     """
     Read cache file: cache_file.pkl
     Returns cache or None if no cache.
@@ -23,7 +22,7 @@ def read_cache_file(cache_file: str) -> List[CidrCacheElem]:
         return []
 
     try:
-        cache: List[CidrCacheElem] = []
+        cache: list[CidrCacheElem] = []
         with open(cache_file, 'rb') as fob:
             data = fob.read()
             if data:
@@ -35,12 +34,12 @@ def read_cache_file(cache_file: str) -> List[CidrCacheElem]:
         return []
 
 
-def write_cache_file(cache_elems: List[CidrCacheElem],
+def write_cache_file(cache_elems: list[CidrCacheElem],
                      cache_file: str) -> bool:
     """
     Write pickled cache file.
     Args:
-        cache_elems (List[CidrCacheElem]):
+        cache_elems (list[CidrCacheElem]):
         Cache data to write
 
         cache_file (str):

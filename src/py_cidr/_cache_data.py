@@ -14,7 +14,7 @@ Cache is an ordered list by net.
     lockmgr: for ensuring cache can be safely read/written
 """
 # pylint: disable=too-many-instance-attributes,too-few-public-methods
-from typing import (List, Self, Tuple)
+from typing import (Self)
 
 from .cidr_types import (IPvxNetwork)
 from ._cidr_compact import (compact_nets)
@@ -29,7 +29,7 @@ class CidrCacheData:
     """
     def __init__(self):
         self.vers: str = 'v2'
-        self.elems: List[CidrCacheElem] = []
+        self.elems: list[CidrCacheElem] = []
 
     def read_cache_file(self, file: str):
         """
@@ -107,7 +107,7 @@ class CidrCacheData:
             return self.elems[index]
         return None
 
-    def find_nearest(self, net: IPvxNetwork) -> Tuple[int, bool]:
+    def find_nearest(self, net: IPvxNetwork) -> tuple[int, bool]:
         """
         Find Nearest (internal).
 
@@ -121,8 +121,8 @@ class CidrCacheData:
         is provided - in which case it is used to do the search.
 
         Returns:
-            Tuple[int, bool]:
-            Tuple of (Index, ismatch). Index refers to cache list.
+            tuple[int, bool]:
+            tuple of (Index, ismatch). Index refers to cache list.
             Match is True when net is a subnet of the cache element
             at index or is identical to that net.
 
@@ -205,7 +205,7 @@ class CidrCacheData:
         return True
 
 
-def _try_merge(elems: List[CidrCacheElem], ind: int, direction: int = 0):
+def _try_merge(elems: list[CidrCacheElem], ind: int, direction: int = 0):
     """
     Merging any neighboring nets if possible.
 
@@ -252,8 +252,8 @@ def _try_merge(elems: List[CidrCacheElem], ind: int, direction: int = 0):
                 _try_merge(elems, ind_prev, direction=-1)
 
 
-def _find_nearest(elems: List[CidrCacheElem], net: IPvxNetwork
-                  ) -> Tuple[int, bool]:
+def _find_nearest(elems: list[CidrCacheElem], net: IPvxNetwork
+                  ) -> tuple[int, bool]:
     """
     Return (index, ismatch).
 

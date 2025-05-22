@@ -3,7 +3,6 @@
 """
 Class support functions for subnets
 """
-from typing import (List)
 import ipaddress
 
 from .cidr_types import (IPvxNetwork)
@@ -35,7 +34,7 @@ def cidr_set_prefix(cidr: str, prefix: int) -> str:
     return str(addr_new)
 
 
-def cidr_is_subnet(cidr: str, ipa_nets: List[IPvxNetwork]) -> bool:
+def cidr_is_subnet(cidr: str, ipa_nets: list[IPvxNetwork]) -> bool:
     """
     Is Subnet:
         Check if cidr is a subnet of any of the list of IPvxNetworks .
@@ -44,7 +43,7 @@ def cidr_is_subnet(cidr: str, ipa_nets: List[IPvxNetwork]) -> bool:
         Cidr string to check.
 
     :param ipa_nets:
-        List of IPvxNetworks to check in.
+        list of IPvxNetworks to check in.
 
     :returns:
         True if cidr is subnet of any of the ipa_nets, else False.
@@ -68,8 +67,8 @@ def cidr_is_subnet(cidr: str, ipa_nets: List[IPvxNetwork]) -> bool:
     return False
 
 
-def net_exclude(net1: IPvxNetwork, nets2: List[IPvxNetwork]
-                ) -> List[IPvxNetwork]:
+def net_exclude(net1: IPvxNetwork, nets2: list[IPvxNetwork]
+                ) -> list[IPvxNetwork]:
     """
     Exclude net1 from any of networks in net2
     return resulting list of nets (without net1)
@@ -77,7 +76,7 @@ def net_exclude(net1: IPvxNetwork, nets2: List[IPvxNetwork]
     if not net1 or not nets2:
         return nets2
 
-    nets: List[IPvxNetwork] = []
+    nets: list[IPvxNetwork] = []
     for net in nets2:
         if net1.subnet_of(net):                      # type: ignore[arg-type]
             # remove the net1 subnet from net
@@ -92,8 +91,8 @@ def net_exclude(net1: IPvxNetwork, nets2: List[IPvxNetwork]
     return nets
 
 
-def nets_exclude(nets1: List[IPvxNetwork], nets2: List[IPvxNetwork]
-                 ) -> List[IPvxNetwork]:
+def nets_exclude(nets1: list[IPvxNetwork], nets2: list[IPvxNetwork]
+                 ) -> list[IPvxNetwork]:
     """
     Exclude every nets1 network from from any networks in nets2
     """
@@ -105,13 +104,13 @@ def nets_exclude(nets1: List[IPvxNetwork], nets2: List[IPvxNetwork]
     return final
 
 
-def cidrs_exclude(cidrs1: List[str], cidrs2: List[str]) -> List[str]:
+def cidrs_exclude(cidrs1: list[str], cidrs2: list[str]) -> list[str]:
     """ old name """
     return cidrs2_minus_cidrs1(cidrs1, cidrs2)
 
 
-def cidrs2_minus_cidrs1(cidrs1: List[str], cidrs2: List[str]
-                        ) -> List[str]:
+def cidrs2_minus_cidrs1(cidrs1: list[str], cidrs2: list[str]
+                        ) -> list[str]:
     """
     Exclude all of cidrs1 from cidrs2
     i.e. return cidrs2 - cidrs1
@@ -123,7 +122,7 @@ def cidrs2_minus_cidrs1(cidrs1: List[str], cidrs2: List[str]
     return cidrs
 
 
-def cidr_exclude(cidr1: str, cidrs2: List[str]) -> List[str]:
+def cidr_exclude(cidr1: str, cidrs2: list[str]) -> list[str]:
     """
     Exclude cidr1 from any of networks in cidrs2
     return resulting list of cidrs (without cidr1)

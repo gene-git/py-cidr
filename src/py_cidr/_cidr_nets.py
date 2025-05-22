@@ -3,7 +3,6 @@
 """
 Class support functions for networks
 """
-from typing import (List)
 import ipaddress
 
 from .cidr_types import (IPvxNetwork)
@@ -30,18 +29,18 @@ def cidr_to_net(cidr: str, strict: bool = False) -> IPvxNetwork | None:
     return ipaddress.ip_network(cidr, strict=strict)
 
 
-def cidrs_to_nets(cidrs: List[str], strict: bool = False) -> List[IPvxNetwork]:
+def cidrs_to_nets(cidrs: list[str], strict: bool = False) -> list[IPvxNetwork]:
     """
     Convert list of cidr strings to list of IPvxNetwork.
 
     :param cidrs:
-        List of cidr strings
+        list of cidr strings
 
     :param strict:
         If true, then any cidr with host bits is invalid. Defaults to false.
 
     :returns:
-        List of IPvxNetworks.
+        list of IPvxNetworks.
     """
     if cidrs is None or len(cidrs) < 1:
         return []
@@ -54,16 +53,16 @@ def cidrs_to_nets(cidrs: List[str], strict: bool = False) -> List[IPvxNetwork]:
         raise ValueError from exc
 
 
-def nets_to_cidrs(nets: List[IPvxNetwork]) -> List[str]:
+def nets_to_cidrs(nets: list[IPvxNetwork]) -> list[str]:
     """
     Nets to Strings
         Convert list of ipaddress networks to list of cidr strings.
 
     :param nets:
-        List of nets to convert
+        list of nets to convert
 
     :returns:
-        List of cidr strings
+        list of cidr strings
     """
     if nets is None or len(nets) < 1:
         return []

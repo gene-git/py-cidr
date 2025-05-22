@@ -3,7 +3,6 @@
 """
 Class support functions to clean/tidy cidrs
 """
-from typing import (List)
 from ._cidr_valid import (is_valid_cidr)
 from ._cidr_nets import (cidr_to_net)
 
@@ -40,7 +39,7 @@ def clean_cidr(cidr: str) -> str | None:
     return None
 
 
-def clean_cidrs(cidrs: List[str]) -> List[str]:
+def clean_cidrs(cidrs: list[str]) -> list[str]:
     """ clean cidr array """
     if not cidrs:
         return []
@@ -62,7 +61,7 @@ def fix_cidr_host_bits(cidr: str, verb: bool = False) -> str:
     return fix
 
 
-def fix_cidrs_host_bits(cidrs: List[str], verb: bool = False):
+def fix_cidrs_host_bits(cidrs: list[str], verb: bool = False):
     """ zero any host bits """
     if not cidrs:
         return cidrs

@@ -3,7 +3,6 @@ Test:
     Read / Write cache file
 """
 # pylint: disable=too-few-public-methods
-from typing import List
 import os
 from py_cidr import IPvxNetwork
 from py_cidr._cidr_nets import cidr_to_net
@@ -11,7 +10,7 @@ from py_cidr._cache_elem import CidrCacheElem
 from py_cidr._cache_files import (read_cache_file, write_cache_file)
 
 
-def _compare(ela: List[CidrCacheElem], elb: List[CidrCacheElem]) -> bool:
+def _compare(ela: list[CidrCacheElem], elb: list[CidrCacheElem]) -> bool:
     """
     check if 2 elems are the same
     """
@@ -32,9 +31,9 @@ class _TestData:
     Initialize for test
     """
     def __init__(self):
-        self.nets: List[IPvxNetwork] = []
-        self.elems: List[CidrCacheElem] = []
-        self.cidrs: List[str] = ['10.0.0.0/24', '10.0.1.0/24', '10.0.2.0/24']
+        self.nets: list[IPvxNetwork] = []
+        self.elems: list[CidrCacheElem] = []
+        self.cidrs: list[str] = ['10.0.0.0/24', '10.0.1.0/24', '10.0.2.0/24']
 
         pid: int = os.getpid()
         self.file: str = f'/tmp/_xxxx.{pid}'

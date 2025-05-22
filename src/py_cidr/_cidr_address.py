@@ -3,7 +3,6 @@
 """
 Class support functions for cidr addresses
 """
-from typing import (List)
 import ipaddress
 import re
 from ipaddress import (AddressValueError)
@@ -39,31 +38,31 @@ def ip_to_address(ip: str) -> IPvxAddress | None:
     return addr
 
 
-def ips_to_addresses(ips: List[str]) -> List[IPvxAddress]:
+def ips_to_addresses(ips: list[str]) -> list[IPvxAddress]:
     """
     Convert list of IP strings to a list of ip addresses.
 
     :param ips:
-        List of IP strings to convert
+        list of IP strings to convert
 
     :returns:
-        List of IPvxAddress derived from input IPs.
+        list of IPvxAddress derived from input IPs.
     """
     addresses = [ip_to_address(ip) for ip in ips]
     good_addresses = [ip for ip in addresses if ip is not None]
     return good_addresses
 
 
-def addresses_to_ips(addresses: List[IPvxAddress]) -> List[str]:
+def addresses_to_ips(addresses: list[IPvxAddress]) -> list[str]:
     """
     Address to IP strings
         For list of IPs in ipaddress format, return list of ip strings
 
     :param addresses:
-        List of IP addresses in ipaddress format
+        list of IP addresses in ipaddress format
 
     :returns:
-        List of IP strings
+        list of IP strings
     """
     ips = [str(address) for address in addresses]
     return ips

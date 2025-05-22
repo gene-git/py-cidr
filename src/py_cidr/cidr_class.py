@@ -4,7 +4,7 @@
 Class providing some common CIDR utilities
 """
 # pylint: disable=too-many-public-methods
-from typing import (Any, List, Tuple, Type)
+from typing import (Any)
 
 from .cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
 from ._version import version
@@ -79,36 +79,36 @@ class Cidr:
         return cidr_to_net(cidr, strict)
 
     @staticmethod
-    def cidrs_to_nets(cidrs: List[str], strict: bool = False
-                      ) -> List[IPvxNetwork]:
+    def cidrs_to_nets(cidrs: list[str], strict: bool = False
+                      ) -> list[IPvxNetwork]:
         """
         Convert list of cidr strings to list of IPvxNetwork.
 
         Args:
-            cidrs (List[str]):
-            List of cidr strings
+            cidrs (list[str]):
+            list of cidr strings
 
             strict (bool):
             If true, cidr with host bits set is invalid. Defaults to false.
 
         Returns:
-            List[IPvxNetwork]:
-            List of IPvxNetworks generated from cidrs.
+            list[IPvxNetwork]:
+            list of IPvxNetworks generated from cidrs.
         """
         return cidrs_to_nets(cidrs, strict)
 
     @staticmethod
-    def nets_to_cidrs(nets: List[IPvxNetwork]) -> List[str]:
+    def nets_to_cidrs(nets: list[IPvxNetwork]) -> list[str]:
         """
         Convert list of ipaddress networks to list of cidr strings.
 
         Args:
-            nets (List[IPvxNetwork]):
-            List of nets to convert.
+            nets (list[IPvxNetwork]):
+            list of nets to convert.
 
         Returns:
-            List[str]:
-            List of cidr strings.
+            list[str]:
+            list of cidr strings.
         """
         return nets_to_cidrs(nets)
 
@@ -129,32 +129,32 @@ class Cidr:
         return ip_to_address(ip)
 
     @staticmethod
-    def ips_to_addresses(ips: List[str]) -> List[IPvxAddress]:
+    def ips_to_addresses(ips: list[str]) -> list[IPvxAddress]:
         """
         Convert list of IP strings to a list of ip addresses
 
         Args:
-            ips (List[str]):
-            List of IP strings to convert
+            ips (list[str]):
+            list of IP strings to convert
 
         Returns:
-            List[IPvxAddress]:
-            List of IPvxAddress derived from input IPs.
+            list[IPvxAddress]:
+            list of IPvxAddress derived from input IPs.
         """
         return ips_to_addresses(ips)
 
     @staticmethod
-    def addresses_to_ips(addresses: List[IPvxAddress]) -> List[str]:
+    def addresses_to_ips(addresses: list[IPvxAddress]) -> list[str]:
         """
         From list of IPs in ipaddress format, get list of ip strings.
 
         Args:
-            addresses (List[IPvxAddress]):
-            List of IP addresses in ipaddress format
+            addresses (list[IPvxAddress]):
+            list of IP addresses in ipaddress format
 
         Returns:
-            List[str]:
-            List of IP strings
+            list[str]:
+            list of IP strings
         """
         return addresses_to_ips(addresses)
 
@@ -196,7 +196,7 @@ class Cidr:
         return ipaddr_cidr_from_string(address, strict)
 
     @staticmethod
-    def cidr_is_subnet(cidr: str, ipa_nets: List[IPvxNetwork]) -> bool:
+    def cidr_is_subnet(cidr: str, ipa_nets: list[IPvxNetwork]) -> bool:
         """
         Check if cidr is a subnet of any of the list of IPvxNetworks .
 
@@ -204,8 +204,8 @@ class Cidr:
             cidr (str):
             Cidr string to check.
 
-            ipa_nets (List[IPvxNetwork]):
-            List of IPvxNetworks to check.
+            ipa_nets (list[IPvxNetwork]):
+            list of IPvxNetworks to check.
 
         Returns:
             bool:
@@ -229,23 +229,23 @@ class Cidr:
         return address_iptype(addr)
 
     @staticmethod
-    def cidr_list_compact(cidrs: List[str], string: bool = True
-                          ) -> List[str] | List[IPvxNetwork]:
+    def cidr_list_compact(cidrs: list[str], string: bool = True
+                          ) -> list[str] | list[IPvxNetwork]:
         """
         Compact list of cidr networks to smallest list possible.
         Deprecated - use compact_cidrs(cidrs, return_nets)) instead,
         it is the same with the boolean flag reversed.
 
         Args:
-            cidrs (List[str]):
-            List of cidr strings to compact.
+            cidrs (list[str]):
+            list of cidr strings to compact.
 
             string (bool):
              - If True (default), then return is a list of strings.
              - If False, a list of IPvxNetworks.
 
         Returns:
-            List[str] | List[IPvxNetwork]:
+            list[str] | list[IPvxNetwork]:
             Compressed list of cidrs as ipaddress networks (string=False)
             or list of strings when string=True
         """
@@ -254,21 +254,21 @@ class Cidr:
         return compact_cidrs_to_nets(cidrs)
 
     @staticmethod
-    def compact_cidrs(cidrs: List[str], nets: bool = False
-                      ) -> List[str] | List[IPvxNetwork]:
+    def compact_cidrs(cidrs: list[str], nets: bool = False
+                      ) -> list[str] | list[IPvxNetwork]:
         """
         Compact a list of cidr networks as strings.
 
         Args:
-            cidrs (List[str]):
-            List of cidrs to compact.
+            cidrs (list[str]):
+            list of cidrs to compact.
 
             nets (bool):
             If False, the default, the result will be list of strings
             else a list of IPvxNetwork's.
 
         Returns:
-            List[str | IPvxNetwork]:
+            list[str | IPvxNetwork]:
             A list of compacted networks whose elements are strings
             if return_nets is False or IPvxNetworks if True.
         """
@@ -277,23 +277,23 @@ class Cidr:
         return compact_cidrs(cidrs)
 
     @staticmethod
-    def compact_nets(nets: List[IPvxNetwork]) -> List[IPvxNetwork]:
+    def compact_nets(nets: list[IPvxNetwork]) -> list[IPvxNetwork]:
         """
         Compact list of IPvxNetwork.
 
         Args:
-            nets (List[IPvxNetwork]):
+            nets (list[IPvxNetwork]):
             Input list if networks to compact.
 
         Returns:
-            List[IPvxNetwork]:
+            list[IPvxNetwork]:
             Compacted list of IPvxNetworks.
         """
         return compact_nets(nets)
 
     @staticmethod
-    def net_exclude(net1: IPvxNetwork, nets2: List[IPvxNetwork]
-                    ) -> List[IPvxNetwork]:
+    def net_exclude(net1: IPvxNetwork, nets2: list[IPvxNetwork]
+                    ) -> list[IPvxNetwork]:
         """
         Exclude net1 from any of networks in net2 and
         return resulting list of nets (without net1).
@@ -302,19 +302,19 @@ class Cidr:
             net1 (IPvxNetwork):
             Network to be ecluded.
 
-            nets2 (List[IPvxNetwork]):
-            List of networks from which net1 will be excluded
+            nets2 (list[IPvxNetwork]):
+            list of networks from which net1 will be excluded
             from.
 
         Returns:
-            List[IPvxNetwork]:
+            list[IPvxNetwork]:
             Resultant list of networks "nets2 - net1".
         """
         return net_exclude(net1, nets2)
 
     @staticmethod
-    def nets_exclude(nets1: List[IPvxNetwork], nets2: List[IPvxNetwork]
-                     ) -> List[IPvxNetwork]:
+    def nets_exclude(nets1: list[IPvxNetwork], nets2: list[IPvxNetwork]
+                     ) -> list[IPvxNetwork]:
         """
         Exclude every nets1 network from from any networks in nets2.
 
@@ -322,47 +322,47 @@ class Cidr:
         to be excluded instead of a single network.
 
         Args:
-            nets1 (List[IPvxNetwork]):
-            List of nets to be excluded.
+            nets1 (list[IPvxNetwork]):
+            list of nets to be excluded.
 
-            nets2: (List[IPvxNetwork]):
-            List of nets from which will exclude any of nets1.
+            nets2: (list[IPvxNetwork]):
+            list of nets from which will exclude any of nets1.
 
         Returns:
-            List[IPvxNetwork]:
-            List of resultant networks ("nets2" - "nets1")
+            list[IPvxNetwork]:
+            list of resultant networks ("nets2" - "nets1")
 
         """
         return nets_exclude(nets1, nets2)
 
     @staticmethod
-    def cidrs_exclude(cidrs1: List[str], cidrs2: List[str]) -> List[str]:
+    def cidrs_exclude(cidrs1: list[str], cidrs2: list[str]) -> list[str]:
         """ Deprecated: replaced by cidrs2_minus_cidrs1()"""
         return cidrs_exclude(cidrs1, cidrs2)
 
     @staticmethod
-    def cidrs2_minus_cidrs1(cidrs1: List[str], cidrs2: List[str]) -> List[str]:
+    def cidrs2_minus_cidrs1(cidrs1: list[str], cidrs2: list[str]) -> list[str]:
         """
         Exclude all of cidrs1 from cidrs2.
 
         i.e. return "cidrs2" - "cidrs1".
 
         Args:
-            cidrs1 (List[str]):
-            List of cidr strings to be excluded.
+            cidrs1 (list[str]):
+            list of cidr strings to be excluded.
 
-            cidrs2 (List[str]):
-            List of cidr strings from which cidrs1 are excluded.
+            cidrs2 (list[str]):
+            list of cidr strings from which cidrs1 are excluded.
 
         Returns:
-            List[str]:
+            list[str]:
             Resulting list of cidr strings = "cidrs2" - "cidrs1".
 
         """
         return cidrs2_minus_cidrs1(cidrs1, cidrs2)
 
     @staticmethod
-    def cidr_exclude(cidr1: str, cidrs2: List[str]) -> List[str]:
+    def cidr_exclude(cidr1: str, cidrs2: list[str]) -> list[str]:
         """
         Exclude cidr1 from any of networks in cidrs2.
 
@@ -370,41 +370,41 @@ class Cidr:
             cidr1 (str):
             cidr to be excluded.
 
-            cidrs2 (List[str]):
-            List fo cidrs from which cidr1 will be excluded.
+            cidrs2 (list[str]):
+            list fo cidrs from which cidr1 will be excluded.
 
         Returns:
-            List[str]:
+            list[str]:
             Resulting list of cidrs ("cidrs2" - "cidr1")
         """
         return cidr_exclude(cidr1, cidrs2)
 
     @staticmethod
-    def sort_cidrs(cidrs: List[str]) -> List[str]:
+    def sort_cidrs(cidrs: list[str]) -> list[str]:
         """
         Sort the list of cidr strings.
 
         Args:
-            cidrs (List[str]):
-            List of cidrs.
+            cidrs (list[str]):
+            list of cidrs.
 
         Returns:
-            List[str]:
+            list[str]:
             Sorted copy of cidr list
         """
         return sort_cidrs(cidrs)
 
     @staticmethod
-    def sort_ips(ips: List[str]) -> List[str]:
+    def sort_ips(ips: list[str]) -> list[str]:
         """
         Sort a list of IP addresses.
 
         Args:
-            ips (List[str]):
-            List of ips to be sorted.
+            ips (list[str]):
+            list of ips to be sorted.
 
         Returns:
-            List[str]:
+            list[str]:
             Sorted copy of ips.
         """
         return sort_ips(ips)
@@ -453,19 +453,19 @@ class Cidr:
         return clean_cidr(cidr)
 
     @staticmethod
-    def clean_cidrs(cidrs: List[str]) -> List[str]:
+    def clean_cidrs(cidrs: list[str]) -> list[str]:
         """
         Clean list of cidrs.
 
         Similar to clean_cidr() but for a list.
 
         Args:
-            cidrs (List[str]):
-            List of cidr strings to clean up.
+            cidrs (list[str]):
+            list of cidr strings to clean up.
 
         Returns:
-            List[str]:
-            List of cleaned cidrs.
+            list[str]:
+            list of cleaned cidrs.
             If input cidr is invalid then its returnded as None
 
         """
@@ -493,21 +493,21 @@ class Cidr:
         return fix_cidr_host_bits(cidr, verb)
 
     @staticmethod
-    def fix_cidrs_host_bits(cidrs: List[str], verb: bool = False) -> List[str]:
+    def fix_cidrs_host_bits(cidrs: list[str], verb: bool = False) -> list[str]:
         """
         zero any host bits for a list of cidrs.
 
         Similar to fix_cidr_host_bits() but for a list of cidrs.
 
         Args:
-            cidrs (List[str]):
-            List of cidrs to fix up.
+            cidrs (list[str]):
+            list of cidrs to fix up.
 
             verb (bool):
             Some info on stdout when set True. Defaults to False.
 
         Returns:
-            List[str]:
+            list[str]:
             The list of cidrs each with any non-zero host bits now zeroed out.
 
         """
@@ -574,7 +574,7 @@ class Cidr:
         return cidr_iptype(address)
 
     @staticmethod
-    def cidr_type_network(cidr: str) -> Tuple[str, Type[IPvxNetwork]]:
+    def cidr_type_network(cidr: str) -> tuple[str, type[IPvxNetwork]]:
         """
         Cidr Network Type.
 
@@ -583,15 +583,15 @@ class Cidr:
             Cidr string to examine
 
         Returns:
-            Tuple[str, IPvxNetwork]:
-            Tuple(ip-type, net-type). ip-type is a string  ('ip4', 'ip6') while
+            tuple[str, IPvxNetwork]:
+            tuple(ip-type, net-type). ip-type is a string  ('ip4', 'ip6') while
             network type is IPv4Network or IPv6Network
         """
         return cidr_type_network(cidr)
 
     @staticmethod
     def range_to_cidrs(addr_start: IPAddress, addr_end: IPAddress,
-                       string: bool = False) -> List[IPvxNetwork] | List[str]:
+                       string: bool = False) -> list[IPvxNetwork] | list[str]:
         """
         Generate a list of cidr/nets from an IP range.
 
@@ -606,9 +606,9 @@ class Cidr:
             If True then returns list of cidr strings otherwise IPvxNetwork
 
         Returns:
-            List[IPvxNetwork] | List[str]
-            List of cidr network blocks representing the IP range.
-            List elements are IPvxAddress or str if parameter string=True
+            list[IPvxNetwork] | list[str]
+            list of cidr network blocks representing the IP range.
+            list elements are IPvxAddress or str if parameter string=True
         """
         if string:
             return range_to_cidrs(addr_start, addr_end)
@@ -616,7 +616,7 @@ class Cidr:
 
     @staticmethod
     def net_to_range(net: IPvxNetwork, string: bool = False
-                     ) -> Tuple[IPvxAddress | str | None,
+                     ) -> tuple[IPvxAddress | str | None,
                                 IPvxAddress | str | None]:
         """
         Convert network to IP Range.
@@ -629,8 +629,8 @@ class Cidr:
             If True then returns cidr strings instead of IPvxAddress
 
         Returns:
-            Tuple[IPAddress, IPAddress]:
-            Tuple (ip0, ip1) of first and last IP address in net
+            tuple[IPAddress, IPAddress]:
+            tuple (ip0, ip1) of first and last IP address in net
             Each (ip0, ip1) is IPvxAddress or a string if "string" == True
         """
         if string:
@@ -639,7 +639,7 @@ class Cidr:
 
     @staticmethod
     def cidr_to_range(cidr: str, string: bool = False
-                      ) -> Tuple[IPvxAddress | str | None,
+                      ) -> tuple[IPvxAddress | str | None,
                                  IPvxAddress | str | None]:
         """
         Cidr string to an IP Range.
@@ -652,8 +652,8 @@ class Cidr:
             If True then returns cidr strings instead of IPvxAddress
 
         Returns:
-            Tuple[IPAddress, IPAddress]:
-            Tuple (ip0, ip1) of first and last IP address in net
+            tuple[IPAddress, IPAddress]:
+            tuple (ip0, ip1) of first and last IP address in net
             (ip0, ip1) are IPvxAddress or str when string is True
         """
         if string:
@@ -677,44 +677,44 @@ class Cidr:
         return is_rfc_1918(cidr)
 
     @staticmethod
-    def rfc_1918_nets() -> List[IPvxNetwork]:
+    def rfc_1918_nets() -> list[IPvxNetwork]:
         """
         Return list of rfc 1918 networks
 
         Returns:
-            List[IPv4Network]:
-            List of RFC 1918 networks.
+            list[IPv4Network]:
+            list of RFC 1918 networks.
         """
         return rfc_1918_nets()
 
     @staticmethod
-    def rfc_1918_cidrs() -> List[str]:
+    def rfc_1918_cidrs() -> list[str]:
         """
         Return list of rfc 1918 networks cidr strings
 
-        Returns (List[str]):
-            List of RFC 1918 networks as cidr strings
+        Returns (list[str]):
+            list of RFC 1918 networks as cidr strings
         """
         return rfc_1918_cidrs()
 
     @staticmethod
-    def remove_rfc_1918(cidrs_in: str | List[str]
-                        ) -> Tuple[str | List[str], str | List[str]]:
+    def remove_rfc_1918(cidrs_in: str | list[str]
+                        ) -> tuple[str | list[str], str | list[str]]:
         """
         Given list of cidrs, return list without any rfc 1918
 
         Args:
-            cidrs_in (str | List[str]:
+            cidrs_in (str | list[str]:
             Cidr string or list of cidr strings.
 
         Returns:
-            Tuple[str | List[str], str | List[str]]:
-            Returns (Tuple[cidrs_cleaned, rfc_1918_cidrs_found]):
+            tuple[str | list[str], str | list[str]]:
+            Returns (tuple[cidrs_cleaned, rfc_1918_cidrs_found]):
 
             - cidrs_cleaned:
-              List of cidrs with all rfc_1918 removed.
+              list of cidrs with all rfc_1918 removed.
             - rfc_1918_cidrs_found:
-              List of any rfc 1918 found in the input.
+              list of any rfc 1918 found in the input.
 
             If input cidr(s) is a list, then items in output
             are a (possibly empty) list

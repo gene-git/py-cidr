@@ -10,7 +10,6 @@
  - cidr are all in column 1
 
 """
-from typing import (List, Tuple)
 import os
 import sys
 from .cidr_class import (Cidr)
@@ -38,7 +37,7 @@ class CidrFile:
     """
     @staticmethod
     def read_cidrs(fname: str | None, verb: bool = False
-                   ) -> Tuple[List[str], List[str]]:
+                   ) -> tuple[list[str], list[str]]:
         """
         Read file of cidrs and return tuple of separate lists (ip4, ip6).
 
@@ -54,8 +53,8 @@ class CidrFile:
             More verbose output when True.
 
         Returns:
-            Tuple[List[str], List[str]]:
-            Tuple of lists of cidrs (ip4, ip6)
+            tuple[list[str], list[str]]:
+            tuple of lists of cidrs (ip4, ip6)
         """
         if verb:
             print(' \tread_cidr_file: {fname}')
@@ -99,7 +98,7 @@ class CidrFile:
         return (ip4, ip6)
 
     @staticmethod
-    def read_cidr_file(fname: str, verb: bool = False) -> List[str]:
+    def read_cidr_file(fname: str, verb: bool = False) -> list[str]:
         """
          Read file of cidrs and return list of all IPv4 and IPv6.
 
@@ -113,14 +112,14 @@ class CidrFile:
             More verbose output
 
         Returns:
-            List[str]:
-            List of all cidrs (ip4 and ip6 combined)
+            list[str]:
+            list of all cidrs (ip4 and ip6 combined)
         """
         (ip4, ip6) = CidrFile.read_cidrs(fname, verb)
         return ip4 + ip6
 
     @staticmethod
-    def read_cidr_files(targ_dir: str, file_list: List[str]) -> List[str]:
+    def read_cidr_files(targ_dir: str, file_list: list[str]) -> list[str]:
         """
         Read files in a directory and return merged list of cidr strings.
 
@@ -128,15 +127,15 @@ class CidrFile:
             targ_dir (str):
             Directory to find each file.
 
-            file_list (List[str]):
-            List of files in *targ_dir* to read.
+            file_list (list[str]):
+            list of files in *targ_dir* to read.
 
         Returns:
-            List[str]:
-            List of all cidrs found in the files.
+            list[str]:
+            list of all cidrs found in the files.
 
         """
-        cidrs: List[str] = []
+        cidrs: list[str] = []
         if not targ_dir or not file_list:
             return cidrs
 
@@ -151,13 +150,13 @@ class CidrFile:
         return cidrs
 
     @staticmethod
-    def write_cidr_file(cidrs: List[str], pname: str) -> bool:
+    def write_cidr_file(cidrs: list[str], pname: str) -> bool:
         """
         Write list of cidrs to a file.
 
         Args:
-            cidrs (List[str]):
-            List of cidr strings to write.
+            cidrs (list[str]):
+            list of cidr strings to write.
 
             pname (str):
             Path to file where cidrs are to be written.
