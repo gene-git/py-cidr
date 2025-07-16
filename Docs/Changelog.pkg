@@ -1,12 +1,19 @@
 -------------------------------------------------------
  Changelog    : py-cidr
- Tags         : 3.2.2 ➙ 3.6.0, origin/master
-              : 2025-05-19 ➙ 2025-05-21
+ Tags         : 3.2.2 ➙ 3.6.0
+              : 2025-05-19 ➙ 2025-07-16
               : 6 tags. See Docs for full changelog
 -------------------------------------------------------
 
- 2025-05-21   : 3.6.0, origin/master
-                update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
+ 2025-07-16   : 3.6.0
+                Add net_to_cidr()
+                Add sort_nets()
+                Add net_is_subnet()
+                Add address_to_net()
+                Change cidr_iptype() address_iptype() to return empty string on invalid
+                insteed of None
+                Cidr Cache lockfile name: use effective user instead of real user
+ 2025-05-21     update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
  2025-05-21   : 3.5.0
                 Use builtin types where possible. e.g. typing.List -> list

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>py_cidr.cidr_map &#8212; py-cidr 3.6.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+    <script src="../../../_static/documentation_options.js?v=5349f462"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="py_cidr.cidr_types" href="../cidr_types/index.html" />
+    <link rel="prev" title="py_cidr.cidr_file_class" href="../cidr_file_class/index.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-py_cidr.cidr_map">
+<span id="py-cidr-cidr-map"></span><h1>py_cidr.cidr_map<a class="headerlink" href="#module-py_cidr.cidr_map" title="Link to this heading">¶</a></h1>
+<p>Map cidr/ips to a (str) value.
+Requires CidrCache</p>
+<p>Keep separate caches for ipv4 and ipv6
+cidr matches cache.cidr cidr when cidr is subnet of cache.cidr.</p>
+<p>Requires CidrCache for the actual cache management</p>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="py_cidr.cidr_map.CidrMap">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CidrMap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cache_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_cidr.cidr_map.CidrMap" title="Link to this definition">¶</a></dt>
+<dd><p>Class provides map(cidr) -&gt; some value.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>ipv4 and ipv6 are cached separately</p></li>
+<li><p>built on CidrCache and Cidr classes</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cache_dir (str):
+Optional directory to save cache file</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_map.CidrMap.add_cidr">
+<span class="sig-name descname"><span class="pre">add_cidr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priv_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_NetCache</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_cidr.cidr_map.CidrMap.add_cidr" title="Link to this definition">¶</a></dt>
+<dd><p>Add cidr to cache.</p>
+<dl>
+<dt>Args:</dt><dd><p>cidr (str):
+Add this cidr string and its associated result value to the map.</p>
+<p>result (str):
+The result value to be associated with this cidr.
+i.e. map(cidr) = result</p>
+<p>priv_data (private):</p>
+<p>If using multiple processes/threads then provide this object
+where changes are kept instead of in the instance cache.
+This way the same instance (and its cache) can be used
+across multiple processes/threads.</p>
+<p>Use CidrMap.create_private_cache() to create private_data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_map.CidrMap.create_private_cache">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_private_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">_NetCache</span></span></span><a class="headerlink" href="#py_cidr.cidr_map.CidrMap.create_private_cache" title="Link to this definition">¶</a></dt>
+<dd><p>Create and Return private cache object to use with add_cidr().</p>
+<p>This cache has no cache_dir set - memory only.
+Required if one CidrMap instance is used in multiple processes/threads
+Give each process/thread a private data cache and they can be merged
+into the CidrMap instance after they have all completed.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>(private):
+private_cache_data object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_map.CidrMap.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#py_cidr.cidr_map.CidrMap.lookup" title="Link to this definition">¶</a></dt>
+<dd><p>Check if cidr is in map.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cidr (str):
+Cidr value to lookup.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Any | None:
+Result = map(cidr) if found else None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_map.CidrMap.merge">
+<span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">priv_cache</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">_NetCache</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#py_cidr.cidr_map.CidrMap.merge" title="Link to this definition">¶</a></dt>
+<dd><p>Merge private cache into our internal cache.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>priv_data (_PrivCache):
+The “private data” to add (cidr, result) to the map, then
+this merges content of priv_data into the current data.
+priv_data must be created by CidrMap.create_private_cache()</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_map.CidrMap.print">
+<span class="sig-name descname"><span class="pre">print</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_cidr.cidr_map.CidrMap.print" title="Link to this definition">¶</a></dt>
+<dd><p>Print the cache data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_map.CidrMap.save_cache">
+<span class="sig-name descname"><span class="pre">save_cache</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#py_cidr.cidr_map.CidrMap.save_cache" title="Link to this definition">¶</a></dt>
+<dd><p>Write cache to files</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">py-cidr</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html">py-cidr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html#getting-started">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html#appendix">Appendix</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../License.html">MIT License</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Contributing.html">How to help with this project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../Code-of-conduct.html">Contributor Covenant Code of Conduct</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">py_cidr</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">API Reference</a><ul>
+  <li><a href="../index.html">py_cidr</a><ul>
+      <li>Previous: <a href="../cidr_file_class/index.html" title="previous chapter">py_cidr.cidr_file_class</a></li>
+      <li>Next: <a href="../cidr_types/index.html" title="next chapter">py_cidr.cidr_types</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024-present, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="../../../_sources/autoapi/py_cidr/cidr_map/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
