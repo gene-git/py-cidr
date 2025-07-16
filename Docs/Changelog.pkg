@@ -1,9 +1,12 @@
 -------------------------------------------------------
  Changelog    : py-cidr
- Tags         : 3.2.1 ➙ 3.5.0
-              : 2025-05-04 ➙ 2025-05-21
+ Tags         : 3.2.2 ➙ 3.6.0, origin/master
+              : 2025-05-19 ➙ 2025-05-21
               : 6 tags. See Docs for full changelog
 -------------------------------------------------------
+
+ 2025-05-21   : 3.6.0, origin/master
+                update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
  2025-05-21   : 3.5.0
                 Use builtin types where possible. e.g. typing.List -> list
@@ -22,6 +25,3 @@
                 Add pytest to checkdepnds in arch PKBUILD
                   Thanks to @Reylak pm AUR.
  2025-05-04     update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
-
- 2025-05-04   : 3.2.1
-                More documentation tweaks

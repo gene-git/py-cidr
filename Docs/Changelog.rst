@@ -7,12 +7,18 @@ Tags
 
 ::
 
-	2.6.0 (2025-01-18) -> 3.5.0 (2025-05-21)
-	28 commits.
+	2.6.0 (2025-01-18) -> 3.6.0, origin/master (2025-05-21)
+	29 commits.
 
 Commits
 =======
 
+
+* 2025-05-21  : **3.6.0, origin/master**
+
+::
+
+                update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-05-21  : **3.5.0**
 

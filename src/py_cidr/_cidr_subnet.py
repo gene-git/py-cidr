@@ -55,13 +55,44 @@ def cidr_is_subnet(cidr: str, ipa_nets: list[IPvxNetwork]) -> bool:
     if not this_net:
         return False
 
-    this_ipt = cidr_iptype(this_net)
+    return net_is_subnet(this_net, ipa_nets)
 
-    for net in ipa_nets:
-        net_ipt = cidr_iptype(net)
-        if net_ipt != this_ipt:
+
+def net_is_subnet(net1: IPvxNetwork, net2: IPvxNetwork | list[IPvxNetwork]
+                  ) -> bool:
+    """
+    Determines if net1 is a subnet of any of net2.
+
+    Args:
+        net1 (IPvxNetwork):
+            Network to check if is a subnet.
+
+        net2 (IPvxNetwork | list[IPvxNetwork]):
+            Network or list of networks to be checked.
+
+    Returns:
+        bool:
+            True if net1 is a subnet of any of net2.
+    """
+    if not net1 or not net2:
+        return False
+
+    # make list if not already
+    nets2: list[IPvxNetwork]
+    if not isinstance(net2, list):
+        nets2 = [net2]
+    else:
+        nets2 = net2
+
+    ipt1 = cidr_iptype(net1)
+
+    # check each net in list
+    for net in nets2:
+        ipt = cidr_iptype(net)
+        if ipt != ipt1:
             return False
-        if this_net.subnet_of(net):         # type: ignore[arg-type]
+
+        if net1.subnet_of(net):         # type: ignore[arg-type]
             return True
 
     return False

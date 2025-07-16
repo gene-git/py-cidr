@@ -50,18 +50,21 @@ def is_valid_cidr(address: Any) -> bool:
         return False
 
 
-def cidr_iptype(address: Any) -> str | None:
+def cidr_iptype(address: Any) -> str:
     """
     Determines if an IP address or CIDR string is ipv4 or ipv6
 
     :param address:
         ip address or cidr string
 
-     :returns:
-        'ip4' or 'ip6' or None
+     Returns:
+            str:
+                'ip4' or 'ip6' or empty string, '', if address invalid.
+                Note. Earlier versions returned None instead of
+                empty string if unable to be converted.
     """
     if not address:
-        return None
+        return ''
 
     if is_valid_ip4(address):
         return 'ip4'
@@ -69,10 +72,10 @@ def cidr_iptype(address: Any) -> str | None:
     if is_valid_ip6(address):
         return 'ip6'
 
-    return None
+    return ''
 
 
-def address_iptype(addr: IPvxAddress | IPvxNetwork) -> str | None:
+def address_iptype(addr: IPvxAddress | IPvxNetwork) -> str:
     """
     Identify if IP address (IPvxAddres) or net (IPvxNetwork) is ipv4 or ipv6.
 
@@ -80,17 +83,20 @@ def address_iptype(addr: IPvxAddress | IPvxNetwork) -> str | None:
         IP address or cidr network .
 
     :returns:
-        'ip4', 'ip6' or None
+        'ip4', 'ip6' or ''
+        Note: older versions returned None when addr is not valid.
     """
     if not addr:
-        return None
+        return ''
 
     ipt = type(addr)
     if ipt in (IPv4Address, IPv4Network):
         return 'ip4'
+
     if ipt in (IPv6Address, IPv6Network):
         return 'ip6'
-    return None
+
+    return ''
 
 
 def cidr_type_network(cidr: str) -> tuple[str, type[IPvxNetwork]]:

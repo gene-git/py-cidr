@@ -19,6 +19,7 @@ Requires:
 # pylint: disable=too-many-instance-attributes
 from typing import (Any, Self)
 import os
+import pwd
 
 from lockmgr import LockMgr
 
@@ -297,12 +298,14 @@ def _choose_lock_file(cache_dir: str, ipt: str) -> str:
     if not cache_dir:
         return '-x-'
 
-    try:
+    user = _get_lock_user()
+
+    if user:
         user = os.getlogin()
         lockdir = f'/tmp/py-cidr-{user}'
         lockfile = f'{ipt}.' + os.path.basename(cache_dir) + '.lock'
 
-    except OSError:
+    else:
         user = 'xxx'
         lockdir = cache_dir
         lockfile = f'{ipt}.lock'
@@ -310,3 +313,30 @@ def _choose_lock_file(cache_dir: str, ipt: str) -> str:
     os.makedirs(lockdir, exist_ok=True)
     path = os.path.join(lockdir, lockfile)
     return path
+
+
+def _get_lock_user() -> str:
+    """
+    Get username to use for lockfile.
+
+    Preference is to use effective user.
+    - effective user
+    - effectuve user id
+
+    Note: we previously used real user uid (os.getlogin)
+    """
+    # effective uid
+    try:
+        euid = os.geteuid()
+    except OSError:
+        return ''
+        # should not happen
+
+    user: str = ''
+
+    # username
+    try:
+        user = pwd.getpwuid(euid).pw_name
+    except KeyError:
+        user = str(euid)
+    return user

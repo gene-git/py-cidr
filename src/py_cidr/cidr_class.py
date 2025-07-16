@@ -15,17 +15,22 @@ from ._cidr_clean import (fix_cidr_host_bits, fix_cidrs_host_bits)
 from ._cidr_address import (ip_to_address, ips_to_addresses)
 from ._cidr_address import (addresses_to_ips, ipaddr_cidr_from_string)
 
-from ._cidr_subnet import (cidr_set_prefix, get_host_bits, cidr_is_subnet)
+from ._cidr_subnet import (cidr_set_prefix, get_host_bits)
+from ._cidr_subnet import (net_is_subnet, cidr_is_subnet)
 from ._cidr_subnet import (net_exclude, nets_exclude, cidrs_exclude)
 from ._cidr_subnet import (cidrs2_minus_cidrs1, cidr_exclude)
 
-from ._cidr_sort import (sort_cidrs, sort_ips)
+from ._cidr_sort import (sort_cidrs, sort_ips, sort_nets)
 from ._cidr_compact import (compact_cidrs_to_nets, compact_cidrs)
 from ._cidr_compact import (compact_nets)
+
 from ._cidr_nets import (cidr_to_net, cidrs_to_nets, nets_to_cidrs)
+from ._cidr_nets import (address_to_net, net_to_cidr)
+
 from ._cidr_range import (range_to_cidrs, range_to_nets)
 from ._cidr_range import (net_to_range_cidrs, net_to_range_nets)
 from ._cidr_range import (cidr_to_range_cidrs, cidr_to_range_nets)
+
 from ._cidr_valid import (is_valid_ip4, is_valid_ip6, is_valid_cidr)
 from ._cidr_valid import (cidr_iptype, cidr_type_network)
 from ._cidr_valid import (address_iptype)
@@ -57,6 +62,30 @@ class Cidr:
             Version of py-cidr
         """
         return version()
+
+    @staticmethod
+    def address_to_net(addr: IPAddress | IPvxNetwork, strict: bool = False
+                       ) -> IPvxNetwork | None:
+        """
+        Convert an address to IPvxNetwork.
+
+        Be flexible with input address. Can be
+        IPAddress (includes string) or even IPvxNetwork.
+
+        Args:
+            addr (IPAddress | IPvxNetwork):
+                Input address.
+
+            strict (bool):
+                If true then cidr is considered invalid if host bits are set.
+                Defaults to False. (see ipaddress docs).
+
+        Returns:
+            IPvxNetwork | None:
+                The IPvxNetwork derived from input "addr" or None if
+                not an address/network.
+        """
+        return address_to_net(addr, strict)
 
     @staticmethod
     def cidr_to_net(cidr: str, strict: bool = False) -> IPvxNetwork | None:
@@ -111,6 +140,23 @@ class Cidr:
             list of cidr strings.
         """
         return nets_to_cidrs(nets)
+
+    @staticmethod
+    def net_to_cidr(net: IPvxNetwork) -> str:
+        """
+        Net to Cidr String
+            Convert an ipaddress network to a cidr string.
+
+        Args:
+            net (IPvxNetwork):
+                Ipaddress Network to convert.
+
+        Returns:
+            str:
+            Cidr string from net. If unable to conver,
+            then empty string is returned.
+        """
+        return net_to_cidr(net)
 
     @staticmethod
     def ip_to_address(ip: str) -> IPvxAddress | None:
@@ -214,7 +260,26 @@ class Cidr:
         return cidr_is_subnet(cidr, ipa_nets)
 
     @staticmethod
-    def address_iptype(addr: IPvxAddress | IPvxNetwork) -> str | None:
+    def net_is_subnet(net1: IPvxNetwork, net2: IPvxNetwork | list[IPvxNetwork]
+                      ) -> bool:
+        """
+        Determines if net1 is a subnet of any of net2.
+
+        Args:
+            net1 (IPvxNetwork):
+                Network to check if is a subnet.
+
+            net2 (IPvxNetwork | list[IPvxNetwork]):
+                Network or list of networks to be checked.
+
+        Returns:
+            bool:
+                True if net1 is a subnet of any of net2.
+        """
+        return net_is_subnet(net1, net2)
+
+    @staticmethod
+    def address_iptype(addr: IPvxAddress | IPvxNetwork) -> str:
         """
         Identify address or net (IPvxNetwork) as ipv4, ipv6 or neither.
 
@@ -224,7 +289,7 @@ class Cidr:
 
         Returns:
             str | None:
-            'ip4', 'ip6' or None
+            'ip4', 'ip6' or ''
         """
         return address_iptype(addr)
 
@@ -410,6 +475,21 @@ class Cidr:
         return sort_ips(ips)
 
     @staticmethod
+    def sort_nets(nets: list[IPvxNetwork]) -> list[IPvxNetwork]:
+        """
+        Sort a list of networks.
+
+        Args:
+            nets (list[IPvxNetwork]):
+                list of networks to be sorted.
+
+        Returns:
+            list[IPvxNetwork]:
+                Sorted copy of networks.
+        """
+        return sort_nets(nets)
+
+    @staticmethod
     def get_host_bits(ip: str, pfx: int = 24) -> int:
         """
         Gets the host bits from an IP address given the netmask.
@@ -559,17 +639,19 @@ class Cidr:
         return is_valid_cidr(address)
 
     @staticmethod
-    def cidr_iptype(address: Any) -> str | None:
+    def cidr_iptype(address: Any) -> str:
         """
         Determines if address string is valid ipv4 or ipv6 or not.
 
         Args:
             address (Any):
-            address or cidr string
+                address or cidr string
 
          Returns:
-            str | None:
-            'ip4' or 'ip6' or None if not a valid address
+            str :
+                'ip4' or 'ip6' or empty string, '', if address invalid.
+                Note. Earlier versions returned None instead of
+                empty string if unable to be converted.
         """
         return cidr_iptype(address)
 

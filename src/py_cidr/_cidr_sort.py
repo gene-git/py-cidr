@@ -5,6 +5,7 @@ Class support functions to sort lists of cidrs/nets
 """
 import ipaddress
 
+from .cidr_types import IPvxNetwork
 from ._cidr_nets import (cidrs_to_nets, nets_to_cidrs)
 from ._cidr_address import (ips_to_addresses, addresses_to_ips)
 
@@ -16,7 +17,9 @@ def sort_cidrs(cidrs: list[str]) -> list[str]:
     nets = cidrs_to_nets(cidrs)
     if not nets:
         return cidrs
-    nets.sort(key=ipaddress.get_mixed_type_key)     # type: ignore[arg-type]
+
+    key_ip = ipaddress.get_mixed_type_key
+    nets.sort(key=key_ip)                           # type: ignore[arg-type]
     cidrs_sorted = nets_to_cidrs(nets)
     return cidrs_sorted
 
@@ -26,6 +29,21 @@ def sort_ips(ips: list[str]) -> list[str]:
     Sort the list of cidr strings.
     """
     addresses = ips_to_addresses(ips)
-    addresses.sort(key=ipaddress.get_mixed_type_key)  # type: ignore[arg-type]
+
+    key_ip = ipaddress.get_mixed_type_key
+    addresses.sort(key=key_ip)                      # type: ignore[arg-type]
     ips_sorted = addresses_to_ips(addresses)
     return ips_sorted
+
+
+def sort_nets(nets: list[IPvxNetwork]) -> list[IPvxNetwork]:
+    """
+    Sort list of networks.
+    """
+    nets_sorted: list[IPvxNetwork] = []
+    if not nets:
+        return nets_sorted
+
+    key_ip = ipaddress.get_mixed_type_key
+    nets_sorted = sorted(nets, key=key_ip)          # type: ignore[arg-type]
+    return nets_sorted

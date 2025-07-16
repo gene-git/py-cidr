@@ -4,24 +4,62 @@
 Class support functions for networks
 """
 import ipaddress
+from ipaddress import (IPv4Address, IPv6Address, IPv4Network, IPv6Network)
 
-from .cidr_types import (IPvxNetwork)
+from .cidr_types import (IPAddress, IPvxNetwork)
+
+
+def address_to_net(addr: IPAddress | IPvxNetwork, strict: bool = False
+                   ) -> IPvxNetwork | None:
+    """
+    Convert an address to IPvxNetwork.
+
+    Be flexible with input address. Can be
+    IPAddress (includes string) or even IPvxNetwork.
+
+    Args:
+        addr (IPAddress | IPvxNetwork):
+            Input address.
+
+        strict (bool):
+            If true then cidr is considered invalid if host bits are set.
+            Defaults to False. (see ipaddress docs).
+
+    Returns:
+        IPvxNetwork | None:
+            The IPvxNetwork derived from input "addr" or None if
+            not an address/network.
+    """
+    if not addr or addr is None:
+        return None
+
+    if isinstance(addr, (IPv4Network, IPv6Network)):
+        return addr
+
+    if isinstance(addr, (str, IPv4Address, IPv6Address)):
+        return ipaddress.ip_network(addr, strict=strict)
+
+    return None
 
 
 def cidr_to_net(cidr: str, strict: bool = False) -> IPvxNetwork | None:
     """
     Convert cidr string to ipaddress network.
 
-    :param cidr:
-        Input cidr string
+    Special case of address_to_net.
 
-    :param strict:
-        If true then cidr is considered invalid if host bits are set.
-        Defaults to False. (see ipaddress docs).
+    Args:
+        cidr (str):
+            Input cidr string
 
-    :returns:
-        The ipaddress network derived from cidr string
-        as either IPvxNetwork = IPv4Network or IPv6Network.
+        strict (bool):
+            If true then cidr is considered invalid if host bits are set.
+            Defaults to False. (see ipaddress docs).
+
+    Returns:
+        IPvxNetwork | None:
+            The ipaddress network derived from cidr string
+            as either IPvxNetwork = IPv4Network or IPv6Network.
     """
     if not cidr:
         return None
@@ -68,3 +106,24 @@ def nets_to_cidrs(nets: list[IPvxNetwork]) -> list[str]:
         return []
     cidrs = [str(net) for net in nets]
     return cidrs
+
+
+def net_to_cidr(net: IPvxNetwork) -> str:
+    """
+    Net to Cidr String
+        Convert an ipaddress network to a cidr string.
+
+    Args:
+        net (IPvxNetwork):
+            Ipaddress Network to convert.
+
+    Returns:
+        str:
+        Cidr string from net. If unable to conver,
+        then empty string is returned.
+    """
+    if not net:
+        return ''
+
+    cidr = str(net)
+    return cidr
