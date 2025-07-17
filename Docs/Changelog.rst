@@ -7,12 +7,18 @@ Tags
 
 ::
 
-	2.6.0 (2025-01-18) -> 3.6.0 (2025-07-16)
-	30 commits.
+	2.6.0 (2025-01-18) -> HEAD (2025-07-16)
+	31 commits.
 
 Commits
 =======
 
+
+* 2025-07-16  : **HEAD**
+
+::
+
+                update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-07-16  : **3.6.0**
 

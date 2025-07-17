@@ -301,7 +301,6 @@ def _choose_lock_file(cache_dir: str, ipt: str) -> str:
     user = _get_lock_user()
 
     if user:
-        user = os.getlogin()
         lockdir = f'/tmp/py-cidr-{user}'
         lockfile = f'{ipt}.' + os.path.basename(cache_dir) + '.lock'
 
