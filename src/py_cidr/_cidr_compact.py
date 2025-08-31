@@ -10,6 +10,7 @@ import ipaddress
 
 from .cidr_types import (IPvxNetwork)
 from ._cidr_nets import (cidrs_to_nets, nets_to_cidrs)
+from ._cidr_split_type import cidrs_split_type
 
 
 def cidr_list_compact(cidrs: list[str],
@@ -42,17 +43,20 @@ def compact_nets(nets: list[IPvxNetwork]) -> list[IPvxNetwork]:
 
     Args:
         cidrs (list(IPvxNetwork):
-        list of networks
+            list of networks
 
     Returns:
         list[IPvxNetwork]:
-        list of compacted IPvxNetworks
+            list of compacted IPvxNetworks
     """
+    if not nets:
+        return []
+
     try:
         nets_compact = list(ipaddress.collapse_addresses(nets))
         return nets_compact
-    except TypeError as exc:
-        raise TypeError('**Error: IPv4 or IPv6 but not mixed types') from exc
+    except (TypeError, ValueError) as exc:
+        raise TypeError('**Error: Bad IPv4/IPv6 net or mixed types') from exc
 
 
 def compact_cidrs_to_nets(cidrs: list[str]) -> list[IPvxNetwork]:
@@ -79,15 +83,35 @@ def compact_cidrs_to_nets(cidrs: list[str]) -> list[IPvxNetwork]:
 def compact_cidrs(cidrs: list[str]) -> list[str]:
     """
     Compact list of cidrs to smallest list possible.
+    Any bad cidr will raise ValueError
 
     Args:
         cidrs (list[str]):
-        list of cidr strings to compact.
+            list of cidr strings to compact.
 
     Returns:
         list[str]:
-        Compact list of cidr strings
+            Compact list of cidr strings
     """
-    nets = compact_cidrs_to_nets(cidrs)
-    cidrs_compact = nets_to_cidrs(nets)
+    cidrs_compact: list[str] = []
+    if not cidrs:
+        return cidrs_compact
+
+    (ip4, ip6, oth) = cidrs_split_type(cidrs)
+
+    if oth:
+        raise ValueError('Bad cidr input invalid')
+
+    if ip4:
+        nets = compact_cidrs_to_nets(ip4)
+        cidrs_compact += nets_to_cidrs(nets)
+
+    if ip6:
+        nets = compact_cidrs_to_nets(ip6)
+        cidrs_compact += nets_to_cidrs(nets)
+
+    # if oth:
+    #     cidrs_compact += oth
+    # nets = compact_cidrs_to_nets(cidrs)
+    # cidrs_compact = nets_to_cidrs(nets)
     return cidrs_compact

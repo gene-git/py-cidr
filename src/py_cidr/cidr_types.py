@@ -14,3 +14,6 @@ from ipaddress import (IPv4Network, IPv6Network, IPv4Address, IPv6Address)
 type IPvxNetwork = IPv4Network | IPv6Network
 type IPvxAddress = IPv4Address | IPv6Address
 type IPAddress = IPvxAddress | str
+
+type IPv4 = IPv4Address | IPv4Network
+type IPv6 = IPv6Address | IPv6Network

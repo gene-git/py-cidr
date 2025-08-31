@@ -228,10 +228,10 @@ Building docs is not really needed since pre-built docs are provided in the git 
 Philosophy
 ==========
 
-We follow the *live at head commit* philosophy. This means we recommend using the
-latest commit on git master branch. We also provide git tags. 
+We follow the *live at head commit* philosophy as recommended by
+Google's Abseil team [1]_.  This means we recommend using the
+latest commit on git master branch. 
 
-This approach is also taken by Google [1]_ [2]_.
 
 License
 =======
@@ -244,7 +244,6 @@ Created by Gene C. and licensed under the terms of the MIT license.
 .. _Github: https://github.com/gene-git/py-cidr
 .. _Archlinux AUR: https://aur.archlinux.org/packages/py-cidr
 
-.. [1] https://github.com/google/googletest  
-.. [2] https://abseil.io/about/philosophy#upgrade-support
+.. [1] https://abseil.io/about/philosophy#upgrade-support
 
 

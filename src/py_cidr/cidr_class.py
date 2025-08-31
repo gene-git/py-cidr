@@ -38,6 +38,8 @@ from ._cidr_valid import (address_iptype)
 from ._rfc_1918 import (is_rfc_1918, rfc_1918_nets, rfc_1918_cidrs)
 from ._rfc_1918 import (remove_rfc_1918)
 
+from ._cidr_split_type import cidrs_split_type
+
 
 class Cidr:
     """
@@ -803,3 +805,37 @@ class Cidr:
             If not a list then returned items will be string or None.
         """
         return remove_rfc_1918(cidrs_in)
+
+    @staticmethod
+    def cidrs_split_type(cidrs: list[str]
+                         ) -> tuple[list[str], list[str], list[str]]:
+        """
+        Split a list of cidrs into ipv4, ipv6 and other.
+
+        Args:
+            cidrs (list[str]):
+                list of cidr strings
+        Returns:
+            tuple[ip4: list[str], ip6: list[str], other: list[str]]
+            Tuple of lists of ipv4, ipv6 and unknown.
+        """
+        return cidrs_split_type(cidrs)
+
+    @staticmethod
+    def compact(cidrs: list[str]) -> list[str]:
+        """
+        Compact list of cidrs - can be mixed ipv4/ipv6.
+        Returns 1 type, making type annotation simpler for caller.
+
+        Args:
+            cidrs (list[str]):
+                Input list of cidr strings.
+
+        Returns:
+            list[str]:
+                Compacted list of cidrs. If mixed ipv4 is before ipv6
+
+        Recommended methods are compact() or compact_nets().
+        Others are kept for backward compatibility.
+        """
+        return compact_cidrs(cidrs)

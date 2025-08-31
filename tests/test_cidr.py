@@ -32,9 +32,20 @@ class TestCidr:
         """ test compacting cidrs """
         cidrs = ['10.0.0.0/24', '10.0.1.0/24', '10.10.0.0/16']
 
-        compact = Cidr.cidr_list_compact(cidrs)
+        compact = Cidr.compact(cidrs)
         all_ok = False
         if compact and len(compact) == 2:
+            all_ok = True
+        assert all_ok
+
+    def test_compact_mixed(self):
+        """ test compacting ipv4/ipv6 mixed cidrs """
+        cidrs = ['10.0.0.0/24', '10.0.1.0/24', '10.10.0.0/16']
+        cidrs += ['fc00:22:22::1', 'fc00:22:22::/64', 'fc00:22:22::10']
+
+        compact = Cidr.compact(cidrs)
+        all_ok = False
+        if compact and len(compact) == 3:
             all_ok = True
         assert all_ok
 

@@ -12,6 +12,7 @@ py_cidr.
 #            'CidrCache', 'CidrFile')
 
 from .cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
+from .cidr_types import (IPv4, IPv6)
 from .cidr_class import (Cidr)
 from .cidr_map import CidrMap
 from .cidr_file_class import CidrFile
