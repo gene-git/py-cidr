@@ -7,12 +7,19 @@ Tags
 
 ::
 
-	2.6.0 (2025-01-18) -> 3.8.0 (2025-07-17)
-	33 commits.
+	2.6.0 (2025-01-18) -> 3.9.0 (2025-08-31)
+	35 commits.
 
 Commits
 =======
 
+
+* 2025-08-31  : **3.9.0**
+
+::
+
+                compact(cidrs) can now handle mixed ipv4/ipv6
+ 2025-07-17     update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-07-17  : **3.8.0**
 
@@ -20,7 +27,7 @@ Commits
 
                 Cidr cache lockfile name use effective user id instead of username.
 
-* 2025-07-17  : **3.7.0, origin/master**
+* 2025-07-17  : **3.7.0**
 
 ::
 

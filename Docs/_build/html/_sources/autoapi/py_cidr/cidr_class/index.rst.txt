@@ -273,6 +273,21 @@ Module Contents
 
 
 
+   .. py:method:: cidrs_split_type(cidrs: list[str]) -> tuple[list[str], list[str], list[str]]
+      :staticmethod:
+
+
+      Split a list of cidrs into ipv4, ipv6 and other.
+
+      Args:
+          cidrs (list[str]):
+              list of cidr strings
+      Returns:
+          tuple[ip4: list[str], ip6: list[str], other: list[str]]
+          Tuple of lists of ipv4, ipv6 and unknown.
+
+
+
    .. py:method:: cidrs_to_nets(cidrs: list[str], strict: bool = False) -> list[py_cidr.cidr_types.IPvxNetwork]
       :staticmethod:
 
@@ -335,6 +350,26 @@ Module Contents
           list of cleaned cidrs.
           If input cidr is invalid then its returnded as None
 
+
+
+
+   .. py:method:: compact(cidrs: list[str]) -> list[str]
+      :staticmethod:
+
+
+      Compact list of cidrs - can be mixed ipv4/ipv6.
+      Returns 1 type, making type annotation simpler for caller.
+
+      Args:
+          cidrs (list[str]):
+              Input list of cidr strings.
+
+      Returns:
+          list[str]:
+              Compacted list of cidrs. If mixed ipv4 is before ipv6
+
+      Recommended methods are compact() or compact_nets().
+      Others are kept for backward compatibility.
 
 
 

@@ -23,6 +23,14 @@ Module Contents
    :canonical: IPvxAddress | str
 
 
+.. py:type:: IPv4
+   :canonical: IPv4Address | IPv4Network
+
+
+.. py:type:: IPv6
+   :canonical: IPv6Address | IPv6Network
+
+
 .. py:type:: IPvxAddress
    :canonical: IPv4Address | IPv6Address
 
