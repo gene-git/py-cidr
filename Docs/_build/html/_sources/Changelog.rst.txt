@@ -7,12 +7,19 @@ Tags
 
 ::
 
-	2.6.0 (2025-01-18) -> 3.9.0 (2025-08-31)
-	35 commits.
+	2.6.0 (2025-01-18) -> 3.10 (2025-09-01)
+	37 commits.
 
 Commits
 =======
 
+
+* 2025-09-01  : **3.10**
+
+::
+
+                Cidr.compact(): with  mixed ipv4/ipv6 - allow host bits in cidrs
+ 2025-08-31     update Docs/Changelogs Docs/_build/html Docs/py-cidr.pdf
 
 * 2025-08-31  : **3.9.0**
 
