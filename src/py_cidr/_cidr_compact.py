@@ -99,8 +99,8 @@ def compact_cidrs(cidrs: list[str]) -> list[str]:
 
     (ip4, ip6, oth) = cidrs_split_type(cidrs)
 
-    if oth:
-        raise ValueError('Bad cidr input invalid')
+    # if oth:
+    #     raise ValueError('Bad cidr input invalid')
 
     if ip4:
         nets = compact_cidrs_to_nets(ip4)
@@ -110,8 +110,9 @@ def compact_cidrs(cidrs: list[str]) -> list[str]:
         nets = compact_cidrs_to_nets(ip6)
         cidrs_compact += nets_to_cidrs(nets)
 
-    # if oth:
-    #     cidrs_compact += oth
-    # nets = compact_cidrs_to_nets(cidrs)
-    # cidrs_compact = nets_to_cidrs(nets)
+    if oth:
+        # could have host bits set.
+        nets = compact_cidrs_to_nets(oth)
+        cidrs_compact += nets_to_cidrs(nets)
+
     return cidrs_compact
