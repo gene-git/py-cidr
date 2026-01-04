@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: © 2024-present  Gene C <arch@sapience.com>
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: © 2024-present Gene C <arch@sapience.com>
 """
 Cached (network, value) pairs: value is string.
 network is any ipaddress network (ipv4 or ipv6 )

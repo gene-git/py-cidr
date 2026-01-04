@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: © 2023-present  Gene C <arch@sapience.com>
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: © 2023-present Gene C <arch@sapience.com>
 """
 Class providing some common CIDR utilities
 """
@@ -319,6 +319,17 @@ class Cidr:
         if string:
             return compact_cidrs(cidrs)
         return compact_cidrs_to_nets(cidrs)
+
+    @staticmethod
+    def compact_cidrs_to_cidrs(cidrs: list[str]) -> list[str]:
+        """
+        Compact list of cidr networks and return list of cidr strings
+
+        Same as compact_cidrs(cidrs, nets=False).
+        With single return type this is helpful when using
+        type annotation checkers.
+        """
+        return compact_cidrs(cidrs)
 
     @staticmethod
     def compact_cidrs(cidrs: list[str], nets: bool = False

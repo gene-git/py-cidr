@@ -1,5 +1,5 @@
-# SPDX-License-Identifier: MIT
-# SPDX-FileCopyrightText: © 2024-present  Gene C <arch@sapience.com>
+# SPDX-License-Identifier: GPL-2.0-or-later
+# SPDX-FileCopyrightText: © 2024-present Gene C <arch@sapience.com>
 """
 Map cidr/ips to a (str) value.
 Requires CidrCache
@@ -16,7 +16,7 @@ from ._cidr_nets import (cidr_to_net)
 from ._cidr_valid import (is_valid_ip4, is_valid_ip6)
 
 
-class _NetCache:
+class NetCache:
     """ holds both ipv4 and ipv6 cache """
     def __init__(self, cache_dir: str):
         self.ipv4: CidrCache = CidrCache('ipv4', cache_dir=cache_dir)
@@ -95,7 +95,7 @@ class CidrMap:
         if cache_dir:
             self._cache_dir = cache_dir
 
-        self._cache: _NetCache = _NetCache(cache_dir=self._cache_dir)
+        self._cache: NetCache = NetCache(cache_dir=self._cache_dir)
 
     def _iptype(self, cidr: str) -> str:
         """
@@ -151,7 +151,7 @@ class CidrMap:
         return result
 
     @staticmethod
-    def create_private_cache() -> _NetCache:
+    def create_private_cache() -> NetCache:
         """
         Create and Return private cache object to use with add_cidr().
 
@@ -164,11 +164,11 @@ class CidrMap:
             (private):
             private_cache_data object.
         """
-        private_cache = _NetCache(cache_dir='')
+        private_cache = NetCache(cache_dir='')
         return private_cache
 
     def add_cidr(self, cidr: str, result: str,
-                 priv_cache: _NetCache | None = None):
+                 priv_cache: NetCache | None = None):
         """
         Add cidr to cache.
 
@@ -201,7 +201,7 @@ class CidrMap:
 
         cache.add_cidr(cidr, result)
 
-    def merge(self, priv_cache: _NetCache | None):
+    def merge(self, priv_cache: NetCache | None):
         """
         Merge private cache into our internal cache.
 

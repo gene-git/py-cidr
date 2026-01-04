@@ -1,4 +1,4 @@
-.. SPDX-License-Identifier: MIT
+.. SPDX-License-Identifier: GPL-2.0-or-later
 
 #######
 py-cidr
@@ -34,6 +34,16 @@ See API reference documentation for more details.
 
 New / Interesting
 ==================
+
+**3.11.0**
+
+* Code Reorg
+* Switch packaging from hatch to uv
+* Testing to confirm all working on python 3.14.2
+* License GPL-2.0-or-later
+
+
+**Older**
 
 * Rename *py-cidr-cache-print* (without the .py extension)
 * PEP-8, PEP-257 and PEP-484 style changes
@@ -236,10 +246,10 @@ latest commit on git master branch.
 License
 =======
 
-Created by Gene C. and licensed under the terms of the MIT license.
+Created by Gene C. and licensed under the terms of the GPL-2.0-or-later license.
 
-* SPDX-License-Identifier: MIT
-* SPDX-FileCopyrightText: © 2024-present  Gene C <arch@sapience.com>
+* SPDX-License-Identifier: GPL-2.0-or-later
+* SPDX-FileCopyrightText: © 2024-present Gene C <arch@sapience.com>
 
 .. _Github: https://github.com/gene-git/py-cidr
 .. _Archlinux AUR: https://aur.archlinux.org/packages/py-cidr

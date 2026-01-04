@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+#
+# Source code checks.
+#
+# Run in top level
+# Requires
+# - pylint
+# - pycodestyle
+# - mypy
+
+# code
+mod_dir="py_cidr"
+cd ./src
+PYTHONPATH=. pylint "$mod_dir"/*.py *.py
+PYTHONPATH=. pycodestyle --max-line-length=110 $mod_dir/*.py *.py
+
+mypy --check-untyped-defs --follow-untyped-imports $mod_dir
+
+cd ../tests
+PYTHONPATH=../src pylint *.py
+PYTHONPATH=../src pycodestyle *.py
+mypy --check-untyped-defs --follow-untyped-imports .
+
+
