@@ -394,6 +394,18 @@ Module Contents
 
 
 
+   .. py:method:: compact_cidrs_to_cidrs(cidrs: list[str]) -> list[str]
+      :staticmethod:
+
+
+      Compact list of cidr networks and return list of cidr strings
+
+      Same as compact_cidrs(cidrs, nets=False).
+      With single return type this is helpful when using
+      type annotation checkers.
+
+
+
    .. py:method:: compact_nets(nets: list[py_cidr.cidr_types.IPvxNetwork]) -> list[py_cidr.cidr_types.IPvxNetwork]
       :staticmethod:
 

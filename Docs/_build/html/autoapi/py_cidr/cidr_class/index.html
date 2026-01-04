@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>py_cidr.cidr_class &#8212; py-cidr 3.10.0 documentation</title>
+    <title>py_cidr.cidr_class &#8212; py-cidr 3.11.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="../../../_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="../../../_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
-    <script src="../../../_static/documentation_options.js?v=f8d09eac"></script>
+    <script src="../../../_static/documentation_options.js?v=8905d4f5"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -391,6 +391,15 @@ A list of compacted networks whose elements are strings
 if return_nets is False or IPvxNetworks if True.</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="py_cidr.cidr_class.Cidr.compact_cidrs_to_cidrs">
+<em class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compact_cidrs_to_cidrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cidrs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#py_cidr.cidr_class.Cidr.compact_cidrs_to_cidrs" title="Link to this definition">¶</a></dt>
+<dd><p>Compact list of cidr networks and return list of cidr strings</p>
+<p>Same as compact_cidrs(cidrs, nets=False).
+With single return type this is helpful when using
+type annotation checkers.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -813,17 +822,75 @@ Sorted copy of ips.</p>
     </div>
 </search>
 <script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">py-cidr</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html#getting-started">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html#appendix">Appendix</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../Changelog.html">Changelog</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../License.html">MIT License</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../Contributing.html">How to help with this project</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../Code-of-conduct.html">Contributor Covenant Code of Conduct</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../License/License.html">License</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html">py_cidr</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">py_cidr</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">py_cidr.cidr_class</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#py_cidr.cidr_class.Cidr"><code class="docutils literal notranslate"><span class="pre">Cidr</span></code></a><ul>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.address_iptype"><code class="docutils literal notranslate"><span class="pre">Cidr.address_iptype()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.address_to_net"><code class="docutils literal notranslate"><span class="pre">Cidr.address_to_net()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.addresses_to_ips"><code class="docutils literal notranslate"><span class="pre">Cidr.addresses_to_ips()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidr_exclude"><code class="docutils literal notranslate"><span class="pre">Cidr.cidr_exclude()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidr_iptype"><code class="docutils literal notranslate"><span class="pre">Cidr.cidr_iptype()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidr_is_subnet"><code class="docutils literal notranslate"><span class="pre">Cidr.cidr_is_subnet()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidr_list_compact"><code class="docutils literal notranslate"><span class="pre">Cidr.cidr_list_compact()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidr_set_prefix"><code class="docutils literal notranslate"><span class="pre">Cidr.cidr_set_prefix()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidr_to_net"><code class="docutils literal notranslate"><span class="pre">Cidr.cidr_to_net()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidr_to_range"><code class="docutils literal notranslate"><span class="pre">Cidr.cidr_to_range()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidr_type_network"><code class="docutils literal notranslate"><span class="pre">Cidr.cidr_type_network()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidrs2_minus_cidrs1"><code class="docutils literal notranslate"><span class="pre">Cidr.cidrs2_minus_cidrs1()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidrs_exclude"><code class="docutils literal notranslate"><span class="pre">Cidr.cidrs_exclude()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidrs_split_type"><code class="docutils literal notranslate"><span class="pre">Cidr.cidrs_split_type()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.cidrs_to_nets"><code class="docutils literal notranslate"><span class="pre">Cidr.cidrs_to_nets()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.clean_cidr"><code class="docutils literal notranslate"><span class="pre">Cidr.clean_cidr()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.clean_cidrs"><code class="docutils literal notranslate"><span class="pre">Cidr.clean_cidrs()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.compact"><code class="docutils literal notranslate"><span class="pre">Cidr.compact()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.compact_cidrs"><code class="docutils literal notranslate"><span class="pre">Cidr.compact_cidrs()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.compact_cidrs_to_cidrs"><code class="docutils literal notranslate"><span class="pre">Cidr.compact_cidrs_to_cidrs()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.compact_nets"><code class="docutils literal notranslate"><span class="pre">Cidr.compact_nets()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.fix_cidr_host_bits"><code class="docutils literal notranslate"><span class="pre">Cidr.fix_cidr_host_bits()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.fix_cidrs_host_bits"><code class="docutils literal notranslate"><span class="pre">Cidr.fix_cidrs_host_bits()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.get_host_bits"><code class="docutils literal notranslate"><span class="pre">Cidr.get_host_bits()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.ip_to_address"><code class="docutils literal notranslate"><span class="pre">Cidr.ip_to_address()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.ipaddr_cidr_from_string"><code class="docutils literal notranslate"><span class="pre">Cidr.ipaddr_cidr_from_string()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.ips_to_addresses"><code class="docutils literal notranslate"><span class="pre">Cidr.ips_to_addresses()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.is_rfc_1918"><code class="docutils literal notranslate"><span class="pre">Cidr.is_rfc_1918()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.is_valid_cidr"><code class="docutils literal notranslate"><span class="pre">Cidr.is_valid_cidr()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.is_valid_ip4"><code class="docutils literal notranslate"><span class="pre">Cidr.is_valid_ip4()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.is_valid_ip6"><code class="docutils literal notranslate"><span class="pre">Cidr.is_valid_ip6()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.net_exclude"><code class="docutils literal notranslate"><span class="pre">Cidr.net_exclude()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.net_is_subnet"><code class="docutils literal notranslate"><span class="pre">Cidr.net_is_subnet()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.net_to_cidr"><code class="docutils literal notranslate"><span class="pre">Cidr.net_to_cidr()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.net_to_range"><code class="docutils literal notranslate"><span class="pre">Cidr.net_to_range()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.nets_exclude"><code class="docutils literal notranslate"><span class="pre">Cidr.nets_exclude()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.nets_to_cidrs"><code class="docutils literal notranslate"><span class="pre">Cidr.nets_to_cidrs()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.range_to_cidrs"><code class="docutils literal notranslate"><span class="pre">Cidr.range_to_cidrs()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.remove_rfc_1918"><code class="docutils literal notranslate"><span class="pre">Cidr.remove_rfc_1918()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.rfc_1918_cidrs"><code class="docutils literal notranslate"><span class="pre">Cidr.rfc_1918_cidrs()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.rfc_1918_nets"><code class="docutils literal notranslate"><span class="pre">Cidr.rfc_1918_nets()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.sort_cidrs"><code class="docutils literal notranslate"><span class="pre">Cidr.sort_cidrs()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.sort_ips"><code class="docutils literal notranslate"><span class="pre">Cidr.sort_ips()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.sort_nets"><code class="docutils literal notranslate"><span class="pre">Cidr.sort_nets()</span></code></a></li>
+<li class="toctree-l7"><a class="reference internal" href="#py_cidr.cidr_class.Cidr.version"><code class="docutils literal notranslate"><span class="pre">Cidr.version()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../cidr_file_class/index.html">py_cidr.cidr_file_class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cidr_map/index.html">py_cidr.cidr_map</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cidr_types/index.html">py_cidr.cidr_types</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

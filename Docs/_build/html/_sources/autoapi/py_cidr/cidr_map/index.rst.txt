@@ -32,7 +32,7 @@ Module Contents
        Optional directory to save cache file
 
 
-   .. py:method:: add_cidr(cidr: str, result: str, priv_cache: _NetCache | None = None)
+   .. py:method:: add_cidr(cidr: str, result: str, priv_cache: NetCache | None = None)
 
       Add cidr to cache.
 
@@ -56,7 +56,7 @@ Module Contents
 
 
 
-   .. py:method:: create_private_cache() -> _NetCache
+   .. py:method:: create_private_cache() -> NetCache
       :staticmethod:
 
 
@@ -87,7 +87,7 @@ Module Contents
 
 
 
-   .. py:method:: merge(priv_cache: _NetCache | None)
+   .. py:method:: merge(priv_cache: NetCache | None)
 
       Merge private cache into our internal cache.
 
@@ -108,6 +108,49 @@ Module Contents
    .. py:method:: save_cache()
 
       Write cache to files
+
+
+
+.. py:class:: NetCache(cache_dir: str)
+
+   holds both ipv4 and ipv6 cache 
+
+
+   .. py:method:: get(ipt: str)
+
+      Returns the cache for ipv4 or ipv6
+
+      Args:
+          ipt (str):
+          One of 'ipv4' or 'ipv6'
+      Returns:
+          Cache for the requested network type
+
+
+
+   .. py:method:: get_cache(iptype: str) -> py_cidr._cidr_cache.CidrCache
+
+      Extract the cache for the provided iptype
+
+      Args:
+          ipt (str):
+          One of 'ipv4' or 'ipv6'
+
+      Returns:
+          CidrCache:
+          Cache for "iptype"
+
+
+
+   .. py:method:: set(ipt: str, cache: py_cidr._cidr_cache.CidrCache)
+
+      Assigns the cache for ipv4 or ipv6
+
+      Args:
+          ipt (str):
+          One of 'ipv4' or 'ipv6'
+      Returns:
+          Cache for the requested network type
 
 
 
