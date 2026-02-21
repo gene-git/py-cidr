@@ -17,13 +17,14 @@ Requires:
     lockmgr: for ensuring cache can be safely read/written
 """
 # pylint: disable=too-many-instance-attributes
-from typing import (Any, Self)
+from typing import (Any, Iterator, Self)
 import os
 
 from lockmgr import LockMgr
 
 from .cidr_types import (IPvxNetwork)
 from ._cidr_nets import (cidr_to_net)
+from ._cidr_nets import (net_to_cidr)
 from ._cache_files import (cache_file_extension)
 from ._cache_data import (CidrCacheData, CidrCacheElem)
 
@@ -175,6 +176,31 @@ class CidrCache:
                 return elem.val
         return None
 
+    def lookup_cidr_both(self, cidr: str) -> tuple[str, Any | None]:
+        """
+        Look up the value associated with cidr string:
+         - cache(cidr) -> value
+         - Similar to lookup_cidr() but additionally returns the
+           matching cidr from cache data element.
+
+        Args (str):
+            Cidr to lookup
+
+        Returns:
+            tuple[cidr_found: str, value: Any]:
+            cidr_str is the cidr value in cache same or nearest to cidr.
+            i.e. cidr_found <= cidr
+            Value associated with the cidr_found string or None if not found
+        """
+        cidr_found: str = ''
+        net = cidr_to_net(cidr)
+        if net:
+            elem = self.cache_data.lookup_elem(net)
+            if elem:
+                cidr_found = net_to_cidr(elem.net)
+                return (cidr_found, elem.val)
+        return (cidr_found, None)
+
     def lookup(self, net: IPvxNetwork
                ) -> tuple[IPvxNetwork, Any] | tuple[None, None]:
         """
@@ -274,6 +300,12 @@ class CidrCache:
         if self.cache_data:
             print(f'# {self.ipt}')
             self.cache_data.print()
+
+    def items(self) -> Iterator[CidrCacheElem]:
+        """
+        Iterator return one element at a time
+        """
+        yield from self.cache_data.elems
 
 
 def _choose_lock_file(cache_dir: str, ipt: str) -> str:

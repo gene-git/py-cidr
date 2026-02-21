@@ -9,7 +9,7 @@
 project = "py-cidr"
 copyright = '2024-present, Gene C'
 author = 'Gene C'
-release = "3.11.0"
+release = "3.12.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

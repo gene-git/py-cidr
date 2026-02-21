@@ -9,10 +9,10 @@ cidr matches cache.cidr cidr when cidr is subnet of cache.cidr.
 
 Requires CidrCache for the actual cache management
 """
-from typing import (Any)
+from typing import (Any, Iterator)
 
-from ._cidr_cache import (CidrCache)
-from ._cidr_nets import (cidr_to_net)
+from ._cidr_cache import CidrCache
+from ._cidr_nets import cidr_to_net
 from ._cidr_valid import (is_valid_ip4, is_valid_ip6)
 
 
@@ -85,6 +85,8 @@ class CidrMap:
     Args:
         cache_dir (str):
         Optional directory to save cache file
+
+    todo: generalize value to be any object not just string
     """
     def __init__(self, cache_dir: str | None = None):
         """
@@ -148,6 +150,32 @@ class CidrMap:
         result = None
         cache = self._cache.get_cache(ipt)
         result = cache.lookup_cidr(cidr)
+        return result
+
+    def lookup_both(self, cidr: str) -> tuple[str, Any | None]:
+        """
+        Check if cidr is in map. Similar to lookup()
+        but returns the cidr_found in the map as well
+        as it's value
+
+        Args:
+            cidr (str):
+            Cidr value to lookup.
+
+        Returns:
+            tuple[cidr_found: str, value: Any | None]
+            cidr_found is the "prefix"
+            If in map, then cidr_found <= cidr
+            and the value is that associated with cidr_found
+            If not in map, then ['', None] is returned
+        """
+        ipt = self._iptype(cidr)
+        if not ipt:
+            return ('', None)
+
+        result = None
+        cache = self._cache.get_cache(ipt)
+        result = cache.lookup_cidr_both(cidr)
         return result
 
     @staticmethod
@@ -223,3 +251,20 @@ class CidrMap:
         """
         self._cache.ipv4.print()
         self._cache.ipv6.print()
+
+    def items(self, v6: bool = False) -> Iterator[tuple[str, Any]]:
+        """
+        Iterator that returns oen element at a time of the map.
+        Args:
+            v6 (bool):
+                Default is false, and the elements are from IPv4 map
+                If True, then elements are taken from the IPv6 map.
+        Returns:
+            tuple[cidr: str, value: str]:
+                The (cidr, value) for each map element
+        """
+        cache = self._cache.ipv6 if v6 else self._cache.ipv4
+
+        yield from [(str(elem.net), elem.val) for elem in cache.cache_data.elems]
+        # for elem in cache.cache_data.elems:
+        #     yield (str(elem.net), elem.val)

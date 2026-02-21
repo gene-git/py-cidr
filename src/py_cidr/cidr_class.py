@@ -31,6 +31,8 @@ from ._cidr_range import (range_to_cidrs, range_to_nets)
 from ._cidr_range import (net_to_range_cidrs, net_to_range_nets)
 from ._cidr_range import (cidr_to_range_cidrs, cidr_to_range_nets)
 
+from ._cidr_range_split import (cidr_range_split, net_range_split)
+
 from ._cidr_valid import (is_valid_ip4, is_valid_ip6, is_valid_cidr)
 from ._cidr_valid import (cidr_iptype, cidr_type_network)
 from ._cidr_valid import (address_iptype)
@@ -754,6 +756,42 @@ class Cidr:
         if string:
             return cidr_to_range_cidrs(cidr)
         return cidr_to_range_nets(cidr)
+
+    @staticmethod
+    def net_range_split(net: IPvxNetwork) -> tuple[IPvxAddress, IPvxAddress, IPvxAddress]:
+        """
+        Convert network to IP Range.
+
+        Args:
+            net (IPvxNetwork):
+            The network (IPvxNetwork) to examine.
+
+            string (bool):
+            If True then returns cidr strings instead of IPvxAddress
+
+        Returns:
+            tuple[, IPvxAddressIPAddress, , IPvxAddressIPAddress, IPvxAddress]:
+            that are the first IP, middle IP and last IP in the cidr block
+        """
+        return net_range_split(net)
+
+    @staticmethod
+    def cidr_range_split(cidr: str) -> tuple[str, str, str]:
+        """
+        Convert network to IP Range.
+
+        Args:
+            net (IPvxNetwork):
+            The network (IPvxNetwork) to examine.
+
+            string (bool):
+            If True then returns cidr strings instead of IPvxAddress
+
+        Returns:
+            tuple[str, str, str]:
+            that are strings of the first IP, middle IP and last IP in the cidr block
+        """
+        return cidr_range_split(cidr)
 
     @staticmethod
     def is_rfc_1918(cidr: str) -> bool:

@@ -69,3 +69,27 @@ class TestCidrMap:
 
         # all done
         tdata.clean()
+
+    def test_cidr_map_subnet(self):
+        """ write and read back """
+
+        tdata = _TestData()
+        cidr_map = CidrMap(tdata.cache_dir)
+
+        # create mape
+        for (cidr, value) in zip(tdata.cidrs, tdata.values):
+            cidr_map.add_cidr(cidr, value, None)
+
+        # save to cache
+        cidr_map.save_cache()
+
+        # lookup cidr which is subnet of one of elems
+        cidr = '10.0.1.32/27'
+        (cidr_found, val) = cidr_map.lookup_both(cidr)
+        value = val if val is not None else ''
+
+        assert cidr_found == '10.0.1.0/24'
+        assert value == 'bbb'
+
+        # all done
+        tdata.clean()

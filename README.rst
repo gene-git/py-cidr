@@ -35,6 +35,17 @@ See API reference documentation for more details.
 New / Interesting
 ==================
 
+**3.12.0**
+
+* CidrMap : New .items() method provides an Iterator over the map.
+
+  Each iteration yields a tuple[cidr: str, value: Any]
+
+* Add net_range_split/cidr_range_split: 
+
+  split one net/cidr into (first, mid,  last) ip addresses
+
+
 **3.11.0**
 
 * Code Reorg
