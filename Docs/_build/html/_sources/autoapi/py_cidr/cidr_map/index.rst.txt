@@ -31,6 +31,8 @@ Module Contents
        cache_dir (str):
        Optional directory to save cache file
 
+   todo: generalize value to be any object not just string
+
 
    .. py:method:: add_cidr(cidr: str, result: str, priv_cache: NetCache | None = None)
 
@@ -73,6 +75,19 @@ Module Contents
 
 
 
+   .. py:method:: items(v6: bool = False) -> Iterator[tuple[str, Any]]
+
+      Iterator that returns oen element at a time of the map.
+      Args:
+          v6 (bool):
+              Default is false, and the elements are from IPv4 map
+              If True, then elements are taken from the IPv6 map.
+      Returns:
+          tuple[cidr: str, value: str]:
+              The (cidr, value) for each map element
+
+
+
    .. py:method:: lookup(cidr: str) -> Any | None
 
       Check if cidr is in map.
@@ -84,6 +99,25 @@ Module Contents
       Returns:
           Any | None:
           Result = map(cidr) if found else None.
+
+
+
+   .. py:method:: lookup_both(cidr: str) -> tuple[str, Any | None]
+
+      Check if cidr is in map. Similar to lookup()
+      but returns the cidr_found in the map as well
+      as it's value
+
+      Args:
+          cidr (str):
+          Cidr value to lookup.
+
+      Returns:
+          tuple[cidr_found: str, value: Any | None]
+          cidr_found is the "prefix"
+          If in map, then cidr_found <= cidr
+          and the value is that associated with cidr_found
+          If not in map, then ['', None] is returned
 
 
 

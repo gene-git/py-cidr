@@ -6,12 +6,29 @@ Tags
 
 .. code-block:: text
 
-	2.6.0 (2025-01-18) -> 3.11.0 (2026-01-04)
-	39 commits.
+	2.6.0 (2025-01-18) -> 3.12.0 (2026-02-21)
+	41 commits.
 
 Commits
 =======
 
+
+* 2026-02-21  : **3.12.0**
+
+.. code-block:: text
+
+              - **3.12.0**
+            
+                * CidrMap : New .items() method provides an Iterator over the map.
+                  Each iteration yields a tuple[cidr: str, value: Any]
+            
+                * Add net_range_split/cidr_range_split:
+                  split one net/cidr into (first, mid,  last) ip addresses
+ 2026-01-04   ⋯
+
+.. code-block:: text
+
+              - update Docs/Changelogs
 
 * 2026-01-04  : **3.11.0**
 
@@ -24,7 +41,7 @@ Commits
                 * Testing to confirm all working on python 3.14.2
                 * License GPL-2.0-or-later
 
-* 2025-09-01  : **3.10.0, origin/master**
+* 2025-09-01  : **3.10.0**
 
 .. code-block:: text
 

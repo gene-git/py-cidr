@@ -166,6 +166,25 @@ Module Contents
 
 
 
+   .. py:method:: cidr_range_split(cidr: str) -> tuple[str, str, str]
+      :staticmethod:
+
+
+      Convert network to IP Range.
+
+      Args:
+          net (IPvxNetwork):
+          The network (IPvxNetwork) to examine.
+
+          string (bool):
+          If True then returns cidr strings instead of IPvxAddress
+
+      Returns:
+          tuple[str, str, str]:
+          that are strings of the first IP, middle IP and last IP in the cidr block
+
+
+
    .. py:method:: cidr_set_prefix(cidr: str, prefix: int) -> str
       :staticmethod:
 
@@ -639,6 +658,25 @@ Module Contents
       Returns:
           bool:
               True if net1 is a subnet of any of net2.
+
+
+
+   .. py:method:: net_range_split(net: py_cidr.cidr_types.IPvxNetwork) -> tuple[py_cidr.cidr_types.IPvxAddress, py_cidr.cidr_types.IPvxAddress, py_cidr.cidr_types.IPvxAddress]
+      :staticmethod:
+
+
+      Convert network to IP Range.
+
+      Args:
+          net (IPvxNetwork):
+          The network (IPvxNetwork) to examine.
+
+          string (bool):
+          If True then returns cidr strings instead of IPvxAddress
+
+      Returns:
+          tuple[, IPvxAddressIPAddress, , IPvxAddressIPAddress, IPvxAddress]:
+          that are the first IP, middle IP and last IP in the cidr block
 
 
 
