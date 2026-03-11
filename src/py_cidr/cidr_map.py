@@ -1,78 +1,17 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2024-present Gene C <arch@sapience.com>
 """
-Map cidr/ips to a (str) value.
-Requires CidrCache
+Map cidr prefixes to some value.
 
-Keep separate caches for ipv4 and ipv6
-cidr matches cache.cidr cidr when cidr is subnet of cache.cidr.
-
-Requires CidrCache for the actual cache management
+Use separate maps for ipv4 and ipv6
 """
 from typing import (Any, Iterator)
 
-from ._cidr_cache import CidrCache
-from ._cidr_nets import cidr_to_net
-from ._cidr_valid import (is_valid_ip4, is_valid_ip6)
+from py_cidr._network import PrefixVal
+from py_cidr._network.ip_version import ip_version
 
-
-class NetCache:
-    """ holds both ipv4 and ipv6 cache """
-    def __init__(self, cache_dir: str):
-        self.ipv4: CidrCache = CidrCache('ipv4', cache_dir=cache_dir)
-        self.ipv6: CidrCache = CidrCache('ipv6', cache_dir=cache_dir)
-
-        if cache_dir:
-            self.ipv4.load_cache()
-            self.ipv6.load_cache()
-
-    def get(self, ipt: str):
-        """
-        Returns the cache for ipv4 or ipv6
-
-        Args:
-            ipt (str):
-            One of 'ipv4' or 'ipv6'
-        Returns:
-            Cache for the requested network type
-        """
-        cache = getattr(self, ipt)
-        return cache
-
-    def set(self, ipt: str, cache: CidrCache):
-        """
-        Assigns the cache for ipv4 or ipv6
-
-        Args:
-            ipt (str):
-            One of 'ipv4' or 'ipv6'
-        Returns:
-            Cache for the requested network type
-        """
-        setattr(self, ipt, cache)
-        return cache
-
-    def get_cache(self, iptype: str) -> CidrCache:
-        """
-        Extract the cache for the provided iptype
-
-        Args:
-            ipt (str):
-            One of 'ipv4' or 'ipv6'
-
-        Returns:
-            CidrCache:
-            Cache for "iptype"
-        """
-        match iptype:
-            case 'ipv4':
-                return self.ipv4
-
-            case 'ipv6':
-                return self.ipv6
-
-            case _:
-                raise ValueError('iptype must be one of "ipv4" or "ipv6"')
+from py_cidr._prefix import PrefixMap
+from py_cidr._prefix import PrefixMaps
 
 
 class CidrMap:
@@ -87,99 +26,114 @@ class CidrMap:
         Optional directory to save cache file
 
     todo: generalize value to be any object not just string
+    # def __init__(self, cache_dir: str | None = None):
     """
-    def __init__(self, cache_dir: str | None = None):
+    def __init__(self, cache_dir: str = '', compact: bool = False):
         """
         Instantiate CidrMap instance.
         """
         self._cache_dir: str = ''
+        self.compact = compact
 
         if cache_dir:
             self._cache_dir = cache_dir
 
-        self._cache: NetCache = NetCache(cache_dir=self._cache_dir)
+        self.ipv4: PrefixMap = PrefixMap(cache_dir=self._cache_dir, compact=compact)
+        self.ipv6: PrefixMap = PrefixMap(cache_dir=self._cache_dir, compact=compact, ipv6=True)
 
-    def _iptype(self, cidr: str) -> str:
+        if cache_dir:
+            self.ipv4.load_cache()
+            self.ipv6.load_cache()
+
+    def _get_prefix_map(self, cidr: str, private_maps: PrefixMaps | None = None) -> PrefixMap | None:
         """
-        Identify whether cidr is a valid "ipv4" or "ipv6".
-
-        Args:
-            cidr (str):
-            Input cidr string
-
-        Returns:
-            str:
-            'ipv4' of 'ipv6' based on cidr or None if invalid cidr string.
-            Return empty string '' if unknown.
+        Determine which prefix map to use.
+        If private_maps is passed in then will be taken from there.
+        Otherwise from self.
         """
-        net = cidr_to_net(cidr)
-        if not net:
-            return ''
+        if not cidr:
+            return None
 
-        if is_valid_ip4(net):
-            return 'ipv4'
+        ipvers = ip_version(cidr)
+        match ipvers:
+            case 4:
+                if private_maps is not None:
+                    return private_maps.ipv4
+                return self.ipv4
 
-        if is_valid_ip6(net):
-            return 'ipv6'
+            case 6:
+                if private_maps is not None:
+                    return private_maps.ipv6
+                return self.ipv6
 
-        return ''
+            case _:
+                return None
 
     def save_cache(self):
         """
         Write cache to files
         """
-        self._cache.ipv4.write()
-        self._cache.ipv6.write()
+        self.ipv4.save_cache()
+        self.ipv4.save_cache()
 
-    def lookup(self, cidr: str) -> Any | None:
+    def lookup_lmp(self, cidr: str) -> tuple[str, Any]:
         """
-        Check if cidr is in map.
+        Check if cidr is in the map. Similar to lookup()
+        but returns the longest matching prefix (LMP) and it's value.
+        cidr is then the same as or subnet of prefix.
+        If not found then empty string for prefix.
+
+        See lookup_all() which returns list of (prefix, val) tuples
+        where the first element is the (lmp, val) pair.
 
         Args:
             cidr (str):
-            Cidr value to lookup.
+                Cidr value to lookup.
 
         Returns:
-            Any | None:
-            Result = map(cidr) if found else None.
+            tuple[prefix: str, value: Any]
+                cidr is same as or subnet of prefix and val it's assocated value.
+                If not found then prefix is empty string.
         """
-        ipt = self._iptype(cidr)
-        if not ipt:
-            return None
+        prefix_val: tuple[str, Any] = ('', None)
 
-        result = None
-        cache = self._cache.get_cache(ipt)
-        result = cache.lookup_cidr(cidr)
-        return result
+        prefix_map = self._get_prefix_map(cidr)
+        if prefix_map is None:
+            return prefix_val
 
-    def lookup_both(self, cidr: str) -> tuple[str, Any | None]:
+        prefix_val = prefix_map.lookup_lmp(cidr)
+        return prefix_val
+
+    def lookup_all(self, cidr: str) -> list[tuple[str, Any]]:
         """
-        Check if cidr is in map. Similar to lookup()
-        but returns the cidr_found in the map as well
-        as it's value
+        If cidr is in the map, return list of all (prefix, val) tuples.
+        cidr is a subnet of each prefix. The first (prefix, val) returned
+        is always the longest matching prefix (LMP) and it's value: (lmp, val)
+
+        The remaining elements will all have shorter prefix length (larger, less specific)
+        network blocks.
 
         Args:
             cidr (str):
-            Cidr value to lookup.
+                Cidr value to lookup.
 
         Returns:
-            tuple[cidr_found: str, value: Any | None]
-            cidr_found is the "prefix"
-            If in map, then cidr_found <= cidr
-            and the value is that associated with cidr_found
-            If not in map, then ['', None] is returned
+            list[tuple[prefix: str, val: Any]]
+                Result = map(cidr). If no matching elements found
+                returns empty list. Otherwise returns list of values
+                for each element for which cidr is a subnet.
         """
-        ipt = self._iptype(cidr)
-        if not ipt:
-            return ('', None)
+        results: list[tuple[str, Any]] = []
 
-        result = None
-        cache = self._cache.get_cache(ipt)
-        result = cache.lookup_cidr_both(cidr)
-        return result
+        prefix_map = self._get_prefix_map(cidr)
+        if prefix_map is None:
+            return results
+
+        prefix_vals = prefix_map.lookup_all(cidr)
+        return prefix_vals
 
     @staticmethod
-    def create_private_cache() -> NetCache:
+    def create_private_cache() -> PrefixMaps:
         """
         Create and Return private cache object to use with add_cidr().
 
@@ -192,65 +146,71 @@ class CidrMap:
             (private):
             private_cache_data object.
         """
-        private_cache = NetCache(cache_dir='')
-        return private_cache
+        private_maps = PrefixMaps(cache_dir='')
+        return private_maps
 
-    def add_cidr(self, cidr: str, result: str,
-                 priv_cache: NetCache | None = None):
+    def add_prefix_val(self, prefix_val: PrefixVal, priv_maps: PrefixMaps | None = None):
         """
         Add cidr to cache.
 
         Args:
-            cidr (str):
-            Add this cidr string and its associated result value to the map.
+            prefix_val (PrefixVal):
+                PrefixVal = tuple[prefix: str, val: Any]
+                Add this (prefix, val) pair to the map.
 
-            result (str):
-            The result value to be associated with this cidr.
-            i.e. map(cidr) = result
+            priv_map (private):
+                If using multiple processes/threads then provide this object
+                where changes are kept instead of in the instance cache.
+                This way the same instance (and its cache) can be used
+                across multiple processes/threads.
 
-            priv_data (private):
-
-            If using multiple processes/threads then provide this object
-            where changes are kept instead of in the instance cache.
-            This way the same instance (and its cache) can be used
-            across multiple processes/threads.
-
-            Use CidrMap.create_private_cache() to create private_data
-
+                Use CidrMap.create_private_cache() to create private_data
         """
-        ipt = self._iptype(cidr)
-        if not ipt:
+        prefix_map = self._get_prefix_map(prefix_val[0], priv_maps)
+        if prefix_map is None:
             return
 
-        if priv_cache:
-            cache = priv_cache.get_cache(ipt)
-        else:
-            cache = self._cache.get_cache(ipt)
+        prefix_map.update(prefix_val)
 
-        cache.add_cidr(cidr, result)
-
-    def merge(self, priv_cache: NetCache | None):
+    def add_prefix_vals(self, prefix_vals: list[PrefixVal]):
         """
-        Merge private cache into our internal cache.
+        Add list if (prefix, val) tuples.
 
         Args:
-            priv_data (_PrivCache):
-            The "private data" to add (cidr, result) to the map, then
-            this merges content of priv_data into the current data.
-            priv_data must be created by CidrMap.create_private_cache()
+            prefix_vals (list[PrefixVal]):
+                List of tuples each being (prefix: str, val: Any)
         """
-        if not priv_cache:
+        if not prefix_vals:
             return
 
-        self._cache.ipv4.combine_cache(priv_cache.ipv4)
-        self._cache.ipv6.combine_cache(priv_cache.ipv6)
+        prefix_map = self._get_prefix_map(prefix_vals[0][0])
+        if not prefix_map:
+            return
+
+        prefix_map.update(prefix_vals)
+
+    def merge(self, priv_maps: PrefixMaps | None):
+        """
+        Merge private maps back into into our own maps.
+
+        Args:
+            priv_maps (PrefixMaps):
+                The "private data" to add map.
+                Merge the content of priv_maps into the current data.
+                See CidrMap.create_private_cache()
+        """
+        if not priv_maps:
+            return
+
+        self.ipv4.merge_pyt(priv_maps.ipv4.pyt)
+        self.ipv6.merge_pyt(priv_maps.ipv6.pyt)
 
     def print(self):
         """
         Print the cache data.
         """
-        self._cache.ipv4.print()
-        self._cache.ipv6.print()
+        self.ipv4.print()
+        self.ipv6.print()
 
     def items(self, v6: bool = False) -> Iterator[tuple[str, Any]]:
         """
@@ -263,8 +223,53 @@ class CidrMap:
             tuple[cidr: str, value: str]:
                 The (cidr, value) for each map element
         """
-        cache = self._cache.ipv6 if v6 else self._cache.ipv4
+        if v6:
+            yield from self.ipv6.items()
+        else:
+            yield from self.ipv4.items()
+    #
+    # Deprecated methods - to be removed in a future version.
+    #
 
-        yield from [(str(elem.net), elem.val) for elem in cache.cache_data.elems]
-        # for elem in cache.cache_data.elems:
-        #     yield (str(elem.net), elem.val)
+    def add_cidr(self, cidr: str, val: Any, priv_maps: PrefixMaps | None = None):
+        """
+        Historical version of add_prefix_val() - use that instead please.
+        """
+        self.add_prefix_val((cidr, val), priv_maps)
+
+    def add_cidrs(self, prefixes: list[str], vals: list[Any]):
+        """
+        Historical version - use add_prefix_vals() instead.
+        """
+        prefix_vals: list[PrefixVal] = list(zip(prefixes, vals))
+        self.add_prefix_vals(prefix_vals)
+
+    def lookup(self, cidr: str) -> Any | None:
+        """
+        Deprecated: Historical. Change to lookup_lmp()
+
+        Same as lookup_lmp() but only returns value not (prefix, value).
+
+        Returns the value of associated with lmp prefix for which
+        cidr is subnet (or same) as. The prefix returned is the
+        longest matching prefix (LMP).
+
+        Similar to lookup_both() but only the value is returned
+        instead of both (prefix, value).
+
+        Args:
+            cidr (str):
+                Cidr value to lookup.
+
+        Returns:
+            Any | None:
+                Result = map(cidr) if found else None.
+        """
+        (_lmp, val) = self.lookup_lmp(cidr)
+        return val
+
+    def lookup_both(self, cidr: str) -> tuple[str, Any]:
+        """
+        Deprecated: Historical - same as lookup_lmp()
+        """
+        return self.lookup_lmp(cidr)

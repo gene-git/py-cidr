@@ -5,7 +5,8 @@ Class support functions to sort lists of cidrs/nets
 """
 import ipaddress
 
-from .cidr_types import IPvxNetwork
+from py_cidr._network.cidr_types import IPvxNetwork
+
 from ._cidr_nets import (cidrs_to_nets, nets_to_cidrs)
 from ._cidr_address import (ips_to_addresses, addresses_to_ips)
 

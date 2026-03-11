@@ -3,6 +3,7 @@ Test:
     Read / Write cache file
 """
 # pylint: disable=too-few-public-methods
+# pylint: disable=duplicate-code
 import os
 import shutil
 from py_cidr import CidrMap
@@ -13,8 +14,15 @@ class _TestData:
     Initialize for test
     """
     def __init__(self):
-        self.cidrs: list[str] = ['10.0.0.0/24', '10.0.1.0/24', '10.0.2.0/24']
-        self.values: list[str] = ['aaa', 'bbb', 'ccc']
+        self.cidrs: list[str] = [
+                '10.0.0.0/24',
+                '10.0.1.0/24',
+                '10.0.2.0/24']
+        self.values: list[str] = [
+                'aaa',
+                'bbb',
+                'ccc'
+                ]
 
         pid: int = os.getpid()
         self.cache_dir: str = f'/tmp/_py-cidr-test/{pid}'
@@ -40,13 +48,12 @@ class TestCidrMap:
 
     def test_cidr_map(self):
         """ write and read back """
-
         tdata = _TestData()
-        cidr_map = CidrMap(tdata.cache_dir)
+        cidr_map = CidrMap(tdata.cache_dir, compact=False)
 
-        # create mape
+        # create mape - test old way
         for (cidr, value) in zip(tdata.cidrs, tdata.values):
-            cidr_map.add_cidr(cidr, value, None)
+            cidr_map.add_prefix_val((cidr, value))
 
         # save to cache
         cidr_map.save_cache()
@@ -55,16 +62,16 @@ class TestCidrMap:
         num_items = len(tdata.cidrs)
         num_found = 0
         for (cidr, value) in zip(tdata.cidrs, tdata.values):
-            value_lookup = cidr_map.lookup(cidr)
-            num_found += value_lookup == value
+            (_pfx, val) = cidr_map.lookup_lmp(cidr)
+            num_found += bool(val == value)
         assert num_found == num_items
 
         # read cache
         map2 = CidrMap(tdata.cache_dir)
         num_found = 0
         for (cidr, value) in zip(tdata.cidrs, tdata.values):
-            value_lookup = map2.lookup(cidr)
-            num_found += value_lookup == value
+            (_pfx, value_lookup) = map2.lookup_lmp(cidr)
+            num_found += bool(value_lookup == value)
         assert num_found == num_items
 
         # all done
@@ -74,18 +81,18 @@ class TestCidrMap:
         """ write and read back """
 
         tdata = _TestData()
-        cidr_map = CidrMap(tdata.cache_dir)
+        cidr_map = CidrMap(tdata.cache_dir, compact=False)
 
         # create mape
         for (cidr, value) in zip(tdata.cidrs, tdata.values):
-            cidr_map.add_cidr(cidr, value, None)
+            cidr_map.add_prefix_val((cidr, value))
 
         # save to cache
         cidr_map.save_cache()
 
         # lookup cidr which is subnet of one of elems
         cidr = '10.0.1.32/27'
-        (cidr_found, val) = cidr_map.lookup_both(cidr)
+        (cidr_found, val) = cidr_map.lookup_lmp(cidr)
         value = val if val is not None else ''
 
         assert cidr_found == '10.0.1.0/24'

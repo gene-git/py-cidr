@@ -6,7 +6,8 @@ Pretty print a py-cidr cache file
 """
 # pylint: disable=invalid-name
 import sys
-from py_cidr._cidr_cache import CidrCache
+
+from py_cidr import PrefixMap
 
 
 def main():
@@ -19,9 +20,10 @@ def main():
         return
     cache_dir = sys.argv[1]
     sep = 30*'-'
-    for iptype in ('ipv4', 'ipv6'):
+
+    for ipv6 in (False, True):
         print(f' {sep}')
-        cache = CidrCache(iptype, cache_dir=cache_dir)
+        cache = PrefixMap(cache_dir=cache_dir, ipv6=ipv6)
         cache.load_cache()
         cache.print()
 

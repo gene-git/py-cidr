@@ -4,43 +4,46 @@
 Class providing some common CIDR utilities
 """
 # pylint: disable=too-many-public-methods
-from typing import (Any)
+from typing import Any
 
-from .cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
+from ._network.cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
+
+from ._network._cidr_clean import (clean_cidr, clean_cidrs)
+from ._network._cidr_clean import (fix_cidr_host_bits, fix_cidrs_host_bits)
+
+from ._network._cidr_address import (ip_to_address, ips_to_addresses)
+from ._network._cidr_address import (addresses_to_ips, ipaddr_cidr_from_string)
+
+from ._network._cidr_subnet import (cidr_set_prefix, get_host_bits)
+from ._network._cidr_subnet import (net_is_subnet, cidr_is_subnet)
+from ._network._cidr_subnet import (net_exclude, nets_exclude, cidrs_exclude)
+from ._network._cidr_subnet import (cidrs2_minus_cidrs1, cidr_exclude)
+
+from ._network._cidr_sort import (sort_cidrs, sort_ips, sort_nets)
+from ._network._cidr_compact import (compact_cidrs_to_nets, compact_cidrs)
+from ._network._cidr_compact import (compact_nets)
+
+from ._network._cidr_nets import (cidr_to_net, cidrs_to_nets, nets_to_cidrs)
+from ._network._cidr_nets import (address_to_net, net_to_cidr)
+
+from ._network._cidr_range import (range_to_cidrs, range_to_nets)
+from ._network._cidr_range import (net_to_range_cidrs, net_to_range_nets)
+from ._network._cidr_range import (cidr_to_range_cidrs, cidr_to_range_nets)
+
+from ._network._cidr_range_split import (cidr_range_split, net_range_split)
+
+from ._network._cidr_valid import (is_valid_ip4, is_valid_ip6, is_valid_cidr)
+from ._network._cidr_valid import (cidr_iptype, cidr_type_network)
+from ._network._cidr_valid import (address_iptype)
+
+from ._network._rfc_1918 import (is_rfc_1918, rfc_1918_nets, rfc_1918_cidrs)
+from ._network._rfc_1918 import (remove_rfc_1918)
+
+from ._network._cidr_split_type import cidrs_split_type
+
+from ._network.ip_version import ip_version
+
 from ._version import version
-
-from ._cidr_clean import (clean_cidr, clean_cidrs)
-from ._cidr_clean import (fix_cidr_host_bits, fix_cidrs_host_bits)
-
-from ._cidr_address import (ip_to_address, ips_to_addresses)
-from ._cidr_address import (addresses_to_ips, ipaddr_cidr_from_string)
-
-from ._cidr_subnet import (cidr_set_prefix, get_host_bits)
-from ._cidr_subnet import (net_is_subnet, cidr_is_subnet)
-from ._cidr_subnet import (net_exclude, nets_exclude, cidrs_exclude)
-from ._cidr_subnet import (cidrs2_minus_cidrs1, cidr_exclude)
-
-from ._cidr_sort import (sort_cidrs, sort_ips, sort_nets)
-from ._cidr_compact import (compact_cidrs_to_nets, compact_cidrs)
-from ._cidr_compact import (compact_nets)
-
-from ._cidr_nets import (cidr_to_net, cidrs_to_nets, nets_to_cidrs)
-from ._cidr_nets import (address_to_net, net_to_cidr)
-
-from ._cidr_range import (range_to_cidrs, range_to_nets)
-from ._cidr_range import (net_to_range_cidrs, net_to_range_nets)
-from ._cidr_range import (cidr_to_range_cidrs, cidr_to_range_nets)
-
-from ._cidr_range_split import (cidr_range_split, net_range_split)
-
-from ._cidr_valid import (is_valid_ip4, is_valid_ip6, is_valid_cidr)
-from ._cidr_valid import (cidr_iptype, cidr_type_network)
-from ._cidr_valid import (address_iptype)
-
-from ._rfc_1918 import (is_rfc_1918, rfc_1918_nets, rfc_1918_cidrs)
-from ._rfc_1918 import (remove_rfc_1918)
-
-from ._cidr_split_type import cidrs_split_type
 
 
 class Cidr:
@@ -669,6 +672,23 @@ class Cidr:
                 empty string if unable to be converted.
         """
         return cidr_iptype(address)
+
+    @staticmethod
+    def ip_version(addr_or_net: str | IPvxNetwork | IPvxAddress) -> int:
+        """
+        Determines the IP version of an address or network:
+
+        Args:
+            addr_or_net (str | IPvxNetwork | IPvxAddress):
+                Can be IP addess or network either a string or ip_address format.
+
+        Returns:
+            int:
+                4 if addr_or_net is IPv4Network or IPv4Address
+                6 if addr_or_net is IPv6Network or IPv5Address
+                0 otherwise
+        """
+        return ip_version(addr_or_net)
 
     @staticmethod
     def cidr_type_network(cidr: str) -> tuple[str, type[IPvxNetwork]]:

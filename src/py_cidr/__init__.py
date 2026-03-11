@@ -1,22 +1,20 @@
 # SPDX-License-Identifier: GPL-2.0-or-later
 # SPDX-FileCopyrightText: © 2023-present Gene C <arch@sapience.com>
 """
-Public Methods.
-py_cidr.
+Public Methods for py_cidr module
 """
 #
 # Public
 #
-# used by sphinx but will also impact wildcard imports (dont use them)
-# __all__ = ('Cidr', 'IPvxNetwork', 'IPvxAddress', 'CidrMap',
-#            'CidrCache', 'CidrFile')
+from ._network.cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
+from ._network.cidr_types import (IPv4, IPv6)
+from ._network.cidr_types import PrefixVal
+from ._network.ip_version import ip_version
 
-from .cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
-from .cidr_types import (IPv4, IPv6)
-
-from .cidr_class import (Cidr)
+from .cidr_class import Cidr
 
 from .cidr_map import CidrMap
-from .cidr_map import NetCache
+from ._prefix.prefix_map import PrefixMap
+from ._prefix.prefix_maps import PrefixMaps
 
 from .cidr_file_class import CidrFile

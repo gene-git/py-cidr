@@ -12,9 +12,10 @@
 """
 import os
 import sys
-from .cidr_class import (Cidr)
-from ._cidr_compact import (compact_cidrs)
-from ._files import open_file
+
+from ._utils import open_file
+from ._network._cidr_compact import (compact_cidrs)
+from .cidr_class import Cidr
 
 
 def _has_cidr_data(row):
@@ -36,8 +37,7 @@ class CidrFile:
     All methods are static so no class instance variable needed.
     """
     @staticmethod
-    def read_cidrs(fname: str | None, verb: bool = False
-                   ) -> tuple[list[str], list[str]]:
+    def read_cidrs(fname: str | None, verb: bool = False) -> tuple[list[str], list[str]]:
         """
         Read file of cidrs and return tuple of separate lists (ip4, ip6).
 
@@ -88,6 +88,7 @@ class CidrFile:
 
                 if iptype == 'ip4':
                     ip4.append(row)
+
                 elif iptype == 'ip6':
                     ip6.append(row)
 

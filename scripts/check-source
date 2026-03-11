@@ -9,6 +9,7 @@
 # - mypy
 
 # code
+echo "Checking module"
 mod_dir="py_cidr"
 cd ./src
 PYTHONPATH=. pylint "$mod_dir"/*.py *.py
@@ -16,6 +17,7 @@ PYTHONPATH=. pycodestyle --max-line-length=110 $mod_dir/*.py *.py
 
 mypy --check-untyped-defs --follow-untyped-imports $mod_dir
 
+echo "Checking tests"
 cd ../tests
 PYTHONPATH=../src pylint *.py
 PYTHONPATH=../src pycodestyle *.py
