@@ -5,8 +5,7 @@ py_cidr
 
 .. autoapi-nested-parse::
 
-   Public Methods.
-   py_cidr.
+   Public Methods for py_cidr module
 
 
 
@@ -19,6 +18,5 @@ Submodules
    /autoapi/py_cidr/cidr_class/index
    /autoapi/py_cidr/cidr_file_class/index
    /autoapi/py_cidr/cidr_map/index
-   /autoapi/py_cidr/cidr_types/index
 
 

@@ -5,14 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>py-cidr &#8212; py-cidr 3.12.0 documentation</title>
+    <title>py-cidr &#8212; py-cidr 3.13.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
-    <script src="_static/documentation_options.js?v=1b7a0a1e"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/documentation_options.js?v=6aaf4047"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="License" href="License/License.html" />
@@ -69,6 +69,46 @@
 </section>
 <section id="new-interesting">
 <h2>New / Interesting<a class="headerlink" href="#new-interesting" title="Link to this heading">¶</a></h2>
+<p><strong>3.13.0</strong></p>
+<ul>
+<li><p>Lots of pretty big code re-org and changes.</p></li>
+<li><p>Biggest change is in CidrMap:
+- New methods:
+- Significant Changes to CidrMap.</p>
+<blockquote>
+<div><p>The API has changed somewhat. As usual we have kept backward compatibility for the previous API.</p>
+</div></blockquote>
+<ul>
+<li><p>New dependency on python-pytricia which provides a python module of a C-code version of patricia trie.
+I have made this package available in the AUR <a class="reference external" href="https://aur.archlinux.org/packages/python-pytricia">Archlinux AUR PyTricia</a> as it is not available in standard
+Arch repos.</p></li>
+<li><p>lookup_lmp() replaces lookup() and returns a tuple(prefix, value) where prefix is
+the longest matching prefix</p></li>
+<li><p>lookup_all() returns list of all (preifx, value) tuples, where the first item in the list
+is the LMP.</p></li>
+<li><p>add_prefix_val() takes a tuple[prefix, val] and replaces add_cidr(prefix, val).</p></li>
+<li><p>add_prefix_vals() takes a list of (prefix, val) tuples and replaces the add_cidrs()
+which takes list of prefixes and a list of values.</p></li>
+<li><p>New CIDR map argument type compact: CidrMap(compact=False). Note this defaults to
+False. When no compacting is done, then every (prefix, val) is kept.</p>
+<p>When set to True, then the map is kept as compact as possible when adding new (prefix, val)
+pairs.
+For example, take a compact map that has (‘10.0.0.0/22’, ‘net-A’). If one tries to add
+((‘10.0.0.0/24’, ‘net-A’) it will be ignored since the existing map covers it.
+A non-compact map would add the new item.</p>
+<p>If one tries instead to add (((‘10.0.0.0/24’, ‘xxx’), then it is added for compact as well,
+since the <em>value</em> is different, even though the prefix is a subnet of existing item.</p>
+<p>Compacting must also check if any children of a newly added prefix are still needed.</p>
+</li>
+</ul>
+</li>
+<li><dl class="simple">
+<dt>NB There is no conversion of older map cache files to new format. For now you will need</dt><dd><p>to recreate new cidr_map and cidr_map.save_cache().
+TODO: make standalone cache converter.</p>
+</dd>
+</dl>
+</li>
+</ul>
 <p><strong>3.12.0</strong></p>
 <ul>
 <li><p>CidrMap : New .items() method provides an Iterator over the map.</p>
@@ -128,72 +168,87 @@ to verify the git tag.  You can also manually verify the signature</p>
 <h3>module functions<a class="headerlink" href="#module-functions" title="Link to this heading">¶</a></h3>
 <p>The library provides the following tools:</p>
 <p><strong>CidrMap Class</strong></p>
-<p>CidrMap provides a reasonably optimized tool to cache (cidr, value) pairs.
-i.e. it maps a CIDR address to some value (string).
-These are cached to file if a cache directory is provided when instantiating the class.</p>
-<p>Ths will create an IPv4 and an IPv6 cache file in the given directory. The code is careful
-about reading and writing the cache files and uses locking as well as atomic writes.
-For example if application starts, reads cache, updates with new items and some time later
+<p>CidrMap provides an optimized tool to map(network-prefix) to a value.
+The map may be saved to file and reused.</p>
+<p>To make use of file cache, a <em>cache_directory</em> must be provided when instantiating the class.
+Note that there are 2 typed of maps, non-compact and compact. The default is non-compact.
+With this every (prefix, value) is added to the map.</p>
+<p>For a compact map, effort is made to reduce redundant entries. For example if the map
+contains the (prefix, tuple) = (‘10.0.0.0/22’, ‘net-1’) and then a new tuple
+(‘10.0.0.0/24’, ‘net-1’) is added to the map, the new one is considered redundent
+since the network is a subnet of <em>‘10.0.0.0/22’</em> and the value, <em>‘net-1</em>’ is the same.
+If the value was different, then it is not considered redundent.</p>
+<p>For non-compact maps, every (prefix, value) is added.</p>
+<p>A <em>CidrMap</em> contains 2 separate maps. A <em>PrefixMap</em>  for IPv4 and one for IPv6.</p>
+<p>Ths will create both an IPv4 and an IPv6 cache file in the given directory. The code is careful
+about reading and writing the cache files and uses locking and atomic writes to ensure the
+integrity of the data.</p>
+<p>For example if application starts, reads cache, updates with new items and some time later
 saves the cache - the module will detect if the cache changed (by another process using same cache
-directory) since it was read in, and merge its own changes with the changes in the cache file
-before writing out the updated cache.  So nothing should be lost.</p>
+directory) since it was last read in, and merge its own changes with the changes in the cache file
+before writing out the updated cache.  This should ensure nothing gets lost.</p>
 <p>This was built this originally for our firewall tool, where part of the data gathering component creates
-maps of CIDR blocks to geolocated country codes for all CIDRs as listed by each of registries.
-This process can take several minutes. Run time was cut roughly in half using
-CidrMap() to provide a mapping of CIDR to location.</p>
-<p>Since parallelizing can provide siginificant speedups, the CidrMap::add_cidr() method has
-a mechanism to allow that by avoiding multiple threads/processes updating the in memory data
-at the same time. It offers the ability for each thread/subprocess to add cidr blocks to thread local
-data. After all the threads/processes complete, then the private data maps of each of the processes
-can be merged together using CidrMap::merge() method.</p>
+maps of network prefixes (blocks of IP addresses) to geolocated country codes and other useful
+information such as the ASN(s) the prefix belongs to.</p>
+<p>When looking up a CIDR, there are 2 methods available. The first, <em>lookup_lmp()</em> returns
+the (lmp_prefix, val) pair where <em>lmp_prefix</em> is the network with the longest matching
+cidr prefix. The longer the cidr prefix, the more specific the network. A <em>/24</em> os more
+specific than a <em>/22</em> for example.</p>
+<p>The method <em>lookup_all()</em> returns every matching prefix and its associated value. the
+LMP is always the first element in returned in the list.</p>
+<p>Since parallelizing often provides decent speedups, <em>CidrMap</em> provides a mechanism to do that.
+It allows each separate process or thread to work with private (thread local) cache. Each of the
+private data caches can then be merged together by the top level process or thread.</p>
+<p>This avoids multiple threads/processes writing to the same in memory data
+at the same time.  This is done using the <em>CidrMap::merge()</em> method.</p>
 <p>Additional details are available in the API reference documentation.</p>
 <p>Methods provided:</p>
 <ul class="simple">
-<li><p>CidrMap.lookup</p></li>
-<li><p>CidrMap.add_cidr</p></li>
-<li><p>CidrMap.merge</p></li>
+<li><p>CidrMap.add_prefix_val()</p></li>
+<li><p>CidrMap.add_prefix_vals()</p></li>
+<li><p>CidrMap.lookup_lmp()</p></li>
+<li><p>CidrMap.lookup_all()</p></li>
+<li><p>CidrMap.items()</p></li>
+<li><p>CidrMap.save_cache()</p></li>
+<li><p>CidrMap.merge()</p></li>
 </ul>
-<p>Static functions:</p>
-<ul class="simple">
-<li><p>create_private_cache</p></li>
-</ul>
+<p>Static functions:
+* CidrMap.create_private_cache()</p>
 <p><strong>Cidr Class</strong></p>
 <p>See the API reference in the documentation for details.
 This class provides a suite of tools we found ourselves using often, so we encapsulated them in this class.
-All methods in the class are <em>&#64;staticmethod</em> and thus no instance of the class is needed. Just use
-them as functions (<em>Cidr.xxx()</em>)</p>
+All methods in the class are <em>&#64;staticmethod</em> and thus no instance of the class is needed. Just call
+them as you would any function (<em>Cidr.xxx()</em>).</p>
+<p>IP addresses and networks can be represented as strings or the format used by python’s
+native <em>ip_address</em> module. Most functionality is available on both.</p>
+<p>Here is a sample of some of the available functionality, see the API doc for complete documentation.</p>
 <ul class="simple">
-<li><p>Cidr.is_valid_ip4</p></li>
-<li><p>Cidr.is_valid_ip6</p></li>
-<li><p>Cidr.is_valid_cidr</p></li>
-<li><p>Cidr.cidr_iptype</p></li>
-<li><p>Cidr.cidr_type_network</p></li>
+<li><p>Cidr.is_valid_ip4()</p></li>
+<li><p>Cidr.is_valid_ip6()</p></li>
+<li><p>Cidr.is_valid_cidr()</p></li>
+<li><p>Cidr.ip_version()</p></li>
+<li><p>Cidr.cidr_iptype()</p></li>
 <li><p>Cidr.cidr_to_net</p></li>
 <li><p>Cidr.cidrs_to_nets</p></li>
+<li><p>Cidr.net_to_cidr</p></li>
 <li><p>Cidr.nets_to_cidrs</p></li>
-<li><p>Cidr.compact_cidrs</p></li>
 <li><p>Cidr.ip_to_address</p></li>
 <li><p>Cidr.ips_to_addresses</p></li>
+<li><p>Cidr.address_to_ip</p></li>
 <li><p>Cidr.addresses_to_ips</p></li>
 <li><p>Cidr.cidr_set_prefix</p></li>
-<li><p>Cidr.ipaddr_cidr_from_string</p></li>
 <li><p>Cidr.cidr_is_subnet</p></li>
-<li><p>Cidr.address_iptype</p></li>
+<li><p>Cidr.compact_cidrs</p></li>
 <li><p>Cidr.compact_nets</p></li>
-<li><p>Cidr.net_exclude</p></li>
-<li><p>Cidr.nets_exclude</p></li>
-<li><p>Cidr.cidrs_exclude</p></li>
 <li><p>Cidr.cidrs2_minus_cidrs1</p></li>
-<li><p>Cidr.cidr_exclude</p></li>
 <li><p>Cidr.sort_cidrs</p></li>
-<li><p>Cidr.sort_ips</p></li>
 <li><p>Cidr.get_host_bits</p></li>
 <li><p>Cidr.clean_cidr</p></li>
-<li><p>Cidr.clean_cidrs</p></li>
-<li><p>Cidr.range_to_cidrs</p></li>
-<li><p>Cidr.cidr_to_range</p></li>
 <li><p>Cidr.fix_cidr_host_bits</p></li>
-<li><p>Cidr.fix_cidrs_host_bits</p></li>
+<li><p>Cidr.range_to_cidrs</p></li>
+<li><p>Cidr.cidr_range_split</p></li>
+<li><p>Cidr.rfc_1918_cidrs</p></li>
+<li><p>Cidr.is_rfc_1918</p></li>
 </ul>
 <p><strong>CidrFile Class</strong></p>
 <p>This class provides a few reader/writer tools for files with lists of CIDR strings.
@@ -352,7 +407,7 @@ latest commit on git master branch.</p>
       &#169;2024-present, Gene C.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |

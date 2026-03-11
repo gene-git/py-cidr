@@ -31,7 +31,7 @@ Module Contents
        * address means either a IP address or a cidr network as a string
 
 
-   .. py:method:: address_iptype(addr: py_cidr.cidr_types.IPvxAddress | py_cidr.cidr_types.IPvxNetwork) -> str
+   .. py:method:: address_iptype(addr: py_cidr._network.cidr_types.IPvxAddress | py_cidr._network.cidr_types.IPvxNetwork) -> str
       :staticmethod:
 
 
@@ -47,7 +47,7 @@ Module Contents
 
 
 
-   .. py:method:: address_to_net(addr: py_cidr.cidr_types.IPAddress | py_cidr.cidr_types.IPvxNetwork, strict: bool = False) -> py_cidr.cidr_types.IPvxNetwork | None
+   .. py:method:: address_to_net(addr: py_cidr._network.cidr_types.IPAddress | py_cidr._network.cidr_types.IPvxNetwork, strict: bool = False) -> py_cidr._network.cidr_types.IPvxNetwork | None
       :staticmethod:
 
 
@@ -71,7 +71,7 @@ Module Contents
 
 
 
-   .. py:method:: addresses_to_ips(addresses: list[py_cidr.cidr_types.IPvxAddress]) -> list[str]
+   .. py:method:: addresses_to_ips(addresses: list[py_cidr._network.cidr_types.IPvxAddress]) -> list[str]
       :staticmethod:
 
 
@@ -124,7 +124,7 @@ Module Contents
 
 
 
-   .. py:method:: cidr_is_subnet(cidr: str, ipa_nets: list[py_cidr.cidr_types.IPvxNetwork]) -> bool
+   .. py:method:: cidr_is_subnet(cidr: str, ipa_nets: list[py_cidr._network.cidr_types.IPvxNetwork]) -> bool
       :staticmethod:
 
 
@@ -143,7 +143,7 @@ Module Contents
 
 
 
-   .. py:method:: cidr_list_compact(cidrs: list[str], string: bool = True) -> list[str] | list[py_cidr.cidr_types.IPvxNetwork]
+   .. py:method:: cidr_list_compact(cidrs: list[str], string: bool = True) -> list[str] | list[py_cidr._network.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -204,7 +204,7 @@ Module Contents
 
 
 
-   .. py:method:: cidr_to_net(cidr: str, strict: bool = False) -> py_cidr.cidr_types.IPvxNetwork | None
+   .. py:method:: cidr_to_net(cidr: str, strict: bool = False) -> py_cidr._network.cidr_types.IPvxNetwork | None
       :staticmethod:
 
 
@@ -225,7 +225,7 @@ Module Contents
 
 
 
-   .. py:method:: cidr_to_range(cidr: str, string: bool = False) -> tuple[py_cidr.cidr_types.IPvxAddress | str | None, py_cidr.cidr_types.IPvxAddress | str | None]
+   .. py:method:: cidr_to_range(cidr: str, string: bool = False) -> tuple[py_cidr._network.cidr_types.IPvxAddress | str | None, py_cidr._network.cidr_types.IPvxAddress | str | None]
       :staticmethod:
 
 
@@ -245,7 +245,7 @@ Module Contents
 
 
 
-   .. py:method:: cidr_type_network(cidr: str) -> tuple[str, type[py_cidr.cidr_types.IPvxNetwork]]
+   .. py:method:: cidr_type_network(cidr: str) -> tuple[str, type[py_cidr._network.cidr_types.IPvxNetwork]]
       :staticmethod:
 
 
@@ -307,7 +307,7 @@ Module Contents
 
 
 
-   .. py:method:: cidrs_to_nets(cidrs: list[str], strict: bool = False) -> list[py_cidr.cidr_types.IPvxNetwork]
+   .. py:method:: cidrs_to_nets(cidrs: list[str], strict: bool = False) -> list[py_cidr._network.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -392,7 +392,7 @@ Module Contents
 
 
 
-   .. py:method:: compact_cidrs(cidrs: list[str], nets: bool = False) -> list[str] | list[py_cidr.cidr_types.IPvxNetwork]
+   .. py:method:: compact_cidrs(cidrs: list[str], nets: bool = False) -> list[str] | list[py_cidr._network.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -425,7 +425,7 @@ Module Contents
 
 
 
-   .. py:method:: compact_nets(nets: list[py_cidr.cidr_types.IPvxNetwork]) -> list[py_cidr.cidr_types.IPvxNetwork]
+   .. py:method:: compact_nets(nets: list[py_cidr._network.cidr_types.IPvxNetwork]) -> list[py_cidr._network.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -504,7 +504,7 @@ Module Contents
 
 
 
-   .. py:method:: ip_to_address(ip: str) -> py_cidr.cidr_types.IPvxAddress | None
+   .. py:method:: ip_to_address(ip: str) -> py_cidr._network.cidr_types.IPvxAddress | None
       :staticmethod:
 
 
@@ -521,7 +521,25 @@ Module Contents
 
 
 
-   .. py:method:: ipaddr_cidr_from_string(address: str, strict: bool = False) -> py_cidr.cidr_types.IPvxNetwork | None
+   .. py:method:: ip_version(addr_or_net: str | py_cidr._network.cidr_types.IPvxNetwork | py_cidr._network.cidr_types.IPvxAddress) -> int
+      :staticmethod:
+
+
+      Determines the IP version of an address or network:
+
+      Args:
+          addr_or_net (str | IPvxNetwork | IPvxAddress):
+              Can be IP addess or network either a string or ip_address format.
+
+      Returns:
+          int:
+              4 if addr_or_net is IPv4Network or IPv4Address
+              6 if addr_or_net is IPv6Network or IPv5Address
+              0 otherwise
+
+
+
+   .. py:method:: ipaddr_cidr_from_string(address: str, strict: bool = False) -> py_cidr._network.cidr_types.IPvxNetwork | None
       :staticmethod:
 
 
@@ -540,7 +558,7 @@ Module Contents
 
 
 
-   .. py:method:: ips_to_addresses(ips: list[str]) -> list[py_cidr.cidr_types.IPvxAddress]
+   .. py:method:: ips_to_addresses(ips: list[str]) -> list[py_cidr._network.cidr_types.IPvxAddress]
       :staticmethod:
 
 
@@ -621,7 +639,7 @@ Module Contents
 
 
 
-   .. py:method:: net_exclude(net1: py_cidr.cidr_types.IPvxNetwork, nets2: list[py_cidr.cidr_types.IPvxNetwork]) -> list[py_cidr.cidr_types.IPvxNetwork]
+   .. py:method:: net_exclude(net1: py_cidr._network.cidr_types.IPvxNetwork, nets2: list[py_cidr._network.cidr_types.IPvxNetwork]) -> list[py_cidr._network.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -642,7 +660,7 @@ Module Contents
 
 
 
-   .. py:method:: net_is_subnet(net1: py_cidr.cidr_types.IPvxNetwork, net2: py_cidr.cidr_types.IPvxNetwork | list[py_cidr.cidr_types.IPvxNetwork]) -> bool
+   .. py:method:: net_is_subnet(net1: py_cidr._network.cidr_types.IPvxNetwork, net2: py_cidr._network.cidr_types.IPvxNetwork | list[py_cidr._network.cidr_types.IPvxNetwork]) -> bool
       :staticmethod:
 
 
@@ -661,7 +679,7 @@ Module Contents
 
 
 
-   .. py:method:: net_range_split(net: py_cidr.cidr_types.IPvxNetwork) -> tuple[py_cidr.cidr_types.IPvxAddress, py_cidr.cidr_types.IPvxAddress, py_cidr.cidr_types.IPvxAddress]
+   .. py:method:: net_range_split(net: py_cidr._network.cidr_types.IPvxNetwork) -> tuple[py_cidr._network.cidr_types.IPvxAddress, py_cidr._network.cidr_types.IPvxAddress, py_cidr._network.cidr_types.IPvxAddress]
       :staticmethod:
 
 
@@ -680,7 +698,7 @@ Module Contents
 
 
 
-   .. py:method:: net_to_cidr(net: py_cidr.cidr_types.IPvxNetwork) -> str
+   .. py:method:: net_to_cidr(net: py_cidr._network.cidr_types.IPvxNetwork) -> str
       :staticmethod:
 
 
@@ -698,7 +716,7 @@ Module Contents
 
 
 
-   .. py:method:: net_to_range(net: py_cidr.cidr_types.IPvxNetwork, string: bool = False) -> tuple[py_cidr.cidr_types.IPvxAddress | str | None, py_cidr.cidr_types.IPvxAddress | str | None]
+   .. py:method:: net_to_range(net: py_cidr._network.cidr_types.IPvxNetwork, string: bool = False) -> tuple[py_cidr._network.cidr_types.IPvxAddress | str | None, py_cidr._network.cidr_types.IPvxAddress | str | None]
       :staticmethod:
 
 
@@ -718,7 +736,7 @@ Module Contents
 
 
 
-   .. py:method:: nets_exclude(nets1: list[py_cidr.cidr_types.IPvxNetwork], nets2: list[py_cidr.cidr_types.IPvxNetwork]) -> list[py_cidr.cidr_types.IPvxNetwork]
+   .. py:method:: nets_exclude(nets1: list[py_cidr._network.cidr_types.IPvxNetwork], nets2: list[py_cidr._network.cidr_types.IPvxNetwork]) -> list[py_cidr._network.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -741,7 +759,7 @@ Module Contents
 
 
 
-   .. py:method:: nets_to_cidrs(nets: list[py_cidr.cidr_types.IPvxNetwork]) -> list[str]
+   .. py:method:: nets_to_cidrs(nets: list[py_cidr._network.cidr_types.IPvxNetwork]) -> list[str]
       :staticmethod:
 
 
@@ -757,7 +775,7 @@ Module Contents
 
 
 
-   .. py:method:: range_to_cidrs(addr_start: py_cidr.cidr_types.IPAddress, addr_end: py_cidr.cidr_types.IPAddress, string: bool = False) -> list[py_cidr.cidr_types.IPvxNetwork] | list[str]
+   .. py:method:: range_to_cidrs(addr_start: py_cidr._network.cidr_types.IPAddress, addr_end: py_cidr._network.cidr_types.IPAddress, string: bool = False) -> list[py_cidr._network.cidr_types.IPvxNetwork] | list[str]
       :staticmethod:
 
 
@@ -816,7 +834,7 @@ Module Contents
 
 
 
-   .. py:method:: rfc_1918_nets() -> list[py_cidr.cidr_types.IPvxNetwork]
+   .. py:method:: rfc_1918_nets() -> list[py_cidr._network.cidr_types.IPvxNetwork]
       :staticmethod:
 
 
@@ -860,7 +878,7 @@ Module Contents
 
 
 
-   .. py:method:: sort_nets(nets: list[py_cidr.cidr_types.IPvxNetwork]) -> list[py_cidr.cidr_types.IPvxNetwork]
+   .. py:method:: sort_nets(nets: list[py_cidr._network.cidr_types.IPvxNetwork]) -> list[py_cidr._network.cidr_types.IPvxNetwork]
       :staticmethod:
 
 

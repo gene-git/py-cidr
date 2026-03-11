@@ -35,6 +35,41 @@ See API reference documentation for more details.
 New / Interesting
 ==================
 
+**3.13.0**
+
+* Lots of pretty big code re-org and changes.
+* Biggest change is in CidrMap: 
+  - New methods:
+  - Significant Changes to CidrMap.
+    The API has changed somewhat. As usual we have kept backward compatibility for the previous API.
+  - New dependency on python-pytricia which provides a python module of a C-code version of patricia trie. 
+    I have made this package available in the AUR `Archlinux AUR PyTricia`_ as it is not available in standard
+    Arch repos.
+  - lookup_lmp() replaces lookup() and returns a tuple(prefix, value) where prefix is 
+    the longest matching prefix
+  - lookup_all() returns list of all (preifx, value) tuples, where the first item in the list
+    is the LMP.
+  - add_prefix_val() takes a tuple[prefix, val] and replaces add_cidr(prefix, val).
+  - add_prefix_vals() takes a list of (prefix, val) tuples and replaces the add_cidrs()
+    which takes list of prefixes and a list of values.
+  - New CIDR map argument type compact: CidrMap(compact=False). Note this defaults to
+    False. When no compacting is done, then every (prefix, val) is kept.
+    
+    When set to True, then the map is kept as compact as possible when adding new (prefix, val)
+    pairs. 
+    For example, take a compact map that has ('10.0.0.0/22', 'net-A'). If one tries to add
+    (('10.0.0.0/24', 'net-A') it will be ignored since the existing map covers it.
+    A non-compact map would add the new item.
+
+    If one tries instead to add ((('10.0.0.0/24', 'xxx'), then it is added for compact as well,
+    since the *value* is different, even though the prefix is a subnet of existing item.
+
+    Compacting must also check if any children of a newly added prefix are still needed.
+
+* NB There is no conversion of older map cache files to new format. For now you will need
+    to recreate new cidr_map and cidr_map.save_cache().
+    TODO: make standalone cache converter.
+
 **3.12.0**
 
 * CidrMap : New .items() method provides an Iterator over the map.
@@ -105,84 +140,113 @@ The library provides the following tools:
 
 **CidrMap Class**
 
-CidrMap provides a reasonably optimized tool to cache (cidr, value) pairs.
-i.e. it maps a CIDR address to some value (string).
-These are cached to file if a cache directory is provided when instantiating the class.
+CidrMap provides an optimized tool to map(network-prefix) to a value.
+The map may be saved to file and reused.
+
+To make use of file cache, a *cache_directory* must be provided when instantiating the class.
+Note that there are 2 typed of maps, non-compact and compact. The default is non-compact.
+With this every (prefix, value) is added to the map.
+
+For a compact map, effort is made to reduce redundant entries. For example if the map
+contains the (prefix, tuple) = ('10.0.0.0/22', 'net-1') and then a new tuple
+('10.0.0.0/24', 'net-1') is added to the map, the new one is considered redundent
+since the network is a subnet of *'10.0.0.0/22'* and the value, *'net-1*' is the same.
+If the value was different, then it is not considered redundent.
+
+For non-compact maps, every (prefix, value) is added.
+
+A *CidrMap* contains 2 separate maps. A *PrefixMap*  for IPv4 and one for IPv6.
 
 .. code::python
 
-   cidr_cache = CidrMap(cache_dir='/home/bob/.cache/appname')
+   cidr_cache = CidrMap(cache_dir='/home/bob/.cache/appname', compact=False)
 
-Ths will create an IPv4 and an IPv6 cache file in the given directory. The code is careful
-about reading and writing the cache files and uses locking as well as atomic writes.
+Ths will create both an IPv4 and an IPv6 cache file in the given directory. The code is careful
+about reading and writing the cache files and uses locking and atomic writes to ensure the 
+integrity of the data.
+
 For example if application starts, reads cache, updates with new items and some time later
 saves the cache - the module will detect if the cache changed (by another process using same cache
-directory) since it was read in, and merge its own changes with the changes in the cache file 
-before writing out the updated cache.  So nothing should be lost.
+directory) since it was last read in, and merge its own changes with the changes in the cache file 
+before writing out the updated cache.  This should ensure nothing gets lost.
 
 This was built this originally for our firewall tool, where part of the data gathering component creates 
-maps of CIDR blocks to geolocated country codes for all CIDRs as listed by each of registries. 
-This process can take several minutes. Run time was cut roughly in half using 
-CidrMap() to provide a mapping of CIDR to location.
+maps of network prefixes (blocks of IP addresses) to geolocated country codes and other useful
+information such as the ASN(s) the prefix belongs to.
 
-Since parallelizing can provide siginificant speedups, the CidrMap::add_cidr() method has
-a mechanism to allow that by avoiding multiple threads/processes updating the in memory data
-at the same time. It offers the ability for each thread/subprocess to add cidr blocks to thread local 
-data. After all the threads/processes complete, then the private data maps of each of the processes 
-can be merged together using CidrMap::merge() method.
+When looking up a CIDR, there are 2 methods available. The first, *lookup_lmp()* returns
+the (lmp_prefix, val) pair where *lmp_prefix* is the network with the longest matching 
+cidr prefix. The longer the cidr prefix, the more specific the network. A */24* os more 
+specific than a */22* for example.
+
+The method *lookup_all()* returns every matching prefix and its associated value. the 
+LMP is always the first element in returned in the list.
+
+Since parallelizing often provides decent speedups, *CidrMap* provides a mechanism to do that.
+It allows each separate process or thread to work with private (thread local) cache. Each of the
+private data caches can then be merged together by the top level process or thread.
+
+This avoids multiple threads/processes writing to the same in memory data
+at the same time.  This is done using the *CidrMap::merge()* method.
 
 Additional details are available in the API reference documentation.
 
 Methods provided:
 
-* CidrMap.lookup 
-* CidrMap.add_cidr 
-* CidrMap.merge 
+* CidrMap.add_prefix_val() 
+* CidrMap.add_prefix_vals() 
+* CidrMap.lookup_lmp() 
+* CidrMap.lookup_all() 
+* CidrMap.items() 
+* CidrMap.save_cache() 
+* CidrMap.merge() 
 
 Static functions:
-
-* create_private_cache
+* CidrMap.create_private_cache() 
 
 
 **Cidr Class**
 
 See the API reference in the documentation for details.
 This class provides a suite of tools we found ourselves using often, so we encapsulated them in this class.
-All methods in the class are *@staticmethod* and thus no instance of the class is needed. Just use
-them as functions (*Cidr.xxx()*)
+All methods in the class are *@staticmethod* and thus no instance of the class is needed. Just call
+them as you would any function (*Cidr.xxx()*).
 
-* Cidr.is_valid_ip4
-* Cidr.is_valid_ip6
-* Cidr.is_valid_cidr
-* Cidr.cidr_iptype
-* Cidr.cidr_type_network
+IP addresses and networks can be represented as strings or the format used by python's
+native *ip_address* module. Most functionality is available on both.
+
+Here is a sample of some of the available functionality, see the API doc for complete documentation.
+
+* Cidr.is_valid_ip4()
+* Cidr.is_valid_ip6()
+* Cidr.is_valid_cidr()
+* Cidr.ip_version()
+* Cidr.cidr_iptype()
 
 * Cidr.cidr_to_net
 * Cidr.cidrs_to_nets
+* Cidr.net_to_cidr
 * Cidr.nets_to_cidrs
-* Cidr.compact_cidrs
 * Cidr.ip_to_address
 * Cidr.ips_to_addresses
+* Cidr.address_to_ip
 * Cidr.addresses_to_ips
+
 * Cidr.cidr_set_prefix
-* Cidr.ipaddr_cidr_from_string
 * Cidr.cidr_is_subnet
-* Cidr.address_iptype
+* Cidr.compact_cidrs
 * Cidr.compact_nets
-* Cidr.net_exclude
-* Cidr.nets_exclude
-* Cidr.cidrs_exclude
 * Cidr.cidrs2_minus_cidrs1
-* Cidr.cidr_exclude
 * Cidr.sort_cidrs
-* Cidr.sort_ips
 * Cidr.get_host_bits
 * Cidr.clean_cidr
-* Cidr.clean_cidrs
-* Cidr.range_to_cidrs
-* Cidr.cidr_to_range
 * Cidr.fix_cidr_host_bits
-* Cidr.fix_cidrs_host_bits
+
+* Cidr.range_to_cidrs
+* Cidr.cidr_range_split
+
+* Cidr.rfc_1918_cidrs
+* Cidr.is_rfc_1918
 
 **CidrFile Class**
 
@@ -264,6 +328,7 @@ Created by Gene C. and licensed under the terms of the GPL-2.0-or-later license.
 
 .. _Github: https://github.com/gene-git/py-cidr
 .. _Archlinux AUR: https://aur.archlinux.org/packages/py-cidr
+.. _Archlinux AUR PyTricia: https://aur.archlinux.org/packages/python-pytricia
 
 .. [1] https://abseil.io/about/philosophy#upgrade-support
 

@@ -6,12 +6,52 @@ Tags
 
 .. code-block:: text
 
-	2.6.0 (2025-01-18) -> 3.12.0 (2026-02-21)
-	41 commits.
+	2.6.0 (2025-01-18) -> 3.13.0 (2026-03-11)
+	43 commits.
 
 Commits
 =======
 
+
+* 2026-03-11  : **3.13.0**
+
+.. code-block:: text
+
+              - **3.13.0**
+            
+                * Lots of pretty big code re-org and changes.
+                * Biggest change is in CidrMap:
+                  - New methods:
+                  - Significant Changes to CidrMap.
+                    The API has changed somewhat. As usual we have kept backward compatibility for the previous API.
+                  - New dependency on python-pytricia which provides a python module of a C-code version of patricia trie.
+                    I have made this package available in the AUR _ as it is not available in standard
+                    Arch repos.
+                  - lookup_lmp() replaces lookup() and returns a tuple(prefix, value) where prefix is
+                    the longest matching prefix
+                  - lookup_all() returns list of all (preifx, value) tuples, where the first item in the list
+                    is the LMP.
+                  - add_prefix_val() takes a tuple[prefix, val] and replaces add_cidr(prefix, val).
+                  - add_prefix_vals() takes a list of (prefix, val) tuples and replaces the add_cidrs()
+                    which takes list of prefixes and a list of values.
+                  - New CIDR map argument type compact: CidrMap(compact=False). Note this defaults to
+                    False. When no compacting is done, then every (prefix, val) is kept.
+            
+                    When set to True, then the map is kept as compact as possible when adding new (prefix, val)
+                    pairs.
+                    For example, take a compact map that has ('10.0.0.0/22', 'net-A'). If one tries to add
+                    (('10.0.0.0/24', 'net-A') it will be ignored since the existing map covers it.
+                    A non-compact map would add the new item.
+            
+                    If one tries instead to add ((('10.0.0.0/24', 'xxx'), then it is added for compact as well,
+                    since the *value* is different, even though the prefix is a subnet of existing item.
+            
+                    Compacting must also check if any children of a newly added prefix are still needed.
+ 2026-02-21   ⋯
+
+.. code-block:: text
+
+              - update Docs/Changelogs
 
 * 2026-02-21  : **3.12.0**
 
