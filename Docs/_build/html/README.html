@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>py-cidr &#8212; py-cidr 3.13.0 documentation</title>
+    <title>py-cidr &#8212; py-cidr 4.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
-    <script src="_static/documentation_options.js?v=6aaf4047"></script>
+    <script src="_static/documentation_options.js?v=3304f9e4"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -69,75 +69,21 @@
 </section>
 <section id="new-interesting">
 <h2>New / Interesting<a class="headerlink" href="#new-interesting" title="Link to this heading">¶</a></h2>
-<p><strong>3.13.0</strong></p>
+<p><strong>4.0.0</strong></p>
 <ul>
-<li><p>Lots of pretty big code re-org and changes.</p></li>
-<li><p>Biggest change is in CidrMap:
-- New methods:
-- Significant Changes to CidrMap.</p>
+<li><p>CidrMap:
+- use Patricia26 (instead of PyTricia) for the Patricia trees.
+- maps are now very much smaller, about 1/6 th the size of previous files.</p>
 <blockquote>
-<div><p>The API has changed somewhat. As usual we have kept backward compatibility for the previous API.</p>
+<div><p>A benefit that Patricia26 stores only the necessary data.</p>
 </div></blockquote>
-<ul>
-<li><p>New dependency on python-pytricia which provides a python module of a C-code version of patricia trie.
-I have made this package available in the AUR <a class="reference external" href="https://aur.archlinux.org/packages/python-pytricia">Archlinux AUR PyTricia</a> as it is not available in standard
-Arch repos.</p></li>
-<li><p>lookup_lmp() replaces lookup() and returns a tuple(prefix, value) where prefix is
-the longest matching prefix</p></li>
-<li><p>lookup_all() returns list of all (preifx, value) tuples, where the first item in the list
-is the LMP.</p></li>
-<li><p>add_prefix_val() takes a tuple[prefix, val] and replaces add_cidr(prefix, val).</p></li>
-<li><p>add_prefix_vals() takes a list of (prefix, val) tuples and replaces the add_cidrs()
-which takes list of prefixes and a list of values.</p></li>
-<li><p>New CIDR map argument type compact: CidrMap(compact=False). Note this defaults to
-False. When no compacting is done, then every (prefix, val) is kept.</p>
-<p>When set to True, then the map is kept as compact as possible when adding new (prefix, val)
-pairs.
-For example, take a compact map that has (‘10.0.0.0/22’, ‘net-A’). If one tries to add
-((‘10.0.0.0/24’, ‘net-A’) it will be ignored since the existing map covers it.
-A non-compact map would add the new item.</p>
-<p>If one tries instead to add (((‘10.0.0.0/24’, ‘xxx’), then it is added for compact as well,
-since the <em>value</em> is different, even though the prefix is a subnet of existing item.</p>
-<p>Compacting must also check if any children of a newly added prefix are still needed.</p>
-</li>
-</ul>
-</li>
-<li><dl class="simple">
-<dt>NB There is no conversion of older map cache files to new format. For now you will need</dt><dd><p>to recreate new cidr_map and cidr_map.save_cache().
-TODO: make standalone cache converter.</p>
-</dd>
-</dl>
-</li>
-</ul>
-<p><strong>3.12.0</strong></p>
-<ul>
-<li><p>CidrMap : New .items() method provides an Iterator over the map.</p>
-<p>Each iteration yields a tuple[cidr: str, value: Any]</p>
-</li>
-<li><p>Add net_range_split/cidr_range_split:</p>
-<p>split one net/cidr into (first, mid,  last) ip addresses</p>
-</li>
-</ul>
-<p><strong>3.11.0</strong></p>
 <ul class="simple">
-<li><p>Code Reorg</p></li>
-<li><p>Switch packaging from hatch to uv</p></li>
-<li><p>Testing to confirm all working on python 3.14.2</p></li>
-<li><p>License GPL-2.0-or-later</p></li>
+<li><p>cache files are automatically converted to the new format.</p></li>
+<li><p>PrefixMap: compact defaults to False.</p></li>
 </ul>
-<p><strong>Older</strong></p>
-<ul class="simple">
-<li><p>Rename <em>py-cidr-cache-print</em> (without the .py extension)</p></li>
-<li><p>PEP-8, PEP-257 and PEP-484 style changes</p></li>
-<li><p>PEP 561 type hints (improves module use for type checkers e.g. <em>mypy</em>)</p></li>
-<li><p>CidrMap now uses separate CidrCache for “private cache data” instead of just the “data” part.
-CidrCache class no longer needs it’s own “private data” functionality.</p></li>
-<li><p>Add some tests (via pytest)</p></li>
-<li><p>Reorganize CidrMap and simplify/improve way we do private_cache supporing
-multiprocess/multithreading usecase. This is now all done in CidrMap.</p></li>
-<li><p>Change cache file storage to pickle format as its more flexible than json
-Provide simple app to show contents of cache:</p></li>
+</li>
 </ul>
+<p>More information here for <a class="reference external" href="https://github.com/gene-git/patricia26">patricia26</a>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">py</span><span class="o">-</span><span class="n">cidr</span><span class="o">-</span><span class="n">cache</span><span class="o">-</span><span class="nb">print</span> <span class="o">&lt;</span><span class="n">cache_directory</span><span class="o">&gt;</span>
 </pre></div>
 </div>

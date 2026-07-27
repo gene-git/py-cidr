@@ -12,15 +12,21 @@
 echo "Checking module"
 mod_dir="py_cidr"
 cd ./src
+
+echo "==> pylint"
 PYTHONPATH=. pylint "$mod_dir"/*.py *.py
+
+echo "==> pycodestyle"
 PYTHONPATH=. pycodestyle --max-line-length=110 $mod_dir/*.py *.py
 
-mypy --check-untyped-defs --follow-untyped-imports $mod_dir
+echo "==> mypy"
+opts=(--check-untyped-defs --follow-untyped-imports --show-error-context --pretty)
+mypy "${opts[0]}" $mod_dir
 
 echo "Checking tests"
 cd ../tests
 PYTHONPATH=../src pylint *.py
 PYTHONPATH=../src pycodestyle *.py
-mypy --check-untyped-defs --follow-untyped-imports .
+mypy "${opts[0]}" .
 
 

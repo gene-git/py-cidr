@@ -35,72 +35,16 @@ See API reference documentation for more details.
 New / Interesting
 ==================
 
-**3.13.0**
+**4.0.0**
 
-* Lots of pretty big code re-org and changes.
-* Biggest change is in CidrMap: 
-  - New methods:
-  - Significant Changes to CidrMap.
-    The API has changed somewhat. As usual we have kept backward compatibility for the previous API.
-  - New dependency on python-pytricia which provides a python module of a C-code version of patricia trie. 
-    I have made this package available in the AUR `Archlinux AUR PyTricia`_ as it is not available in standard
-    Arch repos.
-  - lookup_lmp() replaces lookup() and returns a tuple(prefix, value) where prefix is 
-    the longest matching prefix
-  - lookup_all() returns list of all (preifx, value) tuples, where the first item in the list
-    is the LMP.
-  - add_prefix_val() takes a tuple[prefix, val] and replaces add_cidr(prefix, val).
-  - add_prefix_vals() takes a list of (prefix, val) tuples and replaces the add_cidrs()
-    which takes list of prefixes and a list of values.
-  - New CIDR map argument type compact: CidrMap(compact=False). Note this defaults to
-    False. When no compacting is done, then every (prefix, val) is kept.
-    
-    When set to True, then the map is kept as compact as possible when adding new (prefix, val)
-    pairs. 
-    For example, take a compact map that has ('10.0.0.0/22', 'net-A'). If one tries to add
-    (('10.0.0.0/24', 'net-A') it will be ignored since the existing map covers it.
-    A non-compact map would add the new item.
+* CidrMap: 
+  - use Patricia26 (instead of PyTricia) for the Patricia trees.
+  - maps are now very much smaller, about 1/6 th the size of previous files.
+    A benefit that Patricia26 stores only the necessary data.
+  - cache files are automatically converted to the new format.
+  - PrefixMap: compact defaults to False.
 
-    If one tries instead to add ((('10.0.0.0/24', 'xxx'), then it is added for compact as well,
-    since the *value* is different, even though the prefix is a subnet of existing item.
-
-    Compacting must also check if any children of a newly added prefix are still needed.
-
-* NB There is no conversion of older map cache files to new format. For now you will need
-    to recreate new cidr_map and cidr_map.save_cache().
-    TODO: make standalone cache converter.
-
-**3.12.0**
-
-* CidrMap : New .items() method provides an Iterator over the map.
-
-  Each iteration yields a tuple[cidr: str, value: Any]
-
-* Add net_range_split/cidr_range_split: 
-
-  split one net/cidr into (first, mid,  last) ip addresses
-
-
-**3.11.0**
-
-* Code Reorg
-* Switch packaging from hatch to uv
-* Testing to confirm all working on python 3.14.2
-* License GPL-2.0-or-later
-
-
-**Older**
-
-* Rename *py-cidr-cache-print* (without the .py extension)
-* PEP-8, PEP-257 and PEP-484 style changes
-* PEP 561 type hints (improves module use for type checkers e.g. *mypy*)
-* CidrMap now uses separate CidrCache for "private cache data" instead of just the "data" part.
-  CidrCache class no longer needs it's own "private data" functionality.
-* Add some tests (via pytest)
-* Reorganize CidrMap and simplify/improve way we do private_cache supporing
-  multiprocess/multithreading usecase. This is now all done in CidrMap.
-* Change cache file storage to pickle format as its more flexible than json
-  Provide simple app to show contents of cache:
+More information here for `patricia26 <https://github.com/gene-git/patricia26>`_.
 
 .. code::
 

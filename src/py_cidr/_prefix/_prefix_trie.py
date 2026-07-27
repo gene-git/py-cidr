@@ -18,7 +18,7 @@ Cache is an ordered list by net.
 # pylint: disable=too-many-branches
 from typing import (Any, Iterable, Iterator, Mapping, Self)
 
-from pytricia import PyTricia
+from patricia26 import Patricia26
 
 from py_cidr import PrefixVal
 from py_cidr._network._cidr_compact import (compact_nets)
@@ -58,6 +58,16 @@ class PrefixTrie(PrefixTrieBase):
             else:
                 for cidr_elem in arg:
                     self._update_prefix_val(cidr_elem)
+
+    def bulk_update(self, pfx_vals: list[PrefixVal]):
+        """
+        For each (prefix, value) add to the tree.
+
+        Note 1: this always marks the tree dirty.
+        Note 2: this ignores "compact"
+        """
+        self.dirty = True
+        self.pyt.bulk_insert(pfx_vals)
 
     def _update_prefix_val(self, prefix_val: tuple[str, Any]) -> bool:
         """
@@ -124,12 +134,12 @@ class PrefixTrie(PrefixTrieBase):
         if prefix in pyt and pyt[prefix] == val:
             return True
 
-        #
-        # 2) Check parent prefix (shorter matching prefix) has same value
-        # 
-        parent_prefix = pyt.get_key(prefix)
-        if parent_prefix and pyt[parent_prefix] == val:
-            return True
+        ##
+        ## 2) Check parent prefix (shorter matching prefix) has same value
+        ## 
+        #parent_prefix = pyt.get_key(prefix)
+        #if parent_prefix and pyt[parent_prefix] == val:
+        #    return True
 
         #
         # 3) (prefix, val) Not in trie so add it.
@@ -161,9 +171,11 @@ class PrefixTrie(PrefixTrieBase):
         for prefix in self.pyt:
             print(f"  {prefix}: {self.pyt[prefix]}")
 
-    def lookup_lmp(self, cidr: str) -> tuple[str, Any]:
+    def lookup_lpm(self, cidr: str) -> tuple[str, Any]:
         """
-        Locate LMP (longest matching prefix) associated with network "cidr".
+        Find and return LPM (longest matching prefix) which "cidr" belongs to
+        and return the (lpm, value).
+
         The longest prefix is the most specific. 
 
         e.g. 
@@ -186,27 +198,28 @@ class PrefixTrie(PrefixTrieBase):
         if not cidr:
             return ('', None)
 
-        lmp: str = ''
+        lpm_str: str = ''
+        lpm: str | None = ''
         val: Any = None
-        try:
-            lmp = self.pyt.get_key(cidr)
-            if lmp:
-                val = self.pyt[lmp]
-            else:
-                lmp = ''
+        (lpm, val) = self.pyt.lookup_lpm(cidr)
 
-        except (KeyError, ValueError):
-            return ('', None)
+        if (lpm is not None):
+            lpm_str = lpm
 
-        return (lmp, val)
+        return (lpm_str, val)
+
+    def lookup_lmp(self, cidr: str) -> tuple[str, Any]:
+        """ Alias for lookup_lpm (historical)"""
+        return self.lookup_lpm(cidr)
 
     def lookup_all(self, cidr: str) -> list[tuple[str, Any]]:
         """
         Return list of prefixes and values for which cidr is subnet.
-        See also lookup_lmp() which returns only the longest matching prefix.
+        See also lookup_lpm() which returns only the longest matching prefix.
         """
         pfx_vals:  list[tuple[str, Any]] = []
-        (prefix, val) = self.lookup_lmp(cidr)
+        prefix: str | None = None
+        (prefix, val) = self.lookup_lpm(cidr)
         if not prefix:
             return pfx_vals
 
@@ -215,13 +228,14 @@ class PrefixTrie(PrefixTrieBase):
         while prefix is not None:
             prefix = pyt.parent(prefix)
             if prefix is not None:
-                pfx_vals.append((prefix, pyt[prefix]))
+                pfx_vals.append((prefix, pyt.lookup(prefix)))
 
         return pfx_vals
             
-    def merge_pyt(self, other_pyt: PyTricia) -> bool:
+    def merge_pyt(self, other_pyt: Patricia26) -> bool:
         """
         Merge other into self where other takes precedence.
+        todo: use pyt.bulk_install()
         """
         for prefix in other_pyt:
             self.pyt[prefix] = other_pyt[prefix]

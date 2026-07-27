@@ -4,16 +4,17 @@
 Base Class for CidrCacheData
 - uses patricia trie tree vai PyTricia module.
 """
-import os
 from typing import Any
+import os
+import io
 import pickle
 from pickle import (PickleError)
 
+from patricia26 import Patricia26
 from pytricia import PyTricia
 
 from py_cidr._utils import write_file_atomic
-
-from ._convert_cache import (convert_cache_v3, convert_cache_v2)
+from ._read_cache_v6 import read_cache_v6
 
 
 class PrefixTrieBase:
@@ -46,8 +47,8 @@ class PrefixTrieBase:
         """
         self.ipv6: bool = ipv6
         self.prefixlen: int = 128 if ipv6 else 32
-        self.pyt: PyTricia = PyTricia(self.prefixlen)
-        self.vers: str = 'v6'
+        self.pyt: Patricia26 = Patricia26()
+        self.vers: str = 'v7'
         self.compact: bool = compact
 
     def freeze(self):
@@ -67,81 +68,34 @@ class PrefixTrieBase:
     def read_cache_file(self, file: str) -> bool:
         """
         Read data from cache file.
-        Caller responsible for locks etc
+        We package our own data together with the tree
+        This approach makes it very siumple if ever need to
+        change cache version as we have a dictionary payload.
         """
         if not (file and os.path.exists(file)):
             # nothing to do not an error
             return True
 
-        #
-        # Version pickle files:
-        # v2 Saves list of elem instances
-        # v3 Saves CidrCacheDataBase instance
-        # v4 - abandoned too slow used sortedcontainers
-        # v6 - This version using patricia trie.
-        #
-        # Assume its prefix_trie unless we discover
-        # it is older version below - then converted.
-        #
-        prefix_trie: PrefixTrieBase | None = None
+        with open(file, 'rb') as fob:
+            payload = pickle.load(fob)
 
-        try:
-            with open(file, 'rb') as fob:
-                data = fob.read()
-                if data:
-                    prefix_trie = pickle.loads(data)
+        if not isinstance(payload, dict):
+            # try reading version v6 pytricia file and convert
+            if not self._read_cache_file_v6(file):
+                return False
+            return True
 
-        except (OSError, PickleError) as err:
-            print(f' Error reading cidr cache: {err}')
-            return False
+        # Our data
+        self.ipv6 = payload.get('ipv6', self.ipv6)
+        self.prefixlen = payload.get('prefixlen', self.prefixlen)
+        self.vers = payload.get('vers', self.vers)
+        self.compact = payload.get('compact', self.compact)
 
-        except (ModuleNotFoundError) as err:
-            print(f' Unsupported cache - please make new cache: {err}')
-            return False
-
-        if prefix_trie is None:
-            return False
-
-        if isinstance(prefix_trie, PrefixTrieBase):
-            #
-            # no need to check version here since only have one (v6).
-            # NB we do not inherit cache version or cache compact
-            #    we keep those as initialized in constructor.
-            #
-            self.pyt = prefix_trie.pyt
-            self.pyt.thaw()
-
-        elif prefix_trie.vers == 'v3':
-            print(f'Converting old v3 cache version {file}\n')
-            self.compact = prefix_trie.compact
-            self.pyt = convert_cache_v3(prefix_trie)
-            self.pyt.thaw()
-
-            file_bak = file + '.bak'
-            print(f'  Saving old version {file_bak}\n')
-            os.rename(file, file_bak)
-            self.write_cache_file(file)
-
-        elif isinstance(prefix_trie, list):
-            """
-            older map
-            - list["CidrCacheElem"]
-            """
-            print(f'Converting old (v2) cache version {file}\n')
-            self.compact = True
-            if prefix_trie:
-                self.pyt = convert_cache_v2(prefix_trie)
-                self.pyt.thaw()
-
-            file_bak = file + '.bak'
-            print(f'  Saving old version {file_bak}\n')
-            os.rename(file, file_bak)
-            self.write_cache_file(file)
-
-        else:
-            # wrong data in file (ignore un-released v3 cache)
-            print(f'Unknown cache type {file}\n')
-            return False
+        # Now the tree
+        tree_bytes = payload.get('pyt')
+        if tree_bytes:
+            with io.BytesIO(tree_bytes) as fob:
+                 self.pyt.load_from_file(fob)
 
         return True
 
@@ -156,17 +110,38 @@ class PrefixTrieBase:
             bool:
             Success or failure.
         """
-        try:
-            self.pyt.freeze()
-            data = pickle.dumps(self, protocol=pickle.HIGHEST_PROTOCOL)
-            self.pyt.thaw()
+        self.pyt.freeze()
+        with io.BytesIO() as fob:
+            self.pyt.dump_to_file(fob)
+            tree_bytes = fob.getvalue()
 
-        except PickleError as exc:
-            print(f' Error saving prefix cache: {exc}')
-            return False
+        # build the payload dictionary
+        payload = {
+            'ipv6': self.ipv6,
+            'prefixlen': self.prefixlen,
+            'vers': self.vers,
+            'compact': self.compact,
+            'pyt': tree_bytes
+        }
 
-        (okay, err) = write_file_atomic(data, file)
-        if not okay:
-            print(f' Error saving prefix cache: {err}')
-            return False
+        with open(file, 'wb') as fob:
+            pickle.dump(payload, fob, protocol=pickle.HIGHEST_PROTOCOL)
+
+        self.pyt.thaw()
         return True
+
+    def _read_cache_file_v6(self, file: str) -> bool:
+        """
+        Attempt to read older cache
+        """
+        tree = read_cache_v6(file)
+        if tree is None:
+            return False
+        #
+        # Conver to new
+        #
+        for pfx in list(tree):
+            self.pyt[pfx] = tree.get(pfx)
+
+        return True
+ 

@@ -52,10 +52,11 @@ class PrefixMap(PrefixTrie):
             or a subnet of existing prefix that has the same "val", then
             it is redundant and not added. Similarly, adding a prefix, val
             may lead to child prefixes with same value being removed.
+            Defaults to False
 
     Possible Enhancement: Add cleanup() method to remove lockfile
     """
-    def __init__(self, cache_dir: str = '', compact: bool = True, ipv6: bool = False):
+    def __init__(self, cache_dir: str = '', compact: bool = False, ipv6: bool = False):
         """
         Add cache related details to PrefixMap.
         """

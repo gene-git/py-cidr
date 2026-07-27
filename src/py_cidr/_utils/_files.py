@@ -37,11 +37,12 @@ def write_file_atomic(data: str | bytes, fpath: str
     #
     fpath_dir = os.path.dirname(fpath)
     errors = None
-    try:
-        os.makedirs(fpath_dir, exist_ok=True)
-    except OSError as err:
-        errors = f'write_file_atomic - error making {fpath_dir}: {err}'
-        return (False, errors)
+    if fpath_dir:
+        try:
+            os.makedirs(fpath_dir, exist_ok=True)
+        except OSError as err:
+            errors = f'write_file_atomic - error making {fpath_dir}: {err}'
+            return (False, errors)
 
     #
     # Set write mode

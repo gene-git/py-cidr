@@ -6,12 +6,30 @@ Tags
 
 .. code-block:: text
 
-	2.6.0 (2025-01-18) -> 3.13.0 (2026-03-11)
-	43 commits.
+	2.6.0 (2025-01-18) -> 4.0.0 (2026-07-27)
+	45 commits.
 
 Commits
 =======
 
+
+* 2026-07-27  : **4.0.0**
+
+.. code-block:: text
+
+              - **4.0.0**
+            
+                * CidrMap:
+                  - use Patricia26 (instead of PyTricia) for the Patricia trees.
+                  - maps are now very much smaller, about 1/6 th the size of previous files.
+                    A benefit that Patricia26 stores only the necessary data.
+                  - cache files are automatically converted to the new format.
+                  - PrefixMap: compact defaults to False.
+ 2026-03-11   ⋯
+
+.. code-block:: text
+
+              - update Docs/Changelogs
 
 * 2026-03-11  : **3.13.0**
 

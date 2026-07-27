@@ -5,13 +5,13 @@ Test:
 # pylint: disable=too-few-public-methods
 import os
 
-from pytricia import PyTricia
+from patricia26 import Patricia26
 
 from py_cidr import PrefixVal
 from py_cidr._prefix import PrefixMap
 
 
-def _compare_pyt(pyt_a: PyTricia, pyt_b: PyTricia) -> bool:
+def _compare_pyt(pyt_a: Patricia26, pyt_b: Patricia26) -> bool:
     for pfx in pyt_a:
         if not (pyt_b.has_key(pfx) and pyt_b[pfx] == pyt_a[pfx]):
             return False
