@@ -3,7 +3,7 @@
 Recent Changes
 ==============
 
-**5.0.1**
+**5.0.2**
 
 * New PyCidr class - replaces functionality in Cidr class.
   Using the pure C-code *cidrtools* library and its python bindings *cidrtools-cffi*

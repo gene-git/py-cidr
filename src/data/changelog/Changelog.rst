@@ -6,14 +6,20 @@ Tags
 
 .. code-block:: text
 
-	2.6.0 (2025-01-18) -> 5.0.1 (2026-08-25)
-	47 commits.
+	2.6.0 (2025-01-18) -> 5.0.2 (2026-08-25)
+	48 commits.
 
 Commits
 =======
 
 
-* 2026-08-25  : **5.0.1**
+* 2026-08-25  : **5.0.2**
+
+.. code-block:: text
+
+              - Manual / repo version update
+
+* 2026-08-25  : **5.0.1, origin/master**
 
 .. code-block:: text
 

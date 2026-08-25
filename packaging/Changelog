@@ -1,11 +1,14 @@
 -------------------------------------------------------
  Changelog    : py-cidr
- Tags         : 3.12.0 ➙ 5.0.1
-              : 2026-02-21 ➙ 2026-08-25
+ Tags         : 3.13.0 ➙ 5.0.2
+              : 2026-03-11 ➙ 2026-08-25
               : 6 tags. See Docs for full changelog
 -------------------------------------------------------
 
- 2026-08-25   : 5.0.1
+ 2026-08-25   : 5.0.2
+              - Manual / repo version update
+
+ 2026-08-25   : 5.0.1, origin/master
               - Add manual to repo
 
  2026-08-25   : 5.0.0
@@ -71,15 +74,4 @@
             
                     Compacting must also check if any children of a newly added prefix are still needed.
  2026-02-21   ⋯
-              - update Docs/Changelogs
-
- 2026-02-21   : 3.12.0
-              - **3.12.0**
-            
-                * CidrMap : New .items() method provides an Iterator over the map.
-                  Each iteration yields a tuple[cidr: str, value: Any]
-            
-                * Add net_range_split/cidr_range_split:
-                  split one net/cidr into (first, mid,  last) ip addresses
- 2026-01-04   ⋯
               - update Docs/Changelogs
