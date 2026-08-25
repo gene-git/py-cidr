@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2. Recent Changes &#8212; py-cidr 6.0.1
+ documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=b6ed0530"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. API Reference Guide" href="python-api.html" />
+    <link rel="prev" title="1. py-cidr" href="README.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="recent-changes">
+<h1><span class="section-number">2. </span>Recent Changes<a class="headerlink" href="#recent-changes" title="Link to this heading">¶</a></h1>
+<p><strong>5.0.1</strong></p>
+<ul class="simple">
+<li><p>New PyCidr class - replaces functionality in Cidr class.
+Using the pure C-code <em>cidrtools</em> library and its python bindings <em>cidrtools-cffi</em></p>
+<ul>
+<li><p>Superior performance.  For example compacting lists of cidr blocks runs
+about 10 - 20 times faster.</p></li>
+<li><p>API is similar but migrating the code will unlock the perfomance benefit.</p></li>
+<li><p>Depends on two new packages: <em>cidrtools</em> and <em>cidrtools-cffi</em></p></li>
+<li><p>Updated build system using meson and uv.</p></li>
+</ul>
+</li>
+<li><p>Cidr class still supported unchanged.
+This facilitates testing and comparing Cidr with PyCidr.
+In the future, some/all of Cidr may be migrated to use the new fast codebase.</p></li>
+<li><p>See manual for details and how to use the new speedy class!</p></li>
+<li><p>Add the manual</p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">py-cidr</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">API Reference Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">1. py-cidr</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Recent Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python-api.html">3. API Reference Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migrate.html">4. Migrating from Cidr to PyCidr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">5. Appendix</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="README.html" title="previous chapter"><span class="section-number">1. </span>py-cidr</a></li>
+      <li>Next: <a href="python-api.html" title="next chapter"><span class="section-number">3. </span>API Reference Guide</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024-present, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/Changes-recent.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

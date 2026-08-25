@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>4. Migrating from Cidr to PyCidr &#8212; py-cidr 6.0.1
+ documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=b6ed0530"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="5. Appendix" href="Appendix.html" />
+    <link rel="prev" title="3.1.1. PyCidr: Overview" href="pycidr-overview.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="migrating-from-cidr-to-pycidr">
+<h1><span class="section-number">4. </span>Migrating from Cidr to PyCidr<a class="headerlink" href="#migrating-from-cidr-to-pycidr" title="Link to this heading">¶</a></h1>
+<p>If existing code uses string representations, it is straightfoward.
+If using ipaddress format, then code will need to be migrated to strings
+to get the performance benefits. Cidr class is not going away, so migrating
+is optional.</p>
+<p>Note that for any functions with an argument to choose the output in string or ipaddress format
+the PyCidr replacement has no such argument because strings are always the output form.</p>
+<p>Some examples migrating:</p>
+<ul class="simple">
+<li><p>Compact list of cidrs.</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Cidr.compact(cids)
+
+PyCidr.compact(cidrs)
+
+Cidr has some additional forms all of which are replaced as above
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Cidr to IP address range</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(ip_start, ip_end) = Cidr.cidr_to_range(cidr)
+(ip_start, ip_mid, ip_end) = Cidr.cidr_range_split(cidr)
+
+(ip_start, ip_mid, ip_end) = PyCidr.cidr_to_range(cidr)
+</pre></div>
+</div>
+<ul>
+<li><p>Sorting</p>
+<p>While Cidr distinguished IP addresses from CIDR blocks and therefore provided separate
+functions for some tasks like sorting, PyCidr accepts an IP address (e.g. <em>10.0.0.22</em>)
+or a CIDR (e.g. <em>10.0.0.0/24</em> or <em>10.0.0.22/32</em>) everywhere.</p>
+</li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>x = Cidr.sort_cidrs(cidrs)
+x = Cidr.sort_ips(ips)
+
+x = PyCidr.sort(cidrs)
+x = PyCidr.sort(ips)
+</pre></div>
+</div>
+<p>However please note that PyCidr returns IP addresses with their prefix (/32 for IPv4 and
+/128 for IPv6). To recover just the IP part using cidr_parts()</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(ip_part, pfx_part) = PyCidr.cidr_parts(cidr)
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Checking ip/cidr validity</p></li>
+</ul>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Cidr.is_valid_ip4()
+Cidr.is_valid_ip6()
+Cidr.is_valid_cidr()
+
+PyCidr.is_valid_ipv4()
+PyCidr.is_valid_ipv6()
+PyCidr.is_valid_cidr()
+</pre></div>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">py-cidr</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">API Reference Guide:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">1. py-cidr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Changes-recent.html">2. Recent Changes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python-api.html">3. API Reference Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">4. Migrating from Cidr to PyCidr</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Appendix.html">5. Appendix</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="pycidr-overview.html" title="previous chapter"><span class="section-number">3.1.1. </span>PyCidr: Overview</a></li>
+      <li>Next: <a href="Appendix.html" title="next chapter"><span class="section-number">5. </span>Appendix</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2024-present, Gene C.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/migrate.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
