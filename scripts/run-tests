@@ -1,0 +1,26 @@
+#!/usr/bin/bash
+#
+here=$(/usr/bin/pwd)
+here_base=$(/usr/bin/basename $here)
+top=""
+
+case "$here_base" in
+    py-cidr)
+        top="$here"
+        ;;
+    scripts)
+        top=(/usr/bin/realpath ../)
+        ;;
+    tests)
+        top=(/usr/bin/realpath ../..)
+        ;;
+    *)
+        echo "Running in unknown directory"
+        exit
+esac
+tests_dir="$top/src/tests"
+
+cd "$tests_dir"
+
+./run-tests
+

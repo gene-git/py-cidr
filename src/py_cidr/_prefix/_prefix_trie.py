@@ -16,14 +16,12 @@ Cache is an ordered list by net.
 # pylint: disable=too-many-instance-attributes,too-few-public-methods
 # pylint: disable=too-many-locals
 # pylint: disable=too-many-branches
-from typing import (Any, Iterable, Iterator, Mapping, Self)
+from typing import (Any, Iterable, Iterator, Mapping)
 
 from patricia26 import Patricia26
 
-from py_cidr import PrefixVal
-from py_cidr._network._cidr_compact import (compact_nets)
-
-from ._prefix_trie_base import PrefixTrieBase
+from py_cidr._prefix._prefix_trie_base import PrefixTrieBase
+from py_cidr._prefix.prefix_types import PrefixVal
 
 
 class PrefixTrie(PrefixTrieBase):
@@ -45,7 +43,7 @@ class PrefixTrie(PrefixTrieBase):
         Args:
             args (PrefixVal | Iterable[PrefixVal] | Mapping[str, Any]):
                 PrefixVal: tuple[cidr: str, val: Any]
-                Can be one PrefixVal or a list of PrefixVal or a dcitionary of 
+                Can be one PrefixVal or a list of PrefixVal or a dcitionary of
                 {cidr: val}
         """
         for arg in args:
@@ -75,7 +73,7 @@ class PrefixTrie(PrefixTrieBase):
         Works for compact as well as non-compact.
         Args:
             prefix_val (tuple[cidr: str, value: Any]):
-                Input (cidr, val) pair. 
+                Input (cidr, val) pair.
 
         Returns:
             False if some error happened.
@@ -96,7 +94,7 @@ class PrefixTrie(PrefixTrieBase):
 
         Args:
             prefix_val (tuple[cidr: str, value: Any]):
-                Input (cidr, val) pair. 
+                Input (cidr, val) pair.
 
         Returns:
             False if some error happened.
@@ -105,7 +103,7 @@ class PrefixTrie(PrefixTrieBase):
             self.pyt[prefix_val[0]] = prefix_val[1]
             self.dirty = True
 
-        except ValueError as exc:
+        except ValueError as _exc:
             print(f'Error adding {prefix_val}')
             return False
         return True
@@ -115,7 +113,7 @@ class PrefixTrie(PrefixTrieBase):
         Install elem to the list - compact version.
         Args:
             prefix_val (tuple[cidr: str, value: Any]):
-                Input (cidr, val) pair. 
+                Input (cidr, val) pair.
 
         Returns:
             False if some error happened.
@@ -128,27 +126,20 @@ class PrefixTrie(PrefixTrieBase):
 
         #
         # 1) Check if prefix exists and has same value
-        # 
+        #
         # NB: has_key() matches exact prefix, "in" matches if same or subnet
         #
         if prefix in pyt and pyt[prefix] == val:
             return True
 
-        ##
-        ## 2) Check parent prefix (shorter matching prefix) has same value
-        ## 
-        #parent_prefix = pyt.get_key(prefix)
-        #if parent_prefix and pyt[parent_prefix] == val:
-        #    return True
-
         #
-        # 3) (prefix, val) Not in trie so add it.
+        # 2) (prefix, val) Not in trie so add it.
         #
         pyt[prefix] = val
         self.dirty = True
 
         #
-        # 4) Check if any (now) redundant children (same value) can be removed
+        # 3) Check if any (now) redundant children (same value) can be removed
         #
         child_prefixes: list[str] = pyt.children(prefix)
         for pfx in child_prefixes:
@@ -176,9 +167,9 @@ class PrefixTrie(PrefixTrieBase):
         Find and return LPM (longest matching prefix) which "cidr" belongs to
         and return the (lpm, value).
 
-        The longest prefix is the most specific. 
+        The longest prefix is the most specific.
 
-        e.g. 
+        e.g.
             10.0.0.0/22     -> 'net_0_22'
             10.0.0.1/24     -> 'net_1_24'
 
@@ -203,10 +194,34 @@ class PrefixTrie(PrefixTrieBase):
         val: Any = None
         (lpm, val) = self.pyt.lookup_lpm(cidr)
 
-        if (lpm is not None):
+        if lpm is not None:
             lpm_str = lpm
 
         return (lpm_str, val)
+
+    def lookup(self, cidr: str) -> Any:
+        """
+        Find and return the value associated with the LPM (longest prefix match) 
+        to which "cidr" belongs.
+
+        The longest prefix is the most specific.
+
+        e.g.
+            10.0.0.0/22     -> 'net_0_22'
+            10.0.0.1/24     -> 'net_1_24'
+
+                lookup('10.0.0.64') -> 'net_1_24'
+            lookup_lpm('10.0.0.64') -> ('10.0.0.1/24', 'net_1_24')
+            
+        :param cidr: The cidr block to lookup.
+        :returns: The value associated with the LPM of cidr.
+        """
+        if not cidr:
+            return None
+
+        val: Any = None
+        val = self.pyt.lookup(cidr)
+        return val
 
     def lookup_lmp(self, cidr: str) -> tuple[str, Any]:
         """ Alias for lookup_lpm (historical)"""
@@ -231,7 +246,7 @@ class PrefixTrie(PrefixTrieBase):
                 pfx_vals.append((prefix, pyt.lookup(prefix)))
 
         return pfx_vals
-            
+
     def merge_pyt(self, other_pyt: Patricia26) -> bool:
         """
         Merge other into self where other takes precedence.

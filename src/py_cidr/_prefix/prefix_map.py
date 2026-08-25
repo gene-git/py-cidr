@@ -17,13 +17,14 @@ Requires:
     lockmgr: for ensuring cache can be safely read/written
 """
 # pylint: disable=too-many-instance-attributes
-from typing import (Any, Iterable, Iterator, Mapping, Self)
+from typing import Self
 import os
 
 from lockmgr import LockMgr
 
-from ._prefix_trie import PrefixTrie
-from ._choose_lockfile import choose_lock_file
+from py_cidr._prefix._prefix_trie import PrefixTrie
+from py_cidr._prefix._choose_lockfile import choose_lock_file
+
 
 class PrefixMap(PrefixTrie):
     """
@@ -46,9 +47,9 @@ class PrefixMap(PrefixTrie):
         ipv6 (bool):
             If true this is used for IPv6 only, otherwise IPv4 which is the default.
 
-        compact (bool):     
+        compact (bool):
             If true,  then prefixes are compacted when possible.
-            Example if adding a (prefix, val) and prefix is same as 
+            Example if adding a (prefix, val) and prefix is same as
             or a subnet of existing prefix that has the same "val", then
             it is redundant and not added. Similarly, adding a prefix, val
             may lead to child prefixes with same value being removed.
@@ -99,6 +100,33 @@ class PrefixMap(PrefixTrie):
             print(f' Prefix cache read failed to get lock after {timeout}')
             print('  ** Failed to read cache')
 
+    def _prep_write_changes(self):
+        """
+        Helper for save_cache()
+        If cache changed need merge those changes with our changes
+        Only call if cache changed since we read it in (self.cache_time > 0)
+        """
+        if not os.path.exists(self.cache_file):
+            return
+
+        cache_time_now = os.path.getmtime(self.cache_file)
+        if self.cache_time <= 0 or cache_time_now > self.cache_time:
+            # cache has not changed since we last read it in
+            return
+
+        print(' Prefix Cache changed - updating cache file')
+        temp_map = PrefixMap(compact=self.compact)
+        if temp_map.read_cache_file(self.cache_file):
+            #
+            # merge our data into the cached file data
+            #
+            if self.vers == temp_map.vers and self.ipv6 == temp_map.ipv6:
+                temp_map.merge_pyt(self.pyt)
+                self.pyt = temp_map.pyt
+        else:
+            print('Existing cache file is wrong vers/type')
+            print('  saving our data and ignoring current file')
+
     def save_cache(self):
         """
         Write cache to file if cache_dir was set up.
@@ -111,24 +139,10 @@ class PrefixMap(PrefixTrie):
             lockmgr = self.lockmgr
             timeout = self.lock_timeout
             if lockmgr.acquire_lock(wait=True, timeout=timeout):
-                if self.cache_time > 0:
-                    # cache changed since we read it in
-                    cache_time_now = os.path.getmtime(self.cache_file)
-                    if cache_time_now > self.cache_time:
-                        print(' Prefix Cache changed - updating cache file')
-                        temp_map = PrefixMap(compact=self.compact)
-                        if temp_map.read_cache_file(self.cache_file):
-                            #
-                            # merge our data into the cached file data
-                            #
-                            if self.vers == temp_map.vers and self.ipv6 == temp_map.ipv6:
-                                temp_map.merge_pyt(self.pyt)
-                                self.pyt = temp_map.pyt
-                            else:
-                                print(f'Existing cache file is wrong vers/type')
-                                print('  saving our data and ignoring current file')
-
+                self._prep_write_changes()
+                #
                 # Save the new data
+                #
                 self.write_cache_file(self.cache_file)
                 lockmgr.release_lock()
             else:
@@ -164,7 +178,6 @@ class PrefixMap(PrefixTrie):
             print('Compact cache type mismatch - cannot combine:')
             print(' compact and {non-compact maps')
             return False
-
 
         if not self.merge_pyt(other.pyt):
             return False

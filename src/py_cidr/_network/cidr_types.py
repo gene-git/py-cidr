@@ -9,7 +9,6 @@ are based on ipaddress types:
   IPv4Network, IPv6Network, IPv4Address and IPv6Address.
 
 """
-from typing import Any
 from ipaddress import (IPv4Network, IPv6Network, IPv4Address, IPv6Address)
 
 type IPvxNetwork = IPv4Network | IPv6Network
@@ -18,5 +17,3 @@ type IPAddress = IPvxAddress | str
 
 type IPv4 = IPv4Address | IPv4Network
 type IPv6 = IPv6Address | IPv6Network
-
-type PrefixVal = tuple[str, Any]

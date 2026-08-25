@@ -3,17 +3,23 @@
 """
 Convert old to new cache
 """
+# pylint: disable=too-few-public-methods
 import pickle
 from pickle import PickleError
 from pytricia import PyTricia
 
+
 class Version6:
+    """
+    The v6 structure used to read/write cahced files
+    """
     def __init__(self):
         self.ipv6: bool = False
         self.prefixlen = 32
         self.pyt: PyTricia = PyTricia(128)
         self.vers: str = 'v6'
         self.compact: bool = False
+
 
 def read_cache_v6(file: str) -> PyTricia | None:
     """

@@ -9,7 +9,7 @@ cidr matches cache.cidr cidr when cidr is subnet of cache.cidr.
 
 Requires CidrCache for the actual cache management
 """
-from .prefix_map import PrefixMap
+from py_cidr._prefix.prefix_map import PrefixMap
 
 
 class PrefixMaps:

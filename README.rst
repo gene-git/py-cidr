@@ -1,105 +1,130 @@
 .. SPDX-License-Identifier: GPL-2.0-or-later
 
-#######
+=======
 py-cidr
-#######
+=======
 
 Overview
 ========
 
-py-cidr : python module providing network / CIDR tools
+py-cidr is a python module with a variety of networking / CIDR tools. 
 
 Key features
 ============
 
-* Built on python's native ipaddress module
-* 3 Classes : Cidr, CidrMap, CidrFile
-* Cidr provides for many common operations for example:
+* PyCidr (As of version 5.0) is now the preferred class. 
 
-  - Support for IPv4 and IPv6
-  - compact lists of CIDRs to smallest set of CIDR blocks
-  - convert an IP range to a list of CIDRs
-  - Identify and validate
-  - many more
+  Very fast version that uses compiled C-code to do most of the work.
 
-* CidrFile offers common operations on files with lists of cidrs.
+  Using compiled C-code is simple, cleane, robust, very maintainable, 
+  is compiled with modern, restritive compiler and linker flags. 
+
+  All CIDR and IP addresses are strings.
+
+  Depends on two new packages:
+
+  * cidrtools-cffi: `github <https://github.com/gene-git/cidrtools-cffi>`_ and 
+    `AUR <https://aur.archlinux.org/packages/cidrtools-cffi>`_.
+
+  * cidrtools: `github <https://github.com/gene-git/cidrtools>`_ and 
+    `AUR  <https://aur.archlinux.org/packages/cidrtools>`_.
+
+  *cidrtools-cffi* has python bindinds to the *cidrtools* compiled library.
+
+* Cidr class is still upported. 
   
-  - Includes atomic file writes
+  It uses Python's own *ipaddress* module. 
 
-* CidrMap provides a class that maps CIDRs to values.
+  We decided to leave the Cidr class untouched. The primary reason is that 
+  this makes it straghtforward to compare with PyCidr.
 
-  - File cache employs locking to ensure multiple processes handle cache correctly.
+  So, at least for now, the performance boost requires migrating from Cidr to PyCidr.
+  At some point, we may update the Cidr class to take advantage of the 
+  very fast *cidrtools* library as well.
 
-See API reference documentation for more details.
+* *py_cidr* has four Classes : PyCidr, Cidr, CidrMap, CidrFile
 
-New / Interesting
-==================
+  - PyCidr does everything Cidr class does just a lot faster.
 
-**4.0.0**
+    It is built on top of the compiled library *libcidrtools.so*. The API has changed 
+    a little from the *Cidr* class and is, hopefully, a little simpler and cleaner. 
+    One of the benefits (and drawbacks) of starting fresh.
 
-* CidrMap: 
-  - use Patricia26 (instead of PyTricia) for the Patricia trees.
-  - maps are now very much smaller, about 1/6 th the size of previous files.
-    A benefit that Patricia26 stores only the necessary data.
-  - cache files are automatically converted to the new format.
-  - PrefixMap: compact defaults to False.
+  - PyCidr and Cidr offer a number of useful operations on IP addresses and network blocks.
 
-More information here for `patricia26 <https://github.com/gene-git/patricia26>`_.
+    - Support for both IPv4 and IPv6
+    - Compact a list of CIDRs to smallest set of CIDR blocks
+    - Convert an range of IP addresses to a list of CIDRs
+    - Exclude one list of cidr blocks from another list.
+    - Split a CIDR block in a list of *smaller* CIDRs blocks with a larger prefix.
+    - Identify and validate
+    - more
 
-.. code::
+* CidrFile reads and writes text files with lists of cidrs.
+  
+  - skips shell style comments when reading
+  - Uses atomic file writes
 
-   py-cidr-cache-print <cache_directory>
+* CidrMap is a way to map cidr strings to values.
 
-Documentation:
-==============
+  For example mapping IP prefixes (cidr blocks) to their ``ISO`` country codes.
 
-We include pre-built versions of both html and PDF documentation, including the
-API reference.
+  - File writes use locking to ensure multiple processes handle cached files correctly.
 
-The PDF file is *Docs/py-cidr.pdf* and after the package is installed it will be available:
+  - Built on Patricia trees using the  `patricia26 <https://github.com/gene-git/patricia26>`_ module.
+    particia26 is extremely fast. 
 
-    `PDF Documentation </usr/share/py-cidr/Docs/py-cidr.pdf>`_.
+See API reference documentation for details.
 
-and a browser can be used to view:
+Manual
+======
 
-    `HTML Documentation <file:///usr/share/py-cidr/Docs/_build/html/index.html>`_.
+There are pre-built versions of of the manual which comes as a PDF file as well
+as an HTML version. The manual includes the API reference guide for all classes.
 
-###############
+The docs are in *src/data/docs* and the Arch PKGUILD installs them to
+*/usr/share/py-cidr/docs*.
+
 Getting Started
-###############
+===============
 
 All git tags are signed with arch@sapience.com key which is available via WKD
 or download from https://www.sapience.com/tech. Add the key to your package builder gpg keyring.
 The key is included in the Arch package and the source= line with *?signed* at the end can be used
 to verify the git tag.  You can also manually verify the signature
 
+More Detail 
+===========
 
-py-cidr module 
-==============
-
-module functions
-----------------
-
-The library provides the following tools:
+The following are part of the module.
 
 **CidrMap Class**
 
-CidrMap provides an optimized tool to map(network-prefix) to a value.
-The map may be saved to file and reused.
+CidrMap provides an optimized tool to map a network-prefix to a value.
+The map may be saved to a (cache) file and reused.
 
-To make use of file cache, a *cache_directory* must be provided when instantiating the class.
-Note that there are 2 typed of maps, non-compact and compact. The default is non-compact.
-With this every (prefix, value) is added to the map.
+To make use of the file cache, provide a *cache_directory* when instantiating the class.
+
+Note that there are 2 typed of maps, non-compact and compact. The default and by
+far the most common is non-compact.
+Here, every (prefix, value) is added to the map.
+
+If the data is available as a list of (prefix, value) tuples, then
+the best and fastest way is using very fast *bulk_insert* to get the data into the
+Patricia tree. 
+
+Bulk inserting is 2 - 3 times faster than inserting the data in a loop one at a time.
+For large maps it is hugely benficial to use bulk_intert().
 
 For a compact map, effort is made to reduce redundant entries. For example if the map
 contains the (prefix, tuple) = ('10.0.0.0/22', 'net-1') and then a new tuple
 ('10.0.0.0/24', 'net-1') is added to the map, the new one is considered redundent
 since the network is a subnet of *'10.0.0.0/22'* and the value, *'net-1*' is the same.
-If the value was different, then it is not considered redundent.
+If the value was different, then it is deemed not compactable.
+Note that bulk_insert() is not available with *compact* maps. 
 
-For non-compact maps, every (prefix, value) is added.
-
-A *CidrMap* contains 2 separate maps. A *PrefixMap*  for IPv4 and one for IPv6.
+A *CidrMap* contains 2 separate maps one for each network family;
+one tree for IPv4 and separate one for IPv6. 
 
 .. code::python
 
@@ -149,48 +174,32 @@ Static functions:
 * CidrMap.create_private_cache() 
 
 
-**Cidr Class**
+**PyCidr Class**
 
 See the API reference in the documentation for details.
 This class provides a suite of tools we found ourselves using often, so we encapsulated them in this class.
 All methods in the class are *@staticmethod* and thus no instance of the class is needed. Just call
-them as you would any function (*Cidr.xxx()*).
+them as you would any function (*PyCidr.xxx()*).
 
-IP addresses and networks can be represented as strings or the format used by python's
-native *ip_address* module. Most functionality is available on both.
+IP addresses and networks are always represented as strings.
 
 Here is a sample of some of the available functionality, see the API doc for complete documentation.
 
-* Cidr.is_valid_ip4()
-* Cidr.is_valid_ip6()
-* Cidr.is_valid_cidr()
-* Cidr.ip_version()
-* Cidr.cidr_iptype()
-
-* Cidr.cidr_to_net
-* Cidr.cidrs_to_nets
-* Cidr.net_to_cidr
-* Cidr.nets_to_cidrs
-* Cidr.ip_to_address
-* Cidr.ips_to_addresses
-* Cidr.address_to_ip
-* Cidr.addresses_to_ips
-
-* Cidr.cidr_set_prefix
-* Cidr.cidr_is_subnet
-* Cidr.compact_cidrs
-* Cidr.compact_nets
-* Cidr.cidrs2_minus_cidrs1
-* Cidr.sort_cidrs
-* Cidr.get_host_bits
-* Cidr.clean_cidr
-* Cidr.fix_cidr_host_bits
-
-* Cidr.range_to_cidrs
-* Cidr.cidr_range_split
-
-* Cidr.rfc_1918_cidrs
-* Cidr.is_rfc_1918
+* PyCidr.compact()
+* PyCidr.cidr_parts()
+* PyCidr.exclude_cidrs()
+* PyCidr.is_subnet()
+* PyCidr.set_prefix()
+* PyCidr.sort()
+* PyCidr.get_host_bits(), format_host_bits()
+* PyCidr.cidr_to_range(), range_to_cidrs()
+* PyCidr.fix_host_bits()
+* PyCidr.clean_cidr(), clean_cidrs()
+* PyCidr.split_by_iptype()
+* PyCidr.num_ips()
+* PyCidr.ip_version()
+* PyCidr.is_valid_ipv4(), is_valid_ipv6, is_valid_cidr()
+* PyCidr.subnets_split()
 
 **CidrFile Class**
 
@@ -205,75 +214,13 @@ class is required.  Simply use them as functions (*Cidr.xxx()*)
 * Cidr.copy_cidr_file(src_file:str, dst_file:str) -> None
 
 
-########
-Appendix
-########
+**Cidr Class**
 
-Installation
-============
+Quite similar to PyCidr but not identical.
+See the API Reference Guide for more details.
 
-Available on
-* `Github`_
-* `Archlinux AUR`_
-
-On Arch you can build using the provided PKGBUILD in the packaging directory or from the AUR.
-To build manually, clone the repo and :
-
- .. code-block:: bash
-
-        rm -f dist/*
-        /usr/bin/python -m build --wheel --no-isolation
-        root_dest="/"
-        ./scripts/do-install $root_dest
-
-When running as non-root then set root_dest a user writable directory
-
-Dependencies
-============
-
-**Run Time** :
-
-* python          (3.13 or later)
-* lockmgr
-
-**Building Package** :
-
-* git
-* hatch           (aka python-hatch)
-* wheel           (aka python-wheel)
-* build           (aka python-build)
-* installer       (aka python-installer)
-* rsync
-
-**Optional for building docs** :
-
-* sphinx
-* python-myst-parser
-* python-sphinx-autoapi
-* texlive-latexextra  (archlinux packaguing of texlive tools)
-
-Building docs is not really needed since pre-built docs are provided in the git repo.
-
-Philosophy
-==========
-
-We follow the *live at head commit* philosophy as recommended by
-Google's Abseil team [1]_.  This means we recommend using the
-latest commit on git master branch. 
-
-
-License
-=======
-
-Created by Gene C. and licensed under the terms of the GPL-2.0-or-later license.
-
-* SPDX-License-Identifier: GPL-2.0-or-later
-* SPDX-FileCopyrightText: © 2024-present Gene C <arch@sapience.com>
 
 .. _Github: https://github.com/gene-git/py-cidr
 .. _Archlinux AUR: https://aur.archlinux.org/packages/py-cidr
-.. _Archlinux AUR PyTricia: https://aur.archlinux.org/packages/python-pytricia
-
-.. [1] https://abseil.io/about/philosophy#upgrade-support
 
 
