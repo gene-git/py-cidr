@@ -3,9 +3,6 @@
 """
 Support for type checks
 """
-from typing import (Any)
-import ipaddress
-from ipaddress import (IPv4Address, IPv6Address, IPv4Network, IPv6Network)
 from ipaddress import (AddressValueError, NetmaskValueError)
 
 from .cidr_types import (IPvxAddress, IPvxNetwork)

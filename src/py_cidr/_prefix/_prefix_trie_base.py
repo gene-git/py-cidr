@@ -2,24 +2,20 @@
 # SPDX-FileCopyrightText: © 2024-present Gene C <arch@sapience.com>
 """
 Base Class for CidrCacheData
-- uses patricia trie tree vai PyTricia module.
+- uses patricia26 tree module
 """
-from typing import Any
 import os
 import io
 import pickle
-from pickle import (PickleError)
 
 from patricia26 import Patricia26
-from pytricia import PyTricia
 
-from py_cidr._utils import write_file_atomic
-from ._read_cache_v6 import read_cache_v6
+from py_cidr._prefix._read_cache_v6 import read_cache_v6
 
 
 class PrefixTrieBase:
     """
-    A Patricia Trie maps prefixes to values 
+    A Patricia Trie maps prefixes to values
     i.e. it holds (prefix, val) pairs. The prefix lives as tree node
     and the value is stored in the node.
 
@@ -29,7 +25,7 @@ class PrefixTrieBase:
     the trie as compact as possible. If (prefix, val) exists
     in trie either exactly or if the parent prefix has the same val,
     then it is not inserted.  Similarly, if a newly added prefix, val
-    has children for which prefix is a supernet and has the same "val", 
+    has children for which prefix is a supernet and has the same "val",
     those children are then removed from the trie.
     """
     def __init__(self, compact: bool = False, ipv6: bool = False):
@@ -95,7 +91,7 @@ class PrefixTrieBase:
         tree_bytes = payload.get('pyt')
         if tree_bytes:
             with io.BytesIO(tree_bytes) as fob:
-                 self.pyt.load_from_file(fob)
+                self.pyt.load_from_file(fob)
 
         return True
 
@@ -144,4 +140,3 @@ class PrefixTrieBase:
             self.pyt[pfx] = tree.get(pfx)
 
         return True
- 

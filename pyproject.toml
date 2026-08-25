@@ -1,44 +1,31 @@
-[build-system]
-requires = ["uv_build>=0.9.21,<=1.0.0"]
-build-backend = "uv_build"
-
 [project]
 name = "py-cidr"
-description = "py-cidr : A Tool to setup tools"
+version = "5.0.0"
+description = "Python module providing network / CIDR tools"
 authors = [{ name = "Gene C", email = "arch@sapience.com" }]
 license = "GPL-2.0-or-later"
 readme = "README.rst"
 keywords = []
+requires-python = ">=3.14"
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14",
-    "Programming Language :: Python :: 3.15",
-]
-requires-python = ">=3.13"
-version = "4.0.0"
-dependencies = []
-
-[project.urls]
-Documentation = "https://github.com/gene-git/py-cidr/Docs"
-Issues = "https://github.com/gene-git/py-cidr/issues"
-Source = "https://github.com/gene-git/py-cidr"
-
-[tool.uv.build-backend]
-module-name = 'py_cidr'
-module-root = "src"
-source-include = [
-    '/py_cidr',
-    '/py_cidr/py.typed',
-]
-source-exclude = [
-    ".pytest_cache",
-    "__pycache__",
-    ".mypy_cache",
+    "Programming Language :: Python :: 3",
+    "Operating System :: POSIX :: Linux",
 ]
 
+[build-system]
+requires = ["meson-python", "cython >= 3.0", "meson", "ninja"]
+build-backend = "mesonpy"
+
+[tool.uv]
+package = true
+
+[tool.meson-python.args]
+install = ["--tags=python-module"]
 
 [tool.mypy]
 check_untyped_defs = true
+follow_untyped_imports = true
+
+[tool.pylint.main]
+extension-pkg-allow-list = ["patricia26"]
 

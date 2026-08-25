@@ -6,44 +6,44 @@ Class providing some common CIDR utilities
 # pylint: disable=too-many-public-methods
 from typing import Any
 
-from ._network.cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
+from py_cidr._network.cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
 
-from ._network._cidr_clean import (clean_cidr, clean_cidrs)
-from ._network._cidr_clean import (fix_cidr_host_bits, fix_cidrs_host_bits)
+from py_cidr._network._cidr_clean import (clean_cidr, clean_cidrs)
+from py_cidr._network._cidr_clean import (fix_cidr_host_bits, fix_cidrs_host_bits)
 
-from ._network._cidr_address import (ip_to_address, ips_to_addresses)
-from ._network._cidr_address import (addresses_to_ips, ipaddr_cidr_from_string)
+from py_cidr._network._cidr_address import (ip_to_address, ips_to_addresses)
+from py_cidr._network._cidr_address import (addresses_to_ips, ipaddr_cidr_from_string)
 
-from ._network._cidr_subnet import (cidr_set_prefix, get_host_bits)
-from ._network._cidr_subnet import (net_is_subnet, cidr_is_subnet)
-from ._network._cidr_subnet import (net_exclude, nets_exclude, cidrs_exclude)
-from ._network._cidr_subnet import (cidrs2_minus_cidrs1, cidr_exclude)
+from py_cidr._network._cidr_subnet import (cidr_set_prefix, get_host_bits)
+from py_cidr._network._cidr_subnet import (net_is_subnet, cidr_is_subnet)
+from py_cidr._network._cidr_subnet import (net_exclude, nets_exclude, cidrs_exclude)
+from py_cidr._network._cidr_subnet import (cidrs2_minus_cidrs1, cidr_exclude)
 
-from ._network._cidr_sort import (sort_cidrs, sort_ips, sort_nets)
-from ._network._cidr_compact import (compact_cidrs_to_nets, compact_cidrs)
-from ._network._cidr_compact import (compact_nets)
+from py_cidr._network._cidr_sort import (sort_cidrs, sort_ips, sort_nets)
+from py_cidr._network._cidr_compact import (compact_cidrs_to_nets, compact_cidrs)
+from py_cidr._network._cidr_compact import (compact_nets)
 
-from ._network._cidr_nets import (cidr_to_net, cidrs_to_nets, nets_to_cidrs)
-from ._network._cidr_nets import (address_to_net, net_to_cidr)
+from py_cidr._network._cidr_nets import (cidr_to_net, cidrs_to_nets, nets_to_cidrs)
+from py_cidr._network._cidr_nets import (address_to_net, net_to_cidr)
 
-from ._network._cidr_range import (range_to_cidrs, range_to_nets)
-from ._network._cidr_range import (net_to_range_cidrs, net_to_range_nets)
-from ._network._cidr_range import (cidr_to_range_cidrs, cidr_to_range_nets)
+from py_cidr._network._cidr_range import (range_to_cidrs, range_to_nets)
+from py_cidr._network._cidr_range import (net_to_range_cidrs, net_to_range_nets)
+from py_cidr._network._cidr_range import (cidr_to_range_cidrs, cidr_to_range_nets)
 
-from ._network._cidr_range_split import (cidr_range_split, net_range_split)
+from py_cidr._network._cidr_range_split import (cidr_range_split, net_range_split)
 
-from ._network._cidr_valid import (is_valid_ip4, is_valid_ip6, is_valid_cidr)
-from ._network._cidr_valid import (cidr_iptype, cidr_type_network)
-from ._network._cidr_valid import (address_iptype)
+from py_cidr._network._cidr_valid import (is_valid_ip4, is_valid_ip6, is_valid_cidr)
+from py_cidr._network._cidr_valid import (cidr_iptype, cidr_type_network)
+from py_cidr._network._cidr_valid import (address_iptype)
 
-from ._network._rfc_1918 import (is_rfc_1918, rfc_1918_nets, rfc_1918_cidrs)
-from ._network._rfc_1918 import (remove_rfc_1918)
+from py_cidr._network._rfc_1918 import (is_rfc_1918, rfc_1918_nets, rfc_1918_cidrs)
+from py_cidr._network._rfc_1918 import (remove_rfc_1918)
 
-from ._network._cidr_split_type import cidrs_split_type
+from py_cidr._network._cidr_split_type import cidrs_split_type
 
-from ._network.ip_version import ip_version
+from py_cidr._network.ip_version import ip_version
 
-from ._version import version
+from py_cidr._version import version
 
 
 class Cidr:

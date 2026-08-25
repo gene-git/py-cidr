@@ -6,15 +6,16 @@ Public Methods for py_cidr module
 #
 # Public
 #
-from ._network.cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
-from ._network.cidr_types import (IPv4, IPv6)
-from ._network.cidr_types import PrefixVal
-from ._network.ip_version import ip_version
+from py_cidr._network.cidr_types import (IPvxNetwork, IPvxAddress, IPAddress)
+from py_cidr._network.cidr_types import (IPv4, IPv6)
+from py_cidr._network.ip_version import ip_version
 
-from .cidr_class import Cidr
+from py_cidr._prefix.prefix_types import PrefixVal
+from py_cidr._prefix.prefix_map import PrefixMap
+from py_cidr._prefix.prefix_maps import PrefixMaps
+from py_cidr.cidr_map import CidrMap
 
-from .cidr_map import CidrMap
-from ._prefix.prefix_map import PrefixMap
-from ._prefix.prefix_maps import PrefixMaps
+from py_cidr.cidr_file_class import CidrFile
+from py_cidr.cidr_class import Cidr
 
-from .cidr_file_class import CidrFile
+from py_cidr.pycidr_class import PyCidr

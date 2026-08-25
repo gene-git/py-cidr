@@ -1,4 +1,4 @@
 """
 _network submodule
 """
-from .cidr_types import PrefixVal
+from ._cidr_compact import compact_cidrs

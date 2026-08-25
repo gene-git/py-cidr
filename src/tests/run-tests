@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+#
+# Must be run at the top level - same dir as meson.build
+# Build and install to build/pkg so we can use the module for testing.
+#
+pkgdir=$(realpath "..")
+export PYTHONPATH="$pkgdir"
+
+/usr/bin/pytest -s -v

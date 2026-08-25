@@ -1,32 +1,35 @@
 #!/usr/bin/bash
 #
-# Source code checks.
+# Source code checks
 #
-# Run in top level
+# Run in top level after build/install to build/pkg
+# 
 # Requires
 # - pylint
 # - pycodestyle
 # - mypy
 
-# code
-echo "Checking module"
-mod_dir="py_cidr"
-cd ./src
+dest=$(realpath "./src/py_cidr")
+export PYTHONPATH="$dest"
 
+echo "---------------------"
 echo "==> pylint"
-PYTHONPATH=. pylint "$mod_dir"/*.py *.py
+pylint --max-line-length=110 "$dest"/*.py "$dest"/*/*.py
 
+echo "---------------------"
 echo "==> pycodestyle"
-PYTHONPATH=. pycodestyle --max-line-length=110 $mod_dir/*.py *.py
+pycodestyle --max-line-length=110 "$dest"/*.py "$dest"/*/*.py
 
+echo "---------------------"
 echo "==> mypy"
 opts=(--check-untyped-defs --follow-untyped-imports --show-error-context --pretty)
-mypy "${opts[0]}" $mod_dir
+mypy   "${opts[@]}" "$dest"
 
+echo "---------------------"
 echo "Checking tests"
-cd ../tests
-PYTHONPATH=../src pylint *.py
-PYTHONPATH=../src pycodestyle *.py
-mypy "${opts[0]}" .
+
+pylint --max-line-length=110 src/tests/*.py
+pycodestyle --max-line-length=110 src/tests/*.py
+mypy "${opts[@]}" src/tests/
 
 
