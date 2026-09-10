@@ -3,6 +3,13 @@
 Recent Changes
 ==============
 
+**5.0.3**
+
+* Change Arch package dependencies that have been renamed:
+
+  - pyconcurrent -> python-pyconcurrent
+  - lockmgr -> python-lockmgr
+
 **5.0.2**
 
 * New PyCidr class - replaces functionality in Cidr class.
@@ -20,6 +27,4 @@ Recent Changes
   In the future, some/all of Cidr may be migrated to use the new fast codebase.
 
 * See manual for details and how to use the new speedy class!
-
-* Add the manual
 

@@ -16,8 +16,8 @@ Key features
 
   Very fast version that uses compiled C-code to do most of the work.
 
-  Using compiled C-code is simple, cleane, robust, very maintainable, 
-  is compiled with modern, restritive compiler and linker flags. 
+  Using compiled C-code is simple, clean, robust, very maintainable 
+  and is compiled with modern, restrictive compiler and linker flags. 
 
   All CIDR and IP addresses are strings.
 
@@ -29,7 +29,7 @@ Key features
   * cidrtools: `github <https://github.com/gene-git/cidrtools>`_ and 
     `AUR  <https://aur.archlinux.org/packages/cidrtools>`_.
 
-  *cidrtools-cffi* has python bindinds to the *cidrtools* compiled library.
+  *cidrtools-cffi* has python bindings to the *cidrtools* compiled library.
 
 * Cidr class is still upported. 
   

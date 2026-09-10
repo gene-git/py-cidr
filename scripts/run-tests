@@ -1,26 +1,9 @@
 #!/usr/bin/bash
 #
-here=$(/usr/bin/pwd)
-here_base=$(/usr/bin/basename $here)
-top=""
+#!/usr/bin/bash
+#
+set -euo pipefail
 
-case "$here_base" in
-    py-cidr)
-        top="$here"
-        ;;
-    scripts)
-        top=(/usr/bin/realpath ../)
-        ;;
-    tests)
-        top=(/usr/bin/realpath ../..)
-        ;;
-    *)
-        echo "Running in unknown directory"
-        exit
-esac
-tests_dir="$top/src/tests"
+/usr/bin/meson test -C build/release
 
-cd "$tests_dir"
-
-./run-tests
-
+exit 0
