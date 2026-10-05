@@ -24,7 +24,7 @@ latexpdf: $(PKG).pdf
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-$(BUILDDIR)/html/index.html: $(SOURCES)
+$(BUILDDIR)/html/index.html: $(SOURCES) _static/custom.css 
 	@$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS) $(O)
 	@$(SPHINXBUILD) -b html "$(SOURCEDIR)" "$(BUILDDIR)/html" $(SPHINXOPTS) $(O)
 	@rsync -a $(HTML_EXCL) _build/html .

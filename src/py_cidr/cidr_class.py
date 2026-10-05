@@ -79,18 +79,10 @@ class Cidr:
         Be flexible with input address. Can be
         IPAddress (includes string) or even IPvxNetwork.
 
-        Args:
-            addr (IPAddress | IPvxNetwork):
-                Input address.
-
-            strict (bool):
-                If true then cidr is considered invalid if host bits are set.
-                Defaults to False. (see ipaddress docs).
-
-        Returns:
-            IPvxNetwork | None:
-                The IPvxNetwork derived from input "addr" or None if
-                not an address/network.
+        :param addr: Input address.
+        :param strict: If true then cidr is considered invalid if host bits are set.
+                       Defaults to False. (see ipaddress docs).
+        :returns: The IPvxNetwork derived from input "addr" or None if not an address/network.
         """
         return address_to_net(addr, strict)
 
@@ -99,18 +91,11 @@ class Cidr:
         """
         Convert cidr string to ipaddress network.
 
-        Args:
-            cidr (str):
-            Input cidr string
-
-            strict (bool):
-            If true then cidr is considered invalid if host bits are set.
-            Defaults to False. (see ipaddress docs).
-
-        Returns:
-            IPvxNetwork | None:
-            The ipaddress network derived from cidr string as
-            IPvxNetwork = IPv4Network or IPv6Network or None if invalid.
+        :param cidr: Input cidr string
+        :param strict: If true then cidr is considered invalid if host bits are set.
+                       Defaults to False. (see ipaddress docs).
+        :returns: The ipaddress network derived from cidr string as
+                  IPvxNetwork = IPv4Network or IPv6Network or None if invalid.
         """
         return cidr_to_net(cidr, strict)
 
@@ -120,16 +105,9 @@ class Cidr:
         """
         Convert list of cidr strings to list of IPvxNetwork.
 
-        Args:
-            cidrs (list[str]):
-            list of cidr strings
-
-            strict (bool):
-            If true, cidr with host bits set is invalid. Defaults to false.
-
-        Returns:
-            list[IPvxNetwork]:
-            list of IPvxNetworks generated from cidrs.
+        :param cidrs: list of cidr strings
+        :param strict: If true, cidr with host bits set is invalid. Defaults to false.
+        :returns: list of IPvxNetworks generated from cidrs.
         """
         return cidrs_to_nets(cidrs, strict)
 
@@ -138,13 +116,8 @@ class Cidr:
         """
         Convert list of ipaddress networks to list of cidr strings.
 
-        Args:
-            nets (list[IPvxNetwork]):
-            list of nets to convert.
-
-        Returns:
-            list[str]:
-            list of cidr strings.
+        :param nets: list of nets to convert.
+        :returns: list of cidr strings.
         """
         return nets_to_cidrs(nets)
 
@@ -154,14 +127,8 @@ class Cidr:
         Net to Cidr String
             Convert an ipaddress network to a cidr string.
 
-        Args:
-            net (IPvxNetwork):
-                Ipaddress Network to convert.
-
-        Returns:
-            str:
-            Cidr string from net. If unable to conver,
-            then empty string is returned.
+        :param net: Ipaddress Network to convert.
+        :returns: Cidr string from net. If unable to conver, then empty string is returned.
         """
         return net_to_cidr(net)
 
@@ -172,12 +139,8 @@ class Cidr:
 
         If IP has prefix or host bits set, strip the prefix and keep host bits.
 
-        Args:
-            ip (str):
-            The IP string to convert
-
-            Rreturns (IPvxAddress | None):
-            IPvxAddress derived from IP or None if not an IP address.
+        :param ip: The IP string to convert
+        :rreturns: IPvxAddress derived from IP or None if not an IP address.
         """
         return ip_to_address(ip)
 
@@ -186,13 +149,8 @@ class Cidr:
         """
         Convert list of IP strings to a list of ip addresses
 
-        Args:
-            ips (list[str]):
-            list of IP strings to convert
-
-        Returns:
-            list[IPvxAddress]:
-            list of IPvxAddress derived from input IPs.
+        :param ips: list of IP strings to convert
+        :returns: list of IPvxAddress derived from input IPs.
         """
         return ips_to_addresses(ips)
 
@@ -201,13 +159,8 @@ class Cidr:
         """
         From list of IPs in ipaddress format, get list of ip strings.
 
-        Args:
-            addresses (list[IPvxAddress]):
-            list of IP addresses in ipaddress format
-
-        Returns:
-            list[str]:
-            list of IP strings
+        :param addresses: list of IP addresses in ipaddress format
+        :returns: list of IP strings
         """
         return addresses_to_ips(addresses)
 
@@ -216,16 +169,9 @@ class Cidr:
         """
         Set new prefix for cidr and return new cidr string.
 
-        Args:
-            cidr (str):
-            Cidr string to use
-
-            prefix (int):
-            The new prefix to use
-
-        Returns:
-            str:
-            Cidr string using the specified prefix
+        :param cidr: Cidr string to use
+        :param prefix: The new prefix to use
+        :returns: Cidr string using the specified prefix
         """
         return cidr_set_prefix(cidr, prefix)
 
@@ -235,16 +181,9 @@ class Cidr:
         """
         Convert string of IP address or cidr net to IPvxNetwork
 
-        Args:
-            address:
-            IP or CIDR network as a string.
-
-            strict (bool):
-            If true, host bits are disallowed for cidr block.
-
-        Returns:
-            IPvxNetwork | None:
-            An IPvxNetwork or None if invalid.
+        :param address: IP or CIDR network as a string.
+        :param strict: If true, host bits are disallowed for cidr block.
+        :returns: An IPvxNetwork or None if invalid.
         """
         return ipaddr_cidr_from_string(address, strict)
 
@@ -253,35 +192,20 @@ class Cidr:
         """
         Check if cidr is a subnet of any of the list of IPvxNetworks .
 
-        Args:
-            cidr (str):
-            Cidr string to check.
-
-            ipa_nets (list[IPvxNetwork]):
-            list of IPvxNetworks to check.
-
-        Returns:
-            bool:
-            True if cidr is subnet of any of the ipa_nets, else False.
+        :param cidr: Cidr string to check.
+        :param ipa_nets: list of IPvxNetworks to check.
+        :returns: True if cidr is subnet of any of the ipa_nets, else False.
         """
         return cidr_is_subnet(cidr, ipa_nets)
 
     @staticmethod
-    def net_is_subnet(net1: IPvxNetwork, net2: IPvxNetwork | list[IPvxNetwork]
-                      ) -> bool:
+    def net_is_subnet(net1: IPvxNetwork, net2: IPvxNetwork | list[IPvxNetwork]) -> bool:
         """
         Determines if net1 is a subnet of any of net2.
 
-        Args:
-            net1 (IPvxNetwork):
-                Network to check if is a subnet.
-
-            net2 (IPvxNetwork | list[IPvxNetwork]):
-                Network or list of networks to be checked.
-
-        Returns:
-            bool:
-                True if net1 is a subnet of any of net2.
+        :param net1: Network to check if is a subnet.
+        :param net2: Network or list of networks to be checked.
+        :returns: True if net1 is a subnet of any of net2.
         """
         return net_is_subnet(net1, net2)
 
@@ -290,13 +214,8 @@ class Cidr:
         """
         Identify address or net (IPvxNetwork) as ipv4, ipv6 or neither.
 
-        Args:
-            addr (str):
-            ipaddress IP or network .
-
-        Returns:
-            str | None:
-            'ip4', 'ip6' or ''
+        :param addr: ipaddress IP or network .
+        :returns: 'ip4', 'ip6' or ''
         """
         return address_iptype(addr)
 
@@ -308,18 +227,11 @@ class Cidr:
         Deprecated - use compact_cidrs(cidrs, return_nets)) instead,
         it is the same with the boolean flag reversed.
 
-        Args:
-            cidrs (list[str]):
-            list of cidr strings to compact.
-
-            string (bool):
-             - If True (default), then return is a list of strings.
-             - If False, a list of IPvxNetworks.
-
-        Returns:
-            list[str] | list[IPvxNetwork]:
-            Compressed list of cidrs as ipaddress networks (string=False)
-            or list of strings when string=True
+        :param cidrs: list of cidr strings to compact.
+        :string: If True (default), then return is a list of strings.
+                 If False, a list of IPvxNetworks.
+        :returns: Compressed list of cidrs as ipaddress networks (string=False)
+                  or list of strings when string=True
         """
         if string:
             return compact_cidrs(cidrs)
@@ -337,23 +249,15 @@ class Cidr:
         return compact_cidrs(cidrs)
 
     @staticmethod
-    def compact_cidrs(cidrs: list[str], nets: bool = False
-                      ) -> list[str] | list[IPvxNetwork]:
+    def compact_cidrs(cidrs: list[str], nets: bool = False) -> list[str] | list[IPvxNetwork]:
         """
         Compact a list of cidr networks as strings.
 
-        Args:
-            cidrs (list[str]):
-            list of cidrs to compact.
-
-            nets (bool):
-            If False, the default, the result will be list of strings
-            else a list of IPvxNetwork's.
-
-        Returns:
-            list[str | IPvxNetwork]:
-            A list of compacted networks whose elements are strings
-            if return_nets is False or IPvxNetworks if True.
+        :param cidrs: list of cidrs to compact.
+        :param nets: If False, the default, the result will be list of strings
+                     else a list of IPvxNetwork's.
+        :returns: A list of compacted networks whose elements are strings
+                  if return_nets is False or IPvxNetworks if True.
         """
         if nets:
             return compact_cidrs_to_nets(cidrs)
@@ -364,57 +268,34 @@ class Cidr:
         """
         Compact list of IPvxNetwork.
 
-        Args:
-            nets (list[IPvxNetwork]):
-            Input list if networks to compact.
-
-        Returns:
-            list[IPvxNetwork]:
-            Compacted list of IPvxNetworks.
+        :param nets: Input list if networks to compact.
+        :returns: Compacted list of IPvxNetworks.
         """
         return compact_nets(nets)
 
     @staticmethod
-    def net_exclude(net1: IPvxNetwork, nets2: list[IPvxNetwork]
-                    ) -> list[IPvxNetwork]:
+    def net_exclude(net1: IPvxNetwork, nets2: list[IPvxNetwork]) -> list[IPvxNetwork]:
         """
         Exclude net1 from any of networks in net2 and
         return resulting list of nets (without net1).
 
-        Args:
-            net1 (IPvxNetwork):
-            Network to be ecluded.
-
-            nets2 (list[IPvxNetwork]):
-            list of networks from which net1 will be excluded
-            from.
-
-        Returns:
-            list[IPvxNetwork]:
-            Resultant list of networks "nets2 - net1".
+        :param net1: Network to be ecluded.
+        :param nets2: list of networks from which net1 will be excluded from.
+        :returns: Resultant list of networks "nets2 - net1".
         """
         return net_exclude(net1, nets2)
 
     @staticmethod
-    def nets_exclude(nets1: list[IPvxNetwork], nets2: list[IPvxNetwork]
-                     ) -> list[IPvxNetwork]:
+    def nets_exclude(nets1: list[IPvxNetwork], nets2: list[IPvxNetwork]) -> list[IPvxNetwork]:
         """
         Exclude every nets1 network from from any networks in nets2.
 
         Similar to net_exclude() except this version has a list
         to be excluded instead of a single network.
 
-        Args:
-            nets1 (list[IPvxNetwork]):
-            list of nets to be excluded.
-
-            nets2: (list[IPvxNetwork]):
-            list of nets from which will exclude any of nets1.
-
-        Returns:
-            list[IPvxNetwork]:
-            list of resultant networks ("nets2" - "nets1")
-
+        :param nets1: list of nets to be excluded.
+        :param nets2: list of nets from which will exclude any of nets1.
+        :returns: list of resultant networks ("nets2" - "nets1")
         """
         return nets_exclude(nets1, nets2)
 
@@ -430,17 +311,9 @@ class Cidr:
 
         i.e. return "cidrs2" - "cidrs1".
 
-        Args:
-            cidrs1 (list[str]):
-            list of cidr strings to be excluded.
-
-            cidrs2 (list[str]):
-            list of cidr strings from which cidrs1 are excluded.
-
-        Returns:
-            list[str]:
-            Resulting list of cidr strings = "cidrs2" - "cidrs1".
-
+        :param cidrs1: list of cidr strings to be excluded.
+        :param cidrs2: list of cidr strings from which cidrs1 are excluded.
+        :returns: Resulting list of cidr strings = "cidrs2" - "cidrs1".
         """
         return cidrs2_minus_cidrs1(cidrs1, cidrs2)
 
@@ -449,16 +322,9 @@ class Cidr:
         """
         Exclude cidr1 from any of networks in cidrs2.
 
-        Args:
-            cidr1 (str):
-            cidr to be excluded.
-
-            cidrs2 (list[str]):
-            list fo cidrs from which cidr1 will be excluded.
-
-        Returns:
-            list[str]:
-            Resulting list of cidrs ("cidrs2" - "cidr1")
+        :param cidr1: cidr to be excluded.
+        :param cidrs2: list fo cidrs from which cidr1 will be excluded.
+        :returns: Resulting list of cidrs ("cidrs2" - "cidr1")
         """
         return cidr_exclude(cidr1, cidrs2)
 
@@ -467,13 +333,8 @@ class Cidr:
         """
         Sort the list of cidr strings.
 
-        Args:
-            cidrs (list[str]):
-            list of cidrs.
-
-        Returns:
-            list[str]:
-            Sorted copy of cidr list
+        :param cidrs: list of cidrs.
+        :returns: Sorted copy of cidr list
         """
         return sort_cidrs(cidrs)
 
@@ -482,13 +343,8 @@ class Cidr:
         """
         Sort a list of IP addresses.
 
-        Args:
-            ips (list[str]):
-            list of ips to be sorted.
-
-        Returns:
-            list[str]:
-            Sorted copy of ips.
+        :param ips: list of ips to be sorted.
+        :returns: Sorted copy of ips.
         """
         return sort_ips(ips)
 
@@ -497,13 +353,8 @@ class Cidr:
         """
         Sort a list of networks.
 
-        Args:
-            nets (list[IPvxNetwork]):
-                list of networks to be sorted.
-
-        Returns:
-            list[IPvxNetwork]:
-                Sorted copy of networks.
+        :param nets: list of networks to be sorted.
+        :returns: Sorted copy of networks.
         """
         return sort_nets(nets)
 
@@ -512,16 +363,9 @@ class Cidr:
         """
         Gets the host bits from an IP address given the netmask.
 
-        Args:
-            ip (str):
-            The IP to examine.
-
-            pfx (int):
-            The cidr prefix.
-
-        Returns:
-            int:
-            The host bits from the IP.
+        :param ip: The IP to examine.
+        :param pfx: The cidr prefix.
+        :returns: The host bits from the IP.
         """
         return get_host_bits(ip, pfx)
 
@@ -538,14 +382,9 @@ class Cidr:
             a.b.c -> a.b.c.0/24
             a.b.c.23/24 -> a.b.c.0/24
 
-        Args:
-            cidr (str):
-            Cidr string to clean up.
-
-        Returns:
-            str | None:
-             - cidr string if valid
-             - None if cidr is invalid.
+        :param cidr: Cidr string to clean up.
+        :returns: - cidr string if valid
+                  - None if cidr is invalid.
 
         """
         return clean_cidr(cidr)
@@ -557,15 +396,9 @@ class Cidr:
 
         Similar to clean_cidr() but for a list.
 
-        Args:
-            cidrs (list[str]):
-            list of cidr strings to clean up.
-
-        Returns:
-            list[str]:
-            list of cleaned cidrs.
-            If input cidr is invalid then its returnded as None
-
+        :param cidrs: list of cidr strings to clean up.
+        :returns: list of cleaned cidrs.
+                  If input cidr is invalid then its returnded as None
         """
         return clean_cidrs(cidrs)
 
@@ -576,17 +409,9 @@ class Cidr:
 
         A strictly valid cidr address must have host bits set to zero.
 
-        Args:
-            cidr (str):
-            The cidr to "fix" if needed.
-
-            verb (bool):
-            Some info on stdout when set True. Defaults to False.
-
-        Returns:
-            str:
-            The cidr with any non-zero host bits now zeroed out.
-
+        :param cidr: The cidr to "fix" if needed.
+        :parm verb: Some info on stdout when set True. Defaults to False.
+        :returns: The cidr with any non-zero host bits now zeroed out.
         """
         return fix_cidr_host_bits(cidr, verb)
 
@@ -597,17 +422,9 @@ class Cidr:
 
         Similar to fix_cidr_host_bits() but for a list of cidrs.
 
-        Args:
-            cidrs (list[str]):
-            list of cidrs to fix up.
-
-            verb (bool):
-            Some info on stdout when set True. Defaults to False.
-
-        Returns:
-            list[str]:
-            The list of cidrs each with any non-zero host bits now zeroed out.
-
+        :param cidrs: list of cidrs to fix up.
+        :param verb: Some info on stdout when set True. Defaults to False.
+        :returns: The list of cidrs each with any non-zero host bits now zeroed out.
         """
         return fix_cidrs_host_bits(cidrs, verb)
 
@@ -616,13 +433,8 @@ class Cidr:
         """
         check if valid IPv4 address or cidr.
 
-        Args:
-            address (Any):
-            Check if this is a valid IPv4 address or cidr.
-
-        Returns:
-            bool:
-            True if valid IPv4 else False
+        :param address: Check if this is a valid IPv4 address or cidr.
+        :returns: True if valid IPv4 else False
         """
         return is_valid_ip4(address)
 
@@ -631,13 +443,8 @@ class Cidr:
         """
         check if valid IPv6 address or cidr.
 
-        Args:
-            address (Any):
-            Check if this is a valid IPv6 address or cidr.
-
-        Returns:
-            bool:
-            True if valid IPv6 else False
+        :param address: Check if this is a valid IPv6 address or cidr.
+        :returns: True if valid IPv6 else False
         """
         return is_valid_ip6(address)
 
@@ -646,13 +453,8 @@ class Cidr:
         """
         Check if address is a valid ip or cidr network.
 
-        Args:
-            address (Any):
-            Address to check. Host bits set is permitted for a cidr network.
-
-        Returns:
-            bool:
-            True/False if address is valid IPv4 or IPv6 address or network.
+        :parram address: Address to check. Host bits set is permitted for a cidr network.
+        :returns: True/False if address is valid IPv4 or IPv6 address or network.
         """
         return is_valid_cidr(address)
 
@@ -661,15 +463,10 @@ class Cidr:
         """
         Determines if address string is valid ipv4 or ipv6 or not.
 
-        Args:
-            address (Any):
-                address or cidr string
-
-         Returns:
-            str :
-                'ip4' or 'ip6' or empty string, '', if address invalid.
-                Note. Earlier versions returned None instead of
-                empty string if unable to be converted.
+        :param address: address or cidr string
+        :returns: 'ip4' or 'ip6' or empty string, '', if address invalid.
+                   Note. Earlier versions returned None instead of
+                   empty string if unable to be converted.
         """
         return cidr_iptype(address)
 
@@ -678,15 +475,10 @@ class Cidr:
         """
         Determines the IP version of an address or network:
 
-        Args:
-            addr_or_net (str | IPvxNetwork | IPvxAddress):
-                Can be IP addess or network either a string or ip_address format.
-
-        Returns:
-            int:
-                4 if addr_or_net is IPv4Network or IPv4Address
-                6 if addr_or_net is IPv6Network or IPv5Address
-                0 otherwise
+        :param addr_or_net: Can be IP addess or network either a string or ip_address format.
+        :returns: 4 if addr_or_net is IPv4Network or IPv4Address
+                  6 if addr_or_net is IPv6Network or IPv5Address
+                  0 otherwise
         """
         return ip_version(addr_or_net)
 
@@ -695,14 +487,8 @@ class Cidr:
         """
         Cidr Network Type.
 
-        Args:
-            cidr (str):
-            Cidr string to examine
-
-        Returns:
-            tuple[str, IPvxNetwork]:
-            tuple(ip-type, net-type). ip-type is a string  ('ip4', 'ip6') while
-            network type is IPv4Network or IPv6Network
+        :param cidr: Cidr string to examine
+        :returns: tuple('ip4' or 'ip6', IPv4Network or IPv6Network).
         """
         return cidr_type_network(cidr)
 
@@ -712,20 +498,11 @@ class Cidr:
         """
         Generate a list of cidr/nets from an IP range.
 
-        Args:
-            addr_start (IPAddress):
-            Start of IP range
-
-            addr_end (IPAddress):
-            End of IP range
-
-            string (bool):
-            If True then returns list of cidr strings otherwise IPvxNetwork
-
-        Returns:
-            list[IPvxNetwork] | list[str]
-            list of cidr network blocks representing the IP range.
-            list elements are IPvxAddress or str if parameter string=True
+        :param addr_start: Start of IP range
+        :param addr_end: End of IP range
+        :string: If True then returns list of cidr strings otherwise IPvxNetwork
+        :returns: list of cidr network blocks representing the IP range.
+                  list elements are IPvxAddress or str if parameter string=True
         """
         if string:
             return range_to_cidrs(addr_start, addr_end)
@@ -738,17 +515,10 @@ class Cidr:
         """
         Convert network to IP Range.
 
-        Args:
-            net (IPvxNetwork):
-            The network (IPvxNetwork) to examine.
-
-            string (bool):
-            If True then returns cidr strings instead of IPvxAddress
-
-        Returns:
-            tuple[IPAddress, IPAddress]:
-            tuple (ip0, ip1) of first and last IP address in net
-            Each (ip0, ip1) is IPvxAddress or a string if "string" == True
+        :param net: The network (IPvxNetwork) to examine.
+        :param string: If True then returns cidr strings instead of IPvxAddress
+        :returns: tuple (ip0, ip1) of first and last IP address in net
+                  Each (ip0, ip1) is IPvxAddress or a string if "string" == True
         """
         if string:
             return net_to_range_cidrs(net)
@@ -761,17 +531,10 @@ class Cidr:
         """
         Cidr string to an IP Range.
 
-        Args:
-            cidr (str):
-            The cidr string to examine.
-
-            string (bool):
-            If True then returns cidr strings instead of IPvxAddress
-
-        Returns:
-            tuple[IPAddress, IPAddress]:
-            tuple (ip0, ip1) of first and last IP address in net
-            (ip0, ip1) are IPvxAddress or str when string is True
+        :param cidr: The cidr string to examine.
+        :param string: If True then returns cidr strings instead of IPvxAddress
+        :returns: tuple (ip0, ip1) of first and last IP address in net
+                  (ip0, ip1) are IPvxAddress or str when string is True
         """
         if string:
             return cidr_to_range_cidrs(cidr)
@@ -782,16 +545,9 @@ class Cidr:
         """
         Convert network to IP Range.
 
-        Args:
-            net (IPvxNetwork):
-            The network (IPvxNetwork) to examine.
-
-            string (bool):
-            If True then returns cidr strings instead of IPvxAddress
-
-        Returns:
-            tuple[, IPvxAddressIPAddress, , IPvxAddressIPAddress, IPvxAddress]:
-            that are the first IP, middle IP and last IP in the cidr block
+        :param net: The network (IPvxNetwork) to examine.
+        :param string: If True then returns cidr strings instead of IPvxAddress
+        :returns: tuple of 3 IPvxAddress: (first IP, middle IP, last IP) in the cidr block
         """
         return net_range_split(net)
 
@@ -800,16 +556,9 @@ class Cidr:
         """
         Convert network to IP Range.
 
-        Args:
-            net (IPvxNetwork):
-            The network (IPvxNetwork) to examine.
-
-            string (bool):
-            If True then returns cidr strings instead of IPvxAddress
-
-        Returns:
-            tuple[str, str, str]:
-            that are strings of the first IP, middle IP and last IP in the cidr block
+        :param net: The network (IPvxNetwork) to examine.
+        :param string: If True then returns cidr strings instead of IPvxAddress
+        :returns: strings of the first IP, middle IP and last IP in the cidr block
         """
         return cidr_range_split(cidr)
 
@@ -818,14 +567,8 @@ class Cidr:
         """
         Check if cidr is any RFC 1918.
 
-        Args:
-            cidr (str):
-            IP or Cidr to check if RFC 1918.
-
-        Returns:
-            bool:
-            True if cidr is an RFC 1918 address.
-            False if not.
+        :param cidr: IP or Cidr to check if RFC 1918.
+        :returns: True if cidr is an RFC 1918 address.  False if not.
         """
         return is_rfc_1918(cidr)
 
@@ -834,9 +577,7 @@ class Cidr:
         """
         Return list of rfc 1918 networks
 
-        Returns:
-            list[IPv4Network]:
-            list of RFC 1918 networks.
+        :returns: list of RFC 1918 networks.
         """
         return rfc_1918_nets()
 
@@ -845,8 +586,7 @@ class Cidr:
         """
         Return list of rfc 1918 networks cidr strings
 
-        Returns (list[str]):
-            list of RFC 1918 networks as cidr strings
+        :returns: list of RFC 1918 networks as cidr strings
         """
         return rfc_1918_cidrs()
 
@@ -856,22 +596,16 @@ class Cidr:
         """
         Given list of cidrs, return list without any rfc 1918
 
-        Args:
-            cidrs_in (str | list[str]:
-            Cidr string or list of cidr strings.
+        :param cidrs_in: Cidr string or list of cidr strings.
+        :returns: Returns (tuple[cidrs_cleaned, rfc_1918_cidrs_found]):
+                  - cidrs_cleaned:
+                  list of cidrs with all rfc_1918 removed.
+                  - rfc_1918_cidrs_found:
+                  list of any rfc 1918 found in the input.
 
-        Returns:
-            tuple[str | list[str], str | list[str]]:
-            Returns (tuple[cidrs_cleaned, rfc_1918_cidrs_found]):
-
-            - cidrs_cleaned:
-              list of cidrs with all rfc_1918 removed.
-            - rfc_1918_cidrs_found:
-              list of any rfc 1918 found in the input.
-
-            If input cidr(s) is a list, then items in output
-            are a (possibly empty) list
-            If not a list then returned items will be string or None.
+                  If input cidr(s) is a list, then items in output
+                  are a (possibly empty) list
+                  If not a list then returned items will be string or None.
         """
         return remove_rfc_1918(cidrs_in)
 
@@ -881,12 +615,8 @@ class Cidr:
         """
         Split a list of cidrs into ipv4, ipv6 and other.
 
-        Args:
-            cidrs (list[str]):
-                list of cidr strings
-        Returns:
-            tuple[ip4: list[str], ip6: list[str], other: list[str]]
-            Tuple of lists of ipv4, ipv6 and unknown.
+        :param cidrs: list of cidr strings
+        :returns: Tuple of lists of ipv4, ipv6 and unknown.
         """
         return cidrs_split_type(cidrs)
 
@@ -896,13 +626,8 @@ class Cidr:
         Compact list of cidrs - can be mixed ipv4/ipv6.
         Returns 1 type, making type annotation simpler for caller.
 
-        Args:
-            cidrs (list[str]):
-                Input list of cidr strings.
-
-        Returns:
-            list[str]:
-                Compacted list of cidrs. If mixed ipv4 is before ipv6
+        :param cidrs: Input list of cidr strings.
+        :returns: Compacted list of cidrs. If mixed ipv4 is before ipv6
 
         Recommended methods are compact() or compact_nets().
         Others are kept for backward compatibility.

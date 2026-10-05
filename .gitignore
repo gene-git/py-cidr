@@ -2,7 +2,4 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 src/data/docs/_build/
-src/data/docs/_static/
-src/data/docs/_templates/
-
 src/data/docs/html/.buildinfo.bak

@@ -6,14 +6,23 @@ Tags
 
 .. code-block:: text
 
-	2.6.0 (2025-01-18) -> 5.0.3 (2026-09-09)
-	49 commits.
+	2.6.0 (2025-01-18) -> 5.0.5 (2026-10-05)
+	50 commits.
 
 Commits
 =======
 
 
-* 2026-09-09  : **5.0.3**
+* 2026-10-05  : **5.0.5**
+
+.. code-block:: text
+
+              - Mon Oct  5 11:18:28 AM EDT 2026
+            
+                * Documentation available at https://py-cidr.readthedocs.io
+                * Switch python docstrings from google to sphinx format
+
+* 2026-09-09  : **5.0.3, origin/master**
 
 .. code-block:: text
 
@@ -24,7 +33,7 @@ Commits
                   - pyconcurrent -> python-pyconcurrent
                   - lockmgr -> python-lockmgr
 
-* 2026-08-25  : **5.0.2, origin/master**
+* 2026-08-25  : **5.0.2**
 
 .. code-block:: text
 

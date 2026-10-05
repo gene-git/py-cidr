@@ -8,8 +8,8 @@ Installation
 ============
 
 Available on
-* `Github`_
-* `Archlinux AUR`_
+* `Github <https://github.com/gene-git/py-cidr>`_
+* `Archlinux AUR <https://aur.archlinux.org/packages/py-cidr>`_
 
 On Arch you can build using the provided PKGBUILD in the packaging directory or from the AUR.
 To build manually, clone the repo and :
@@ -45,14 +45,6 @@ Dependencies
 * python-pytest-asyncio
 
 
-Philosophy
-==========
-
-We follow the *live at head commit* philosophy as recommended by
-Google's Abseil team [1]_.  This means we recommend using the
-latest commit on git master branch. 
-
-
 License
 =======
 
@@ -71,9 +63,6 @@ Assistance from:
 * Google's `Gemini <https://gemini.google.com/>`_ was especially helpful with Cython code.
 
 
-.. _Github: https://github.com/gene-git/py-cidr
-.. _Archlinux AUR: https://aur.archlinux.org/packages/py-cidr
 
-.. [1] https://abseil.io/about/philosophy#upgrade-support
 
 

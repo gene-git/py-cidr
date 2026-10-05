@@ -10,7 +10,6 @@ py-cidr documentation
     :caption: API Reference Guide:
 
     README
-    Changes-recent
     python-api
     migrate
     Appendix
