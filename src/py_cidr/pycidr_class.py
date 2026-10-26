@@ -3,7 +3,7 @@
 """
 PyCidr provides a suitr of common network CIDR utilities
 
-- PyCidr works esclusively with strings. 
+- PyCidr works esclusively with strings.
   This contrasts with the older Cidr class which also supports Python's ipaddress.
 """
 # pylint: disable=too-many-public-methods
@@ -128,7 +128,7 @@ class PyCidr:
          - Ensures host bits are set to zero to match the prefix.
          - Ensure the prefix is appropriate for the IP family,
            bounded by /32 or /128 for IPv4 or IPv6.
-         - Non-cidr (bad) strings are set to '' 
+         - Non-cidr (bad) strings are set to ''
 
         :param cidr: Cidr string to clean up.
         :returns: cidr string if valid (empty if not valid)
@@ -149,9 +149,9 @@ class PyCidr:
         Takes a list of raw input CIDR strings, filters out any invalid items entirely,
         and returns a clean list of canonical networks with corrected host bits.
         Skips invalid entries completely instead of leaving them as empty strings.
-        
+
         :param cidrs: List of cidr strings to be cleaned
-        :returns: New list of cidrs that are now clean. Bad cidrs are returned 
+        :returns: New list of cidrs that are now clean. Bad cidrs are returned
                   as empty strings.
         """
         cidr_blocks = CidrBlocks(cidrs)
@@ -382,7 +382,7 @@ class PyCidr:
         Returns the number of IP addresses in the cidr block.
 
         :param cidr: The cidr to examine
-        :returns: The number of IP addresses in the range. For IPv6 
+        :returns: The number of IP addresses in the range. For IPv6
                   This number is capped at 2^64 (pee cidrtools library)
         """
         cidr_block = CidrBlock(cidr)

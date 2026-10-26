@@ -6,14 +6,20 @@ Tags
 
 .. code-block:: text
 
-	2.6.0 (2025-01-18) -> 5.0.5 (2026-10-05)
-	50 commits.
+	2.6.0 (2025-01-18) -> 5.1.0 (2026-10-26)
+	51 commits.
 
 Commits
 =======
 
 
-* 2026-10-05  : **5.0.5**
+* 2026-10-26  : **5.1.0**
+
+.. code-block:: text
+
+              - 5.1.0 Update to new lockmgr 2.1.0 API
+
+* 2026-10-05  : **5.0.5, origin/master**
 
 .. code-block:: text
 
@@ -22,7 +28,7 @@ Commits
                 * Documentation available at https://py-cidr.readthedocs.io
                 * Switch python docstrings from google to sphinx format
 
-* 2026-09-09  : **5.0.3, origin/master**
+* 2026-09-09  : **5.0.3**
 
 .. code-block:: text
 

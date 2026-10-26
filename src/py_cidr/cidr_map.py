@@ -22,8 +22,8 @@ class CidrMap:
 
     :param cache_dir: Optional directory to keep cached copy of map
     :param compact: Optional flag to request a compact map.
-                    The standard map keeps every prefix added to map 
-                    and this is the default. 
+                    The standard map keeps every prefix added to map
+                    and this is the default.
                     If compacting, then adjacent prefixes whose associated
                     values are the same, will have the prefixed compacted to
                     a single prefix.
@@ -155,7 +155,7 @@ class CidrMap:
         :param prefix_val: The tuple of (prefix, value) to add to the map.
         :param priv_map: Optional private cache.
                          If using multiple processes/threads then provide this object
-                         where changes are kept thread local to the private map 
+                         where changes are kept thread local to the private map
                          instead of in the instance cache.
                          This way the same instance (and its cache) can be used
                          across multiple processes/threads. All the thread local
@@ -211,7 +211,7 @@ class CidrMap:
 
     def items(self, v6: bool = False) -> Iterator[tuple[str, Any]]:
         """
-        Iterator that returns oen tuple element (prefix, value) at a time 
+        Iterator that returns oen tuple element (prefix, value) at a time
         fomr the map.
 
         :prefix v6: Default is false, and the elements are from IPv4 map
@@ -238,7 +238,6 @@ class CidrMap:
         """
         prefix_vals: list[PrefixVal] = list(zip(prefixes, vals))
         self.add_prefix_vals(prefix_vals)
-
 
     def lookup_both(self, cidr: str) -> tuple[str, Any]:
         """

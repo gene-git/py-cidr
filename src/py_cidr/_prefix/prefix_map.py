@@ -77,8 +77,9 @@ class PrefixMap(PrefixTrie):
 
             self.cache_file = os.path.join(self.cache_dir, ext)
             lockfile = choose_lock_file(self.cache_dir, ipv6, self.vers)
+
             self.lock_timeout = 120
-            self.lockmgr = LockMgr(lockfile)
+            self.lockmgr = LockMgr(lockfile, self.lock_timeout)
 
     def load_cache(self):
         """
@@ -87,17 +88,15 @@ class PrefixMap(PrefixTrie):
         if not self.cache_file:
             return
 
-        lockmgr = self.lockmgr
-        timeout = self.lock_timeout
-        if lockmgr.acquire_lock(wait=True, timeout=timeout):
-            if os.path.exists(self.cache_file):
-                if self.read_cache_file(self.cache_file):
-                    self.cache_time = os.path.getmtime(self.cache_file)
-                # else:
-                #     print(f'PrefixMap failed to load file: {self.cache_file}')
-            self.lockmgr.release_lock()
+        if self.lockmgr.acquire_lock():
+            try:
+                if os.path.exists(self.cache_file):
+                    if self.read_cache_file(self.cache_file):
+                        self.cache_time = os.path.getmtime(self.cache_file)
+            finally:
+                self.lockmgr.release()
         else:
-            print(f' Prefix cache read failed to get lock after {timeout}')
+            print(f' Prefix cache read failed to get lock after {self.lock_timeout}')
             print('  ** Failed to read cache')
 
     def _prep_write_changes(self):
@@ -136,17 +135,17 @@ class PrefixMap(PrefixTrie):
             return
 
         if self.dirty:
-            lockmgr = self.lockmgr
-            timeout = self.lock_timeout
-            if lockmgr.acquire_lock(wait=True, timeout=timeout):
-                self._prep_write_changes()
-                #
-                # Save the new data
-                #
-                self.write_cache_file(self.cache_file)
-                lockmgr.release_lock()
+            if self.lockmgr.acquire():
+                try:
+                    #
+                    # Save the new data
+                    #
+                    self._prep_write_changes()
+                    self.write_cache_file(self.cache_file)
+                finally:
+                    self.lockmgr.release()
             else:
-                print(f' Prefix cache write failed to get lock after {timeout}')
+                print(f' Prefix cache write failed to get lock after {self.lock_timeout}')
                 print('  ** skipping writing cache')
 
             self.dirty = False

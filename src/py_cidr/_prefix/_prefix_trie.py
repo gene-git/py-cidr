@@ -201,7 +201,7 @@ class PrefixTrie(PrefixTrieBase):
 
     def lookup(self, cidr: str) -> Any:
         """
-        Find and return the value associated with the LPM (longest prefix match) 
+        Find and return the value associated with the LPM (longest prefix match)
         to which "cidr" belongs.
 
         The longest prefix is the most specific.
@@ -212,7 +212,7 @@ class PrefixTrie(PrefixTrieBase):
 
                 lookup('10.0.0.64') -> 'net_1_24'
             lookup_lpm('10.0.0.64') -> ('10.0.0.1/24', 'net_1_24')
-            
+
         :param cidr: The cidr block to lookup.
         :returns: The value associated with the LPM of cidr.
         """
